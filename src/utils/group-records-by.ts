@@ -1,0 +1,53 @@
+import { Database, DatabaseRecord, RecordFieldType } from '../types/database';
+
+export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
+
+/**
+ * Convert a flat list of records into a list of groups, based on the `Group` property of a view.
+ */
+export const groupRecordsBy = (
+  database: Database,
+  groupBy: string | undefined,
+) => {
+  const { records, fields } = database
+  const groupByField = groupBy ? fields.get(groupBy) : undefined
+
+  if (!groupBy || groupByField?.type !== RecordFieldType.ENUM || !groupByField.params) {
+    return [{
+      id: GROUP_NOT_SET,
+      title: '(not set)',
+      records,
+    }]
+  }
+
+  const recordGroups: {
+    [key: string]: DatabaseRecord[];
+  } = Object.fromEntries(groupByField.params.map(value => [
+    value,
+    [],
+  ]))
+  const notSetRecords: DatabaseRecord[] = []
+
+  records.forEach(record => {
+    const value = record[groupBy]
+
+    if (value === undefined) {
+      notSetRecords.push(record)
+    } else {
+      recordGroups[value].push(record)
+    }
+  })
+
+  return [
+    ...groupByField.params.map(value => ({
+      id: value,
+      title: value.replace(/_/g, ' '),
+      records: recordGroups[value],
+    })),
+    {
+      id: GROUP_NOT_SET,
+      title: '(not set)',
+      records: notSetRecords,
+    }
+  ]
+}

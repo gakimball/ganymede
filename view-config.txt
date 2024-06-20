@@ -1,0 +1,28 @@
+Filters:
+  # Works on any field
+  - Field set
+  - Field eq <value>
+  # Works on numbers, dates
+  - Field <gt|lt|gte|lte> <value>
+  # Inverts any condition
+  - Field not <cond>
+
+(?<field>[a-zA-Z][a-zA-Z0-9_]*)( (?<not>not))? (?<cond>set|eq|gt|lt|gte|lte) (?<value>\S*)( (?<bool>(and|or)))?
+
+%rec: View
+%allowed: Name Layout Sort Filter Group Fields
+%mandatory: Name Layout
+%type Layout enum Table Board
+
+Name: Board
+Layout: Board
+Sort: Finished desc Title asc
+Filter: Finished gte 2024-01-01 or Finished not set
+Group: Status Backlog Reading Read
+Fields: Title Tags Finished
+
+Name: The Stack
+Layout: Table
+Sort: Created desc
+Filter: Status eq Backlog
+Fields: Title Tags Created

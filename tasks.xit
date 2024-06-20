@@ -1,0 +1,26 @@
+Basics
+[x] Sort
+[x] Group
+[x] Fields
+
+Sorts
+[x] String
+[ ] Number
+[ ] Bool
+[ ] Date
+
+Filters
+[ ] set
+[ ] eq
+[ ] gt
+[ ] gte
+[ ] lt
+[ ] lte
+[ ] not
+[ ] and
+[ ] or
+
+Field rendering
+[x] String
+[x] Enum
+[ ] Bool

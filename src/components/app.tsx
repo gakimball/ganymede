@@ -11,6 +11,7 @@ import { ViewSelect } from './view-select'
 import { Board } from './board'
 import { ViewConfig } from '../types/view-config'
 import { FileBrowser } from './file-browser'
+import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants'
 
 const testRec = `
 %rec: State
@@ -39,6 +40,7 @@ export const App = () => {
   const [selectedView, setSelectedView] = useState<string | null>(null)
   const [files, setFiles] = useState<FileEntry[]>([])
 
+  const initializedRef = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const dirRef = useRef<string>('')
 
@@ -53,21 +55,34 @@ export const App = () => {
   //   setSelectedView(db.records[0].Name!)
   // }, [])
 
+  const loadDirectory = useCallback(async (directory: string) => {
+    dirRef.current = directory
+    localStorage.setItem(DIRECTORY_LOCALSTORAGE_KEY, directory)
+    const files = await readDir(directory)
+    setFiles(files)
+    const configFile = files.find(file => file.name === '_recdb.rec')
+    if (configFile) {
+      const configFileContents = await readTextFile(configFile.path)
+      setViewsDb(parseRecfile(configFileContents))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!initializedRef.current) {
+      initializedRef.current = true
+      const savedDir = localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY)
+      if (savedDir) loadDirectory(savedDir)
+    }
+  }, [loadDirectory])
+
   const handleSetDirectory = useCallback(async () => {
     const selected = await openDialog({
       directory: true,
     })
     if (typeof selected === 'string') {
-      dirRef.current = selected
-      const files = await readDir(selected)
-      setFiles(files)
-      const configFile = files.find(file => file.name === '_recdb.rec')
-      if (configFile) {
-        const configFileContents = await readTextFile(configFile.path)
-        setViewsDb(parseRecfile(configFileContents))
-      }
+      await loadDirectory(selected)
     }
-  }, [])
+  }, [loadDirectory])
 
   const handleSelectView = useCallback(async (file: FileEntry, view: ViewConfig) => {
     const fileContents = await readTextFile(file.path)

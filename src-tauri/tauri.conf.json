@@ -15,7 +15,7 @@
       "all": false,
       "fs": {
         "readFile": true,
-        "writeFile": true
+        "readDir": true
       },
       "dialog": {
         "open": true

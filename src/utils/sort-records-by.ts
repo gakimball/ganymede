@@ -35,7 +35,7 @@ export const sortRecordsBy = (
     return getSortComparator(fieldName, field, direction === 'desc')
   })
 
-  return database.records.toSorted((a, b) => {
+  return [...database.records].sort((a, b) => {
     let comp = 0
 
     for (const sort of sorts) {

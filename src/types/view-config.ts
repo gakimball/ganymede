@@ -6,6 +6,8 @@ export interface ViewConfig {
   Name: string;
   /** Layout type. */
   Layout: 'Table' | 'Board';
+  /** Filename, including extension. */
+  File: string;
   /**
    * Fields to sort by. A sort rule is a field name plus `asc` or `desc`:
    * ```txt

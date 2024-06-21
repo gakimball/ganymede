@@ -9,6 +9,6 @@
     "jsxImportSource": "preact",
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "bundler"
   }
 }

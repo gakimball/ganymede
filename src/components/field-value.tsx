@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseField, RecordFieldType } from '../types/database';
+import { parseFieldValue } from '../utils/parse-field-value';
 
 interface FieldValueProps {
   value: string | undefined;
@@ -19,6 +20,19 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
       <span className="badge text-bg-primary">
         {value}
       </span>
+    )
+  }
+
+  if (field.type === RecordFieldType.BOOL) {
+    return (
+      <div className="form-check">
+        <input
+          className="form-check-input"
+          type="checkbox"
+          checked={parseFieldValue(value, field) === true}
+          disabled
+        />
+      </div>
     )
   }
 

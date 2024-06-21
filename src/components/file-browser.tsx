@@ -1,6 +1,6 @@
 import { Fragment, FunctionComponent } from 'preact';
 import { ViewConfig } from '../types/view-config';
-import { FileEntry } from '@tauri-apps/api/fs';
+import type { FileEntry } from '@tauri-apps/api/fs';
 
 interface FileBrowserProps {
   files: FileEntry[];
@@ -17,7 +17,7 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
 }) => {
   const recFiles = files
     .filter(file => file.name?.endsWith('.rec'))
-    .sort((a, b) => b.name!.localeCompare(a.name!))
+    .sort((a, b) => a.name!.localeCompare(b.name!))
 
   return (
     <div>
@@ -44,10 +44,10 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
                 <button
                   key={view.Name}
                   type="button"
-                  className="list-group-item list-group-item-action"
+                  className="list-group-item list-group-item-action ps-4"
                   onClick={() => onSelectView(file, view)}
                 >
-                  {view.Name} (${view.Layout})
+                  {view.Name}
                 </button>
               ))}
             </Fragment>

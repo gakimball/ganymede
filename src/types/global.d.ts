@@ -5,3 +5,9 @@ declare module '*.module.css' {
 
   export default styles
 }
+
+declare module 'bind-methods' {
+  const bindMethods: (obj: unknown) => void;
+
+  export default bindMethods
+}

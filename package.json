@@ -16,7 +16,9 @@
     "tsx": "^4.15.6"
   },
   "dependencies": {
+    "@preact/signals": "^1.2.3",
     "@tauri-apps/api": "^1.5.6",
+    "bind-methods": "^2.0.0",
     "date-fns": "^3.6.0",
     "preact": "^10.22.0"
   },

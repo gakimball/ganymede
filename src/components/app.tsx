@@ -1,48 +1,36 @@
-import { open as openDialog } from '@tauri-apps/api/dialog'
-import { FileEntry, readDir, readTextFile } from '@tauri-apps/api/fs'
-
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
-import { Database } from '../types/database'
+import { useCallback, useEffect, useRef } from 'preact/hooks'
 import { Table } from './table'
-import { parseRecfile } from '../utils/parse-recfile'
 import { DropHandler } from './drop-handler'
 import { Container } from './container'
-import { ViewSelect } from './view-select'
 import { Board } from './board'
-import { ViewConfig } from '../types/view-config'
 import { FileBrowser } from './file-browser'
-import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants'
+import { createState } from '../state/state'
 
-const testRec = `
-%rec: State
-`
+// const testRec = `
+// %rec: State
+// `
 
-const defaultViewConfig = `
-%rec: View
-%allowed: Name Layout Sort Filter Group Fields
-%mandatory: Name Layout
-%type Layout enum Table Board
+// const defaultViewConfig = `
+// %rec: View
+// %allowed: Name Layout Sort Filter Group Fields
+// %mandatory: Name Layout
+// %type Layout enum Table Board
 
-Name: Board
-Layout: Board
-Group: Category
-`.trim()
+// Name: Board
+// Layout: Board
+// Group: Category
+// `.trim()
 
 const views = {
   Table,
   Board,
 }
 
-export const App = () => {
-  const [fileName, setFileName] = useState('(no file)')
-  const [database, setDatabase] = useState(() => parseRecfile(testRec))
-  const [viewsDb, setViewsDb] = useState(() => parseRecfile(defaultViewConfig))
-  const [selectedView, setSelectedView] = useState<string | null>(null)
-  const [files, setFiles] = useState<FileEntry[]>([])
+const initialState = createState()
 
-  const initializedRef = useRef(false)
+export const App = () => {
+  const { current: state } = useRef(initialState)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const dirRef = useRef<string>('')
 
   const handleFile = useCallback(async (file: File) => {
     // setFileName(file.name)
@@ -55,45 +43,13 @@ export const App = () => {
   //   setSelectedView(db.records[0].Name!)
   // }, [])
 
-  const loadDirectory = useCallback(async (directory: string) => {
-    dirRef.current = directory
-    localStorage.setItem(DIRECTORY_LOCALSTORAGE_KEY, directory)
-    const files = await readDir(directory)
-    setFiles(files)
-    const configFile = files.find(file => file.name === '_recdb.rec')
-    if (configFile) {
-      const configFileContents = await readTextFile(configFile.path)
-      setViewsDb(parseRecfile(configFileContents))
-    }
-  }, [])
-
   useEffect(() => {
-    if (!initializedRef.current) {
-      initializedRef.current = true
-      const savedDir = localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY)
-      if (savedDir) loadDirectory(savedDir)
-    }
-  }, [loadDirectory])
+    state.initialize()
+  }, [state])
 
-  const handleSetDirectory = useCallback(async () => {
-    const selected = await openDialog({
-      directory: true,
-    })
-    if (typeof selected === 'string') {
-      await loadDirectory(selected)
-    }
-  }, [loadDirectory])
-
-  const handleSelectView = useCallback(async (file: FileEntry, view: ViewConfig) => {
-    const fileContents = await readTextFile(file.path)
-    setDatabase(parseRecfile(fileContents))
-    setSelectedView(view.Name)
-  }, [])
-
-  const allViews = (viewsDb.records as unknown as ViewConfig[])
-  const currentView = allViews.find(record => record.Name === selectedView)
-  const CurrentViewComponent = currentView?.Layout
-    ? views[currentView.Layout]
+  const currentView = state.currentView.value
+  const CurrentViewComponent = currentView?.view.Layout
+    ? views[currentView?.view.Layout]
     : undefined
 
   return (
@@ -101,10 +57,10 @@ export const App = () => {
       <div class="d-flex flex-row">
         <div style={{ width: '300px', paddingRight: '16px' }}>
           <FileBrowser
-            files={files}
-            views={allViews}
-            onSetDirectory={handleSetDirectory}
-            onSelectView={handleSelectView}
+            files={state.files.value}
+            views={state.viewsList.value}
+            onSetDirectory={state.openDirectoryPicker}
+            onSelectView={state.loadView}
           />
           {/* <textarea
             ref={textareaRef}
@@ -123,7 +79,7 @@ export const App = () => {
         </div>
         <div style={{ flex: '1', overflow: 'hidden' }}>
           <p className="lead">
-            {fileName}
+            {state.currentView.value?.file}
           </p>
           <DropHandler onDroppedFile={handleFile}>
             {/* <ViewSelect
@@ -132,7 +88,10 @@ export const App = () => {
               onChange={setSelectedView}
             /> */}
             {CurrentViewComponent && currentView && (
-              <CurrentViewComponent {...database} config={currentView} />
+              <CurrentViewComponent
+                {...currentView.database}
+                config={currentView.view}
+              />
             )}
           </DropHandler>
         </div>

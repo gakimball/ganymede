@@ -2,6 +2,8 @@ Basics
 [x] Sort
 [x] Group
 [x] Fields
+[ ] Formulae
+[ ] Sums
 
 Sorts
 [x] String
@@ -24,3 +26,7 @@ Field rendering
 [x] String
 [x] Enum
 [ ] Bool
+
+Rendering
+[ ] Money
+[ ] Percentage

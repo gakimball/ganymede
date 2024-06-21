@@ -11,7 +11,9 @@ export const getShownFields = (database: Database, config: ViewConfig) => {
   }
 
   const shownFields = config.Fields.split(' ')
-  const fields = [...database.fields.entries()].filter(([key]) => shownFields.includes(key))
+  const fields = [...database.fields.entries()]
+    .filter(([key]) => shownFields.includes(key))
+    .sort(([keyA], [keyB]) => shownFields.indexOf(keyA) - shownFields.indexOf(keyB))
 
   return new Map(fields)
 }

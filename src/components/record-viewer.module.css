@@ -1,0 +1,10 @@
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background-color: var(--bs-body-bg);
+  padding: 16px;
+  overflow: auto;
+}

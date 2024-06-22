@@ -26,6 +26,11 @@ export const parseTypeDef = (value: string) => {
         field,
         type: RecordFieldType.BOOL,
       }
+    case 'Formula':
+      return {
+        field,
+        type: RecordFieldType.FORMULA,
+      }
     case 'line':
     case 'size':
     case 'regexp':

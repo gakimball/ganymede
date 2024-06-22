@@ -1,6 +1,9 @@
+import Formula from 'fparser'
 import { Database, DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database'
+import { createEmptyRecord } from './create-empty-record'
 import { emplaceMap } from './emplace-map'
 import { parseTypeDef } from './parse-typedef'
+import { createFormula } from './create-formula'
 
 const FIELD_REGEX = /^(?<name>[a-zA-Z%][a-zA-Z0-9_]*):\s(?<value>.+)/
 
@@ -31,8 +34,17 @@ export const parseRecfile = (contents: string): Database => {
     line = line.trim()
 
     if (line === '') {
-      currentRecord = {}
+      currentRecord = createEmptyRecord(fields)
       return
+    }
+
+    if (line.startsWith('#formula')) {
+      const [, fieldName, ...rest] = line.split(' ')
+
+      upsertField(fields, fieldName, {
+        type: RecordFieldType.FORMULA,
+        formula: createFormula(rest.join(' ')),
+      })
     }
 
     if (line.startsWith('#')) {

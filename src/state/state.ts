@@ -3,14 +3,14 @@ import { createEmptyDatabase } from '../utils/create-empty-database'
 import { readDir, readTextFile, type FileEntry } from '@tauri-apps/api/fs'
 import bindMethods from 'bind-methods'
 import { ViewConfig } from '../types/view-config';
-import { Database } from '../types/database';
+import { Database, DatabaseRecord } from '../types/database';
 import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants';
 import { parseRecfile } from '../utils/parse-recfile';
 import { open } from '@tauri-apps/api/dialog';
 
 interface CurrentView {
   file: FileEntry;
-  view: ViewConfig;
+  view: ViewConfig | null;
   database: Database;
 }
 
@@ -20,13 +20,21 @@ export const createState = () => {
     files: signal<FileEntry[]>([]),
     views: signal(createEmptyDatabase()),
     currentView: signal<CurrentView | null>(null),
+    currentRecord: signal<DatabaseRecord | null>(null),
   }
+
+  const viewsList = computed((): ViewConfig[] => {
+    return state.views.value.records as unknown as ViewConfig[]
+  })
 
   const store = {
     ...state,
 
-    viewsList: computed(() => {
-      return state.views.value.records as unknown as ViewConfig[]
+    viewsList,
+
+    viewsForCurrentFile: computed((): ViewConfig[] => {
+      const file = state.currentView.value?.file
+      return viewsList.value.filter(view => view.File === file?.name)
     }),
 
     setFiles(files: FileEntry[]): void {
@@ -61,13 +69,24 @@ export const createState = () => {
       }
     },
 
-    async loadView(file: FileEntry, view: ViewConfig): Promise<void> {
+    async openFile(file: FileEntry): Promise<void> {
       const fileContents = await readTextFile(file.path)
 
       this.currentView.value = {
         file,
-        view,
+        view: viewsList.value.find(view => view.File === file?.name) ?? null,
         database: parseRecfile(fileContents)
+      }
+    },
+
+    openView(view: ViewConfig): void {
+      const currentView = this.currentView.value
+
+      if (currentView) {
+        this.currentView.value = {
+          ...currentView,
+          view,
+        }
       }
     },
 
@@ -76,6 +95,25 @@ export const createState = () => {
         this.loadDirectory(this.directory)
       }
     },
+
+    openRecord(record: DatabaseRecord): void {
+      this.currentRecord.value = record
+    },
+
+    closeRecord(): void {
+      this.currentRecord.value = null
+    },
+
+    updateRecord(original: DatabaseRecord, update: DatabaseRecord): void {
+      const records = this.currentView.value?.database.records
+      const spliceIndex = records?.indexOf(original) ?? -1
+
+      if (spliceIndex > -1) {
+        records?.splice(spliceIndex, 1, update)
+      }
+
+      this.closeRecord()
+    }
   }
 
   bindMethods(store)

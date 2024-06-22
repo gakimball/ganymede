@@ -1,9 +1,10 @@
 import { FunctionComponent } from 'preact';
+import { ViewConfig } from '../types/view-config';
 
 interface ViewSelectProps {
-  current: string | null;
-  onChange: (value: string) => void;
-  views: string[];
+  current: ViewConfig | null;
+  onChange: (value: ViewConfig) => void;
+  views: ViewConfig[];
 }
 
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
@@ -20,7 +21,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
             onClick={() => onChange(view)}
             href="#"
           >
-            {view}
+            {view.Name}
           </a>
         </li>
       ))}

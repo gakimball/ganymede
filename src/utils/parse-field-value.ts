@@ -7,7 +7,11 @@ const TRUE_REGEX = /(true|yes|1)/
  */
 export const parseFieldValue = (value: string | undefined, field: DatabaseField) => {
   switch (field.type) {
+    case RecordFieldType.FORMULA:
+      return value
     case RecordFieldType.INT:
+    case RecordFieldType.RANGE:
+    case RecordFieldType.REAL:
       return Number.parseFloat(value ?? '0')
     case RecordFieldType.BOOL:
       return TRUE_REGEX.test(value ?? 'false')

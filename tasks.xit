@@ -2,8 +2,8 @@ Basics
 [x] Sort
 [x] Group
 [x] Fields
-[ ] Formulae
-[ ] Sums
+[x] Formulae
+[x] Sums
 
 Sorts
 [x] String
@@ -25,8 +25,8 @@ Filters
 Field rendering
 [x] String
 [x] Enum
-[ ] Bool
+[x] Bool
 
 Rendering
-[ ] Money
-[ ] Percentage
+[x] Money
+[x] Percentage

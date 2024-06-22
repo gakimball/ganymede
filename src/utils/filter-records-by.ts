@@ -1,4 +1,5 @@
-import { Database } from '../types/database'
+import { Database, DatabaseRecord } from '../types/database'
+import { ViewConfig } from '../types/view-config';
 import { testFilter } from './test-filter';
 
 const FILTER_REGEX = /(?<field>[a-zA-Z][a-zA-Z0-9_]*)( (?<not>not))? (?<cond>set|eq|gt|lt|gte|lte)( (?<value>\S*))?( (?<bool>(and|or)))?/g
@@ -16,8 +17,10 @@ interface FilterTest {
  */
 export const filterRecordsBy = (
   database: Database,
-  filterBy: string | undefined,
-) => {
+  view: ViewConfig,
+): DatabaseRecord[] => {
+  const filterBy = view.Filter
+
   if (!filterBy) {
     return database.records
   }

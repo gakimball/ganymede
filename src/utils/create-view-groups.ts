@@ -11,11 +11,9 @@ export const createViewGroups = (
   database: Database,
   config: ViewConfig,
 ) => {
-  return groupRecordsBy({
-    records: sortRecordsBy({
-      records: filterRecordsBy(database, config.Filter),
-      fields: database.fields,
-    }, config.Sort),
-    fields: database.fields,
-  }, config.Group)
+  const { fields } = database
+  let records = filterRecordsBy(database, config)
+  records = sortRecordsBy({ records, fields }, config)
+
+  return groupRecordsBy({ records, fields },  config)
 }

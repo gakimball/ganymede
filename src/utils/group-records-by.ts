@@ -1,4 +1,5 @@
 import { Database, DatabaseRecord, RecordFieldType } from '../types/database';
+import { ViewConfig } from '../types/view-config';
 
 export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
 
@@ -7,9 +8,10 @@ export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
  */
 export const groupRecordsBy = (
   database: Database,
-  groupBy: string | undefined,
+  view: ViewConfig,
 ) => {
   const { records, fields } = database
+  const groupBy = view.Group
   const groupByField = groupBy ? fields.get(groupBy) : undefined
 
   if (!groupBy || groupByField?.type !== RecordFieldType.ENUM || !groupByField.params) {

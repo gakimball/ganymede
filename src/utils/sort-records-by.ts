@@ -1,24 +1,17 @@
-import { Database } from '../types/database';
+import { Database, DatabaseRecord } from '../types/database';
+import { ViewConfig } from '../types/view-config';
 import { chunkArray } from './chunk-array';
 import { getSortComparator } from './get-sort-comparator';
-
-const sortFunctions = {
-  string: (a: string, b: string) => a.localeCompare(b),
-  number: (a: number, b: number) => (a - b),
-  bool: (a: boolean, b: boolean) => {
-    if (a === b) return 0
-    if (a) return 1
-    return -1
-  }
-}
 
 /**
  * Apply a view `Sort` rule to a database.
  */
 export const sortRecordsBy = (
   database: Database,
-  sort: string | undefined,
-) => {
+  view: ViewConfig,
+): DatabaseRecord[] => {
+  const sort = view.Sort
+
   if (!sort) {
     return database.records
   }
@@ -26,7 +19,6 @@ export const sortRecordsBy = (
   const sorts = chunkArray(sort.split(' '), 2).map(criteria => {
     const [fieldName, direction] = criteria
     const field = database.fields.get(fieldName)
-    const descending = direction === 'desc'
 
     if (!field) {
       return () => 0

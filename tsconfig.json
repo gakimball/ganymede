@@ -3,6 +3,7 @@
     "target": "es2022",
     "lib": [
       "dom",
+      "DOM.Iterable",
       "es2023"
     ],
     "jsx": "preserve",

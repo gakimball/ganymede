@@ -1,19 +1,25 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseField, RecordFieldType } from '../types/database';
 import { parseFieldValue } from '../utils/parse-field-value';
+import { RenderRule } from '../utils/get-render-rules';
+import { applyRenderRule } from '../utils/apply-render-rule';
 
 interface FieldValueProps {
   value: string | undefined;
   field: DatabaseField;
+  render?: RenderRule;
 }
 
 export const FieldValue: FunctionComponent<FieldValueProps> = ({
   value,
   field,
+  render,
 }) => {
   if (value === undefined) {
     return null
   }
+
+  const parsedValue = parseFieldValue(value, field)
 
   if (field.type === RecordFieldType.ENUM) {
     return (
@@ -29,7 +35,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
         <input
           className="form-check-input"
           type="checkbox"
-          checked={parseFieldValue(value, field) === true}
+          checked={parsedValue === true}
           disabled
         />
       </div>
@@ -38,13 +44,17 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
 
   if (field.type === RecordFieldType.STRING && value.match(/^https?:\/\//)) {
     return (
-      <p>
+      <span>
         <a href={value}>
           {(new URL(value)).hostname}
         </a>
-      </p>
+      </span>
     )
   }
 
-  return <p>{value}</p>
+  if (render && typeof parsedValue === 'number') {
+    return <span>{applyRenderRule(parsedValue, render)}</span>
+  }
+
+  return <span>{value}</span>
 }

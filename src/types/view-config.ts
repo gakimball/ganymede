@@ -49,4 +49,26 @@ export interface ViewConfig {
    *   - For boards, the fields display top-to-bottom
    */
   Fields?: string;
+  /**
+   * Per-field formatting rules with the format:
+   * ```txt
+   * <field> <format> <field> <format> ...
+   * ```
+   * As a visual aid, you can add semicolons to separate each field:
+   * ```txt
+   * Amount money; Percent percent;
+   * ```
+   * Supported formats:
+   *   - `money`: dollar amount
+   *   - `percent`: a value from 0–1 formatted as a %, up to 2 decimal places
+   */
+  Render?: string;
+  /**
+   * Add a sum to the bottom of a column in the Table layout. Only works with numeric and
+   * formula fields.
+   * ```txt
+   * Sum: Amount Percent
+   * ```
+   */
+  Sum?: string;
 }

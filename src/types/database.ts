@@ -1,3 +1,5 @@
+import type Formula from 'fparser'
+
 export interface Database {
   fields: Map<string, DatabaseField>;
   records: DatabaseRecord[];
@@ -9,6 +11,7 @@ export type DatabaseField = {
   unique?: true;
   auto?: true;
   params?: string[];
+  formula?: Formula;
 };
 
 export type DatabaseRecord = Record<string, RecordField | undefined>
@@ -23,4 +26,5 @@ export enum RecordFieldType {
   ENUM = 'ENUM',
   BOOL = 'BOOL',
   DATE = 'DATE',
+  FORMULA = 'FORMULA',
 }

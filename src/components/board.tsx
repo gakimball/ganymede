@@ -5,6 +5,7 @@ import { createViewGroups } from '../utils/create-view-groups';
 import { getShownFields } from '../utils/get-shown-fields';
 import { FieldValue } from './field-value';
 import s from './board.module.css'
+import { getRenderRules } from '../utils/get-render-rules';
 
 export const Board: FunctionComponent<ViewComponentProps> = ({
   config,
@@ -15,6 +16,7 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
     return createViewGroups({ fields, records }, config)
   }, [fields, records, config])
   const shownFields = getShownFields({ fields, records }, config)
+  const renderRules = getRenderRules(config)
 
   return (
     <div className={s.container}>
@@ -29,6 +31,7 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
                     key={fieldName}
                     value={record[fieldName]}
                     field={field}
+                    render={renderRules[fieldName]}
                   />
                 ))}
               </div>

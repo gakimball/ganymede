@@ -6,53 +6,38 @@ interface FileBrowserProps {
   files: FileEntry[];
   views: ViewConfig[];
   onSetDirectory: () => void,
-  onSelectView: (file: FileEntry, view: ViewConfig) => void;
+  onSelectFile: (file: FileEntry) => void;
 }
 
 export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
   files,
   views,
   onSetDirectory,
-  onSelectView,
+  onSelectFile,
 }) => {
   const recFiles = files
     .filter(file => file.name?.endsWith('.rec'))
     .sort((a, b) => a.name!.localeCompare(b.name!))
 
   return (
-    <div>
+    <div className="d-grid gap-2">
       <button
-        className="btn btn-primary"
+        className="btn btn-outline-secondary btn-sm"
         type="button"
         onClick={onSetDirectory}
       >
         Set directory
       </button>
       <div className="list-group">
-        {recFiles.map(file => {
-          const fileViews = views.filter(view => view.File === file.name)
-
-          return (
-            <Fragment key={file.name}>
-              <button
-                className="list-group-item list-group-item-action disabled"
-                type="button"
-              >
-                {file.name}
-              </button>
-              {fileViews.map(view => (
-                <button
-                  key={view.Name}
-                  type="button"
-                  className="list-group-item list-group-item-action ps-4"
-                  onClick={() => onSelectView(file, view)}
-                >
-                  {view.Name}
-                </button>
-              ))}
-            </Fragment>
-          )
-        })}
+        {recFiles.map(file => (
+          <button
+            className="list-group-item list-group-item-action"
+            type="button"
+            onClick={() => onSelectFile(file)}
+          >
+            {file.name}
+          </button>
+        ))}
       </div>
     </div>
   )

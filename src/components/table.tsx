@@ -1,19 +1,25 @@
-import { FunctionComponent } from 'preact';
+import { Fragment, FunctionComponent } from 'preact';
 import { FieldValue } from './field-value';
 import { ViewComponentProps } from '../types/view-component-props';
 import { useMemo } from 'preact/hooks';
 import { createViewGroups } from '../utils/create-view-groups';
 import { getShownFields } from '../utils/get-shown-fields';
+import s from './table.module.css'
+import { getRenderRules } from '../utils/get-render-rules';
+import { getSums } from '../utils/get-sums';
 
 export const Table: FunctionComponent<ViewComponentProps> = ({
   fields,
   records,
   config,
+  onSelectRecord,
 }) => {
   const tables = useMemo(() => {
     return createViewGroups({ records, fields }, config)
   }, [records, fields, config])
   const shownFields = getShownFields({ fields, records }, config)
+  const renderRules = getRenderRules(config)
+  const sums = getSums(records, fields, config)
 
   return (
     <>
@@ -24,7 +30,7 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
               {table.title}
             </span>
           )}
-          <table className="table">
+          <table className="table table-hover">
             <thead>
               <tr>
                 {[...shownFields.keys()].map((field) => (
@@ -36,15 +42,28 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
             </thead>
             <tbody>
               {table.records.map(record => (
-                <tr>
-                  {[...shownFields.entries()].map(([name, field]) => (
-                    <td key={name}>
-                      <FieldValue value={record[name]} field={field} />
+                <tr className={s.row} onClick={() => onSelectRecord(record)}>
+                  {[...shownFields.entries()].map(([fieldName, field]) => (
+                    <td key={fieldName}>
+                      <FieldValue
+                        value={record[fieldName]}
+                        field={field}
+                        render={renderRules[fieldName]}
+                      />
                     </td>
                   ))}
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                {[...shownFields.entries()].map(([fieldName, field]) => (
+                  <td key={fieldName}>
+                    {sums[fieldName]}
+                  </td>
+                ))}
+              </tr>
+            </tfoot>
           </table>
         </>
       ))}

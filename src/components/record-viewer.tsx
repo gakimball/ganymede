@@ -31,20 +31,21 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     ...shownFields.entries(),
     ...restFields,
   ]
-  const [showFormula, setShowFormula] = useState(false)
 
   const handleSubmit = useCallback((event: SubmitEvent) => {
     const formData = new FormData(event.submitter as HTMLFormElement)
     const update = Object.fromEntries(
-      [...fields.entries()].map(([fieldName, field]) => {
-        const value = formData.get(fieldName)
+      [...fields.entries()]
+        .filter(([, field]) => field.type !== RecordFieldType.FORMULA)
+        .map(([fieldName, field]) => {
+          const value = formData.get(fieldName)
 
-        if (field.type === RecordFieldType.BOOL) {
-          return [fieldName, value === 'on' ? 'true' : 'false']
-        }
+          if (field.type === RecordFieldType.BOOL) {
+            return [fieldName, value === 'on' ? 'true' : 'false']
+          }
 
-        return [fieldName, value ? String(value) : undefined]
-      })
+          return [fieldName, value ? String(value) : undefined]
+        })
     )
 
     onSave(record, update)

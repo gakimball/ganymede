@@ -38,15 +38,6 @@ export const parseRecfile = (contents: string): Database => {
       return
     }
 
-    if (line.startsWith('#formula')) {
-      const [, fieldName, ...rest] = line.split(' ')
-
-      upsertField(fields, fieldName, {
-        type: RecordFieldType.FORMULA,
-        formula: createFormula(rest.join(' ')),
-      })
-    }
-
     if (line.startsWith('#')) {
       return
     }
@@ -64,6 +55,15 @@ export const parseRecfile = (contents: string): Database => {
         case '%type': {
           const { field, ...props } = parseTypeDef(value)
           upsertField(fields, field, props)
+          break
+        }
+        case '%formula': {
+          const [, fieldName, ...rest] = line.split(' ')
+          upsertField(fields, fieldName, {
+            type: RecordFieldType.FORMULA,
+            formula: createFormula(rest.join(' ')),
+          })
+          break
         }
       }
       return

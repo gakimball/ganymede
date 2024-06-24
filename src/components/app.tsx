@@ -4,7 +4,7 @@ import { DropHandler } from './drop-handler'
 import { Container } from './container'
 import { Board } from './board'
 import { FileBrowser } from './file-browser'
-import { createState } from '../state/state'
+import { State } from '../state/state'
 import { RecordViewer } from './record-viewer'
 import { ViewSelect } from './view-select'
 
@@ -28,7 +28,7 @@ const views = {
   Board,
 }
 
-const initialState = createState()
+const initialState = new State()
 
 export const App = () => {
   const { current: state } = useRef(initialState)

@@ -4,12 +4,14 @@
   "description": "",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel -p 3000",
-    "dev": "npm run start",
-    "build": "parcel build --detailed-report"
+    "start": "tauri dev",
+    "dev:parcel": "parcel -p 3000",
+    "predev:parcel": "npm run reset:parcel",
+    "build:parcel": "parcel build --detailed-report",
+    "reset:parcel": "rm -rf .parcel-cache"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.14",
     "parcel": "^2.12.0",
@@ -18,7 +20,7 @@
   "dependencies": {
     "@preact/signals": "^1.2.3",
     "@tauri-apps/api": "^1.5.6",
-    "bind-methods": "^2.0.0",
+    "auto-bind": "^5.0.1",
     "date-fns": "^3.6.0",
     "fparser": "^3.0.1",
     "preact": "^10.22.0"

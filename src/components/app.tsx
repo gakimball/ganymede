@@ -7,6 +7,7 @@ import { FileBrowser } from './file-browser'
 import { State } from '../state/state'
 import { RecordViewer } from './record-viewer'
 import { ViewSelect } from './view-select'
+import { TextViewer } from './text-viewer'
 
 const views = {
   Table,
@@ -35,7 +36,7 @@ export const App = () => {
   }, [state])
 
   const currentView = state.currentView.value
-  const CurrentViewComponent = currentView?.view?.Layout
+  const CurrentViewComponent = (currentView?.type === 'database' && currentView.view?.Layout)
     ? views[currentView?.view.Layout]
     : undefined
 
@@ -46,6 +47,7 @@ export const App = () => {
           <FileBrowser
             files={state.files.value}
             views={state.viewsList.value}
+            selectedFile={state.currentView.value?.file}
             onSetDirectory={state.openDirectoryPicker}
             onSelectFile={state.openFile}
           />
@@ -69,7 +71,7 @@ export const App = () => {
             {state.currentView.value?.file}
           </p>
           <DropHandler onDroppedFile={handleFile}>
-            {currentView && (
+            {currentView?.type === 'database' && (
               <>
                 <ViewSelect
                   views={state.viewsForCurrentFile.value}
@@ -83,16 +85,19 @@ export const App = () => {
                     onSelectRecord={state.openRecord}
                   />
                 )}
+                {currentView.view && state.currentRecord.value && (
+                  <RecordViewer
+                    fields={currentView.database.fields}
+                    record={state.currentRecord.value}
+                    viewConfig={currentView.view}
+                    onSave={state.updateRecord}
+                    onClose={state.closeRecord}
+                  />
+                )}
               </>
             )}
-            {currentView?.view && state.currentRecord.value && (
-              <RecordViewer
-                fields={currentView.database.fields}
-                record={state.currentRecord.value}
-                viewConfig={currentView.view}
-                onSave={state.updateRecord}
-                onClose={state.closeRecord}
-              />
+            {currentView?.type === 'text' && (
+              <TextViewer contents={currentView.contents} />
             )}
           </DropHandler>
         </div>

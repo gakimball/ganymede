@@ -5,18 +5,18 @@ import type { FileEntry } from '@tauri-apps/api/fs';
 interface FileBrowserProps {
   files: FileEntry[];
   views: ViewConfig[];
+  selectedFile?: FileEntry;
   onSetDirectory: () => void,
   onSelectFile: (file: FileEntry) => void;
 }
 
 export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
   files,
-  views,
+  selectedFile,
   onSetDirectory,
   onSelectFile,
 }) => {
   const recFiles = files
-    .filter(file => file.name?.endsWith('.rec'))
     .sort((a, b) => a.name!.localeCompare(b.name!))
 
   return (
@@ -29,15 +29,19 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
         Set directory
       </button>
       <div className="list-group">
-        {recFiles.map(file => (
-          <button
-            className="list-group-item list-group-item-action"
-            type="button"
-            onClick={() => onSelectFile(file)}
-          >
-            {file.name}
-          </button>
-        ))}
+        {recFiles.map(file => {
+          const active = file === selectedFile
+
+          return (
+            <button
+              className={`list-group-item list-group-item-action ${active ? 'active' : ''}`}
+              type="button"
+              onClick={() => onSelectFile(file)}
+            >
+              {file.name}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

@@ -8,10 +8,19 @@ import { parseRecfile } from '../utils/parse-recfile';
 import { open } from '@tauri-apps/api/dialog';
 import autoBind from 'auto-bind';
 
-interface CurrentView {
+type CurrentView = DatabaseView | TextView
+
+interface DatabaseView {
+  type: 'database';
   file: FileEntry;
   view: ViewConfig | null;
   database: Database;
+}
+
+interface TextView {
+  type: 'text',
+  file: FileEntry;
+  contents: string;
 }
 
 export class State {
@@ -70,17 +79,26 @@ export class State {
   async openFile(file: FileEntry): Promise<void> {
     const fileContents = await readTextFile(file.path)
 
-    this.currentView.value = {
-      file,
-      view: this.viewsList.value.find(view => view.File === file?.name) ?? null,
-      database: parseRecfile(fileContents)
+    if (file.path.endsWith('.rec')) {
+      this.currentView.value = {
+        type: 'database',
+        file,
+        view: this.viewsList.value.find(view => view.File === file?.name) ?? null,
+        database: parseRecfile(fileContents)
+      }
+    } else {
+      this.currentView.value = {
+        type: 'text',
+        file,
+        contents: fileContents,
+      }
     }
   }
 
   openView(view: ViewConfig): void {
     const currentView = this.currentView.value
 
-    if (currentView) {
+    if (currentView?.type === 'database') {
       this.currentView.value = {
         ...currentView,
         view,

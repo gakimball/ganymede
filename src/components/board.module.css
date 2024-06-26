@@ -8,3 +8,7 @@
 .column {
   width: 400px;
 }
+
+.card {
+  cursor: pointer;
+}

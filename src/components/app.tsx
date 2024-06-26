@@ -8,21 +8,6 @@ import { State } from '../state/state'
 import { RecordViewer } from './record-viewer'
 import { ViewSelect } from './view-select'
 
-// const testRec = `
-// %rec: State
-// `
-
-// const defaultViewConfig = `
-// %rec: View
-// %allowed: Name Layout Sort Filter Group Fields
-// %mandatory: Name Layout
-// %type Layout enum Table Board
-
-// Name: Board
-// Layout: Board
-// Group: Category
-// `.trim()
-
 const views = {
   Table,
   Board,

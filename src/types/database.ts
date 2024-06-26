@@ -27,4 +27,5 @@ export enum RecordFieldType {
   BOOL = 'BOOL',
   DATE = 'DATE',
   FORMULA = 'FORMULA',
+  BODY = 'BODY',
 }

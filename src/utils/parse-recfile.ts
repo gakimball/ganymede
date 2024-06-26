@@ -1,11 +1,10 @@
-import Formula from 'fparser'
 import { Database, DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database'
 import { createEmptyRecord } from './create-empty-record'
 import { emplaceMap } from './emplace-map'
 import { parseTypeDef } from './parse-typedef'
 import { createFormula } from './create-formula'
 
-const FIELD_REGEX = /^(?<name>[a-zA-Z%][a-zA-Z0-9_]*):\s(?<value>.+)/
+const FIELD_REGEX = /^(?<name>[a-zA-Z%][a-zA-Z0-9_]*):(?<valueExists>\s(?<value>.+))?/
 
 const upsertField = (
   map: Map<string, DatabaseField>,
@@ -29,6 +28,7 @@ export const parseRecfile = (contents: string): Database => {
   const fields = new Map<string, DatabaseField>()
   const records = new Set<DatabaseRecord>()
   let currentRecord: DatabaseRecord = {}
+  let multilineParse: { name: string; value: string } | undefined
 
   contents.split('\n').forEach(line => {
     line = line.trim()
@@ -36,6 +36,15 @@ export const parseRecfile = (contents: string): Database => {
     if (line === '') {
       currentRecord = createEmptyRecord(fields)
       return
+    }
+
+    if (multilineParse !== undefined) {
+      if (line.startsWith('+')) {
+        multilineParse.value += line.slice(2) + '\n'
+      } else {
+        currentRecord[multilineParse.name] = multilineParse.value.slice(0, -1)
+        multilineParse = undefined
+      }
     }
 
     if (line.startsWith('#')) {
@@ -48,7 +57,7 @@ export const parseRecfile = (contents: string): Database => {
       return
     }
 
-    const { name, value } = res.groups
+    const { name, value, valueExists } = res.groups
 
     if (name.startsWith('%')) {
       switch (name) {
@@ -65,6 +74,20 @@ export const parseRecfile = (contents: string): Database => {
           })
           break
         }
+        case '%body': {
+          const [, fieldName] = line.split(' ')
+          upsertField(fields, fieldName, {
+            type: RecordFieldType.BODY,
+          })
+        }
+      }
+      return
+    }
+
+    if (!valueExists) {
+      multilineParse = {
+        name,
+        value: '',
       }
       return
     }

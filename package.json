@@ -7,7 +7,9 @@
     "start": "tauri dev",
     "dev:parcel": "parcel -p 3000",
     "predev:parcel": "npm run reset:parcel",
+    "build": "tauri build",
     "build:parcel": "parcel build --detailed-report",
+    "prebuild:parcel": "npm run reset:parcel",
     "reset:parcel": "rm -rf .parcel-cache"
   },
   "author": "",

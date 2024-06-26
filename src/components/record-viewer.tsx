@@ -75,6 +75,8 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
         return <input className="form-check-input ms-3" name={fieldName} type="checkbox" defaultChecked={parseFieldValue(record[fieldName], field) === true} />
       case RecordFieldType.FORMULA:
         return <FormulaField value={record[fieldName]} field={field} />
+      case RecordFieldType.BODY:
+        return <textarea className="form-control" rows={5} defaultValue={record[fieldName]} />
     }
   }
 

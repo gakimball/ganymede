@@ -15,7 +15,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
   field,
   render,
 }) => {
-  if (value === undefined) {
+  if (value === undefined || field.type === RecordFieldType.BODY) {
     return null
   }
 

@@ -102,7 +102,10 @@ export const App = () => {
               </>
             )}
             {currentView?.type === 'text' && (
-              <TextViewer contents={currentView.contents} />
+              <TextViewer
+                file={currentView.file}
+                contents={currentView.contents}
+              />
             )}
           </DropHandler>
         </div>

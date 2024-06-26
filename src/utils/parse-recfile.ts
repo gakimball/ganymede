@@ -33,18 +33,20 @@ export const parseRecfile = (contents: string): Database => {
   contents.split('\n').forEach(line => {
     line = line.trim()
 
-    if (line === '') {
-      currentRecord = createEmptyRecord(fields)
-      return
-    }
-
     if (multilineParse !== undefined) {
       if (line.startsWith('+')) {
         multilineParse.value += line.slice(2) + '\n'
+        return
       } else {
         currentRecord[multilineParse.name] = multilineParse.value.slice(0, -1)
+        upsertField(fields, multilineParse.name)
         multilineParse = undefined
       }
+    }
+
+    if (line === '') {
+      currentRecord = createEmptyRecord(fields)
+      return
     }
 
     if (line.startsWith('#')) {

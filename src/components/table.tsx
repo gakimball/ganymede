@@ -19,7 +19,7 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
   }, [records, fields, config])
   const shownFields = getShownFields({ fields, records }, config)
   const renderRules = getRenderRules(config)
-  const sums = getSums(records, fields, config)
+  const [hasSums, sums] = getSums(records, fields, config)
 
   return (
     <>
@@ -55,15 +55,17 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr>
-                {[...shownFields.entries()].map(([fieldName, field]) => (
-                  <td key={fieldName}>
-                    {sums[fieldName]}
-                  </td>
-                ))}
-              </tr>
-            </tfoot>
+            {hasSums && (
+              <tfoot>
+                <tr>
+                  {[...shownFields.entries()].map(([fieldName, field]) => (
+                    <td key={fieldName}>
+                      {sums[fieldName]}
+                    </td>
+                  ))}
+                </tr>
+              </tfoot>
+            )}
           </table>
         </>
       ))}

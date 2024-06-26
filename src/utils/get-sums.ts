@@ -8,13 +8,18 @@ export const getSums = (
   records: DatabaseRecord[],
   fields: Map<string, DatabaseField>,
   view: ViewConfig,
-) => {
-  if (!view.Sum) return {}
+): [
+  hasSums: boolean,
+  sums: {
+    [k: string]: string;
+  }
+] => {
+  if (!view.Sum) return [false, {}]
 
   const sumFields = view.Sum.split(' ')
   const renderRules = getRenderRules(view)
 
-  return Object.fromEntries(
+  const sums = Object.fromEntries(
     sumFields.map(fieldName => {
       const sum = records.reduce((total, record) => {
         const value = parseFieldValue(record[fieldName], fields.get(fieldName)!)
@@ -35,4 +40,6 @@ export const getSums = (
       return [fieldName, String(sum)]
     })
   )
+
+  return [true, sums]
 }

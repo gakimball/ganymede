@@ -12,7 +12,7 @@ export const parseFieldValue = (value: string | undefined, field: DatabaseField)
     case RecordFieldType.INT:
     case RecordFieldType.RANGE:
     case RecordFieldType.REAL:
-      return Number.parseFloat(value ?? '0')
+      return Number.parseFloat(value?.replace(/,/g, '') ?? '0')
     case RecordFieldType.BOOL:
       return TRUE_REGEX.test(value ?? 'false')
     default:

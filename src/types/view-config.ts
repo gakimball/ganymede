@@ -5,7 +5,7 @@ export interface ViewConfig {
   /** Name of the view. */
   Name: string;
   /** Layout type. */
-  Layout: 'Table' | 'Board';
+  Layout: 'Table' | 'Board' | 'Text';
   /** Filename, including extension. */
   File: string;
   /**

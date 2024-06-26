@@ -8,10 +8,12 @@ import { State } from '../state/state'
 import { RecordViewer } from './record-viewer'
 import { ViewSelect } from './view-select'
 import { TextViewer } from './text-viewer'
+import { DatabaseTextViewer } from './database-text-viewer'
 
 const views = {
   Table,
   Board,
+  Text: DatabaseTextViewer,
 }
 
 const initialState = new State()
@@ -48,6 +50,7 @@ export const App = () => {
             files={state.files.value}
             views={state.viewsList.value}
             selectedFile={state.currentView.value?.file}
+            favorites={state.favorites.value}
             onSetDirectory={state.openDirectoryPicker}
             onSelectFile={state.openFile}
           />
@@ -74,6 +77,7 @@ export const App = () => {
             {currentView?.type === 'database' && (
               <>
                 <ViewSelect
+                  file={currentView.file}
                   views={state.viewsForCurrentFile.value}
                   current={currentView.view}
                   onChange={state.openView}
@@ -83,6 +87,7 @@ export const App = () => {
                     {...currentView.database}
                     config={currentView.view!}
                     onSelectRecord={state.openRecord}
+                    directory={state.directory}
                   />
                 )}
                 {currentView.view && state.currentRecord.value && (

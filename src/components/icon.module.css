@@ -1,0 +1,9 @@
+.icon {
+  display: inline-block;
+  width: calc(var(--Icon-size) * 1px);
+  height: calc(var(--Icon-size) * 1px);
+}
+
+.svg {
+  vertical-align: top;
+}

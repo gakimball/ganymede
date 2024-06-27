@@ -3,6 +3,12 @@ import { ViewConfig } from '../types/view-config';
 import type { FileEntry } from '@tauri-apps/api/fs';
 import { FavoritesEntry } from '../types/favorites-entry';
 import getExt from 'get-ext'
+import { useCallback, useEffect, useState } from 'preact/hooks';
+import { swapArrayValue } from '../utils/swap-array-value';
+import { FileBrowserIcon } from './file-browser-icon';
+import { FeatherIconNames } from 'feather-icons';
+import { Icon } from './icon';
+import s from './file-browser.module.css'
 
 interface FileBrowserProps {
   files: FileEntry[];
@@ -22,24 +28,66 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
 }) => {
   const recFiles = files
     .sort((a, b) => a.name!.localeCompare(b.name!))
+  const [expandedDirs, setExpandedDirs] = useState<string[]>([])
 
-  const renderFile = (file: FileEntry, disabled = false) => {
+  useEffect(() => {
+    setExpandedDirs([])
+  }, [files])
+
+  const getIcon = useCallback((file: FileEntry): FeatherIconNames => {
+    if (file.children) {
+      return 'folder'
+    }
+    if (file.path.endsWith('.rec')) {
+      return 'database'
+    }
+    if (file.path.endsWith('.xit')) {
+      return 'check-square'
+    }
+    return 'file'
+  }, [])
+
+  const renderFile = (file: FileEntry, disabled = false, indent = 0) => {
     const active = file === selectedFile
-    const ext = getExt(file.path ?? '')
+    const name = file?.name ?? file.path
+    const isDir = !!file.children
+    const ext = isDir ? '' : getExt(name)
 
     return (
-      <button
-        className={`list-group-item list-group-item-action ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
-        type="button"
-        disabled={disabled}
-        onClick={() => onSelectFile(file)}
-      >
-        {disabled ? '[Broken] ' : ''}
-        {file.name?.slice(0, -ext.length)}
-        <span className="text-body-secondary">
-          {ext}
-        </span>
-      </button>
+      <Fragment key={file.path}>
+        <button
+          className={`
+            list-group-item
+            list-group-item-action
+            ${active ? 'active' : ''}
+            ${disabled ? 'disabled' : ''}
+            ps-${indent + 3}
+            d-flex
+            align-items-center
+          `}
+          type="button"
+          disabled={disabled}
+          onClick={() => {
+            if (isDir) {
+              setExpandedDirs(prev => swapArrayValue(prev, file.path))
+            } else {
+              onSelectFile(file)
+            }
+          }}
+        >
+          <div className={s.icon}>
+            <Icon size={16} name={getIcon(file)} />
+          </div>
+          {disabled ? '[Broken] ' : ''}
+          {isDir ? file.name : file.name?.slice(0, -ext.length)}
+          <span className="text-body-secondary">
+            {ext}
+          </span>
+        </button>
+        {isDir && expandedDirs.includes(file.path) && file.children?.map(file => {
+          return renderFile(file, false, indent + 1)
+        })}
+      </Fragment>
     )
   }
 

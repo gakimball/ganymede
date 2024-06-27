@@ -87,6 +87,7 @@ export class State {
   async openDirectoryPicker(): Promise<void> {
     const selected = await open({
       directory: true,
+      recursive: true,
     })
     if (typeof selected === 'string') {
       await this.loadDirectory(selected)
@@ -97,12 +98,14 @@ export class State {
     this.directory = path
     localStorage.setItem(DIRECTORY_LOCALSTORAGE_KEY, path)
 
-    const files = await readDir(path)
+    const files = await readDir(path, {
+      recursive: true,
+    })
     const configFile = files.find(file => file.name === '_views.rec')
     const favoritesFile = files.find(file => file.name === '_favorites.rec')
 
     this.setFiles(
-      files.filter(file => file !== configFile && file !== favoritesFile)
+      files.filter(file => file !== configFile && file !== favoritesFile && !file.name?.startsWith('.'))
     )
 
     if (configFile) {

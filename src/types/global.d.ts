@@ -11,3 +11,9 @@ declare module 'bind-methods' {
 
   export default bindMethods
 }
+
+declare module 'get-ext' {
+  const getExt: (path: string) => string;
+
+  export default getExt
+}

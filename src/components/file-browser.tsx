@@ -2,6 +2,7 @@ import { Fragment, FunctionComponent } from 'preact';
 import { ViewConfig } from '../types/view-config';
 import type { FileEntry } from '@tauri-apps/api/fs';
 import { FavoritesEntry } from '../types/favorites-entry';
+import getExt from 'get-ext'
 
 interface FileBrowserProps {
   files: FileEntry[];
@@ -24,6 +25,7 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
 
   const renderFile = (file: FileEntry, disabled = false) => {
     const active = file === selectedFile
+    const ext = getExt(file.path ?? '')
 
     return (
       <button
@@ -33,7 +35,10 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
         onClick={() => onSelectFile(file)}
       >
         {disabled ? '[Broken] ' : ''}
-        {file.name}
+        {file.name?.slice(0, -ext.length)}
+        <span className="text-body-secondary">
+          {ext}
+        </span>
       </button>
     )
   }

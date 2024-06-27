@@ -25,6 +25,7 @@
     "auto-bind": "^5.0.1",
     "date-fns": "^3.6.0",
     "fparser": "^3.0.1",
+    "get-ext": "^1.0.2",
     "preact": "^10.22.0"
   },
   "alias": {

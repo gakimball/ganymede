@@ -70,9 +70,6 @@ export const App = () => {
           </button> */}
         </div>
         <div style={{ flex: '1', overflow: 'hidden' }}>
-          <p className="lead">
-            {state.currentView.value?.file}
-          </p>
           <DropHandler onDroppedFile={handleFile}>
             {currentView?.type === 'database' && (
               <>

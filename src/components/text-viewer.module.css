@@ -1,3 +1,31 @@
+.scrollArea {
+  padding-top: 24px;
+  height: 95vh;
+  overflow-y: auto;
+  }
+
+.container {
+  position: relative;
+  min-height: 100%;
+  max-height: none;
+}
+
 .textarea {
-  height: 85vh;
+  height: 100%;
+  color: transparent;
+  caret-color: var(--bs-body-color);
+}
+
+.textarea:focus {
+  box-shadow: none !important;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: .375rem .75rem;
+  pointer-events: none;
 }

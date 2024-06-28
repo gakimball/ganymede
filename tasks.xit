@@ -1,3 +1,7 @@
+Formatting
+[@] xit
+[@] md/gmi
+
 Basics
 [x] Sort
 [x] Group
@@ -7,20 +11,20 @@ Basics
 
 Sorts
 [x] String
-[ ] Number
-[ ] Bool
+[x] Number
+[x] Bool
 [ ] Date
 
 Filters
-[ ] set
-[ ] eq
-[ ] gt
-[ ] gte
-[ ] lt
-[ ] lte
-[ ] not
-[ ] and
-[ ] or
+[x] set
+[x] eq
+[x] gt
+[x] gte
+[x] lt
+[x] lte
+[x] not
+[x] and
+[x] or
 
 Field rendering
 [x] String

@@ -5,11 +5,13 @@ import { Table } from './table';
 import { Board } from './board';
 import { DatabaseTextViewer } from './database-text-viewer';
 import { RecordViewer } from './record-viewer';
+import { ListView } from './list-view';
 
 const views = {
   Table,
   Board,
   Text: DatabaseTextViewer,
+  List: ListView,
 }
 
 export const DatabaseViewer = memo(() => {
@@ -25,7 +27,7 @@ export const DatabaseViewer = memo(() => {
     : undefined
 
   return (
-    <>
+    <div style={{ paddingTop: '35px' }}>
       <ViewSelect
         file={view.file}
         views={store.viewsForCurrentFile.value}
@@ -36,6 +38,7 @@ export const DatabaseViewer = memo(() => {
         <CurrentViewComponent
           {...view.database}
           config={view.view!}
+          file={view.file}
           onSelectRecord={store.openRecord}
           directory={store.directory}
         />
@@ -49,6 +52,6 @@ export const DatabaseViewer = memo(() => {
           onClose={store.closeRecord}
         />
       )}
-    </>
+    </div>
   )
 })

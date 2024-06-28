@@ -5,15 +5,14 @@ import { readTextFile } from '@tauri-apps/api/fs'
 import s from './database-text-viewer.module.css'
 
 export const DatabaseTextViewer: FunctionComponent<ViewComponentProps> = ({
-  config,
-  directory,
+  file,
 }) => {
   const [contents, setContents] = useState('')
-  const fileName = directory + '/' + config.File
+  const filePath = file.path
 
   const loadFile = useCallback(async () => {
-    setContents(await readTextFile(fileName))
-  }, [fileName])
+    setContents(await readTextFile(filePath))
+  }, [filePath])
 
   useEffect(() => {
     loadFile()
@@ -23,7 +22,7 @@ export const DatabaseTextViewer: FunctionComponent<ViewComponentProps> = ({
     <textarea
       className={`form-control font-monospace border-0 ${s.textarea}`}
       defaultValue={contents}
-      rows={12}
+      rows={10}
     />
   )
 }

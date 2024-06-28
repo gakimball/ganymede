@@ -2,7 +2,7 @@ import { Database, DatabaseField, DatabaseRecord } from '../types/database';
 import { getSortComparator } from './get-sort-comparator';
 import { parseFieldValue } from './parse-field-value';
 
-interface FilterTest {
+export interface FilterTest {
   field: string;
   not: boolean;
   condition: 'set' | 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
@@ -31,10 +31,10 @@ export const testFilter = (
       const comparison = getSortComparator(test.field, field)(record, { [test.field]: test.value })
 
       switch (test.condition) {
-        case 'gt': return comparison < 0
-        case 'gte': return comparison <= 0
-        case 'lt': return comparison > 0
-        case 'lte': return comparison === 0
+        case 'gt': return comparison > 0
+        case 'gte': return comparison >= 0
+        case 'lt': return comparison < 0
+        case 'lte': return comparison <= 0
       }
     }
   }

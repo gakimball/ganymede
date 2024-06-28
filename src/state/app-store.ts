@@ -28,7 +28,7 @@ type PersistedView =
   | Omit<DatabaseView, 'database'>
   | Omit<TextView, 'contents'>
 
-export class State {
+export class AppStore {
   directory = localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY) ?? '';
 
   readonly files =  signal<FileEntry[]>([]);

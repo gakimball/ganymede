@@ -2,24 +2,24 @@ import { useCallback, useEffect, useRef } from 'preact/hooks'
 import { DropHandler } from './drop-handler'
 import { Container } from './container'
 import { FileBrowser } from './file-browser'
-import { State } from '../state/state'
+import { AppStore } from '../state/app-store'
 import { TextViewer } from './text-viewer'
-import { StateContext } from '../state/state-context'
+import { StoreContext } from '../state/store-context'
 import { DatabaseViewer } from './database-viewer'
 
-const initialState = new State()
+const initialState = new AppStore()
 
 export const App = () => {
-  const { current: state } = useRef(initialState)
+  const { current: store } = useRef(initialState)
   const handleFile = useCallback(async (file: File) => {}, [])
-  const viewType = state.currentViewType.value
+  const viewType = store.currentViewType.value
 
   useEffect(() => {
-    state.initialize()
-  }, [state])
+    store.initialize()
+  }, [store])
 
   return (
-    <StateContext.Provider value={state}>
+    <StoreContext.Provider value={store}>
       <Container>
         <div class="d-flex flex-row">
           <div style={{ width: '300px', paddingRight: '16px' }}>
@@ -37,6 +37,6 @@ export const App = () => {
           </div>
         </div>
       </Container>
-    </StateContext.Provider >
+    </StoreContext.Provider>
   )
 }

@@ -16,6 +16,7 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   contents,
 }) => {
   const [value, setValue] = useState(contents)
+  const [disableHighlight, setDisableHighlight] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const scrollAreaHeightRef = useRef(0)
@@ -30,10 +31,17 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   const recalculate = useCallback((lineCount: number) => {
     const minHeight = scrollAreaHeightRef.current
     const height = 12 + (24 * lineCount)
+    const finalHeight = Math.max(height, minHeight)
 
-    console.log(`Height is ${Math.max(height, minHeight)}`)
+    console.log(`Height is ${finalHeight}`)
 
-    textareaRef.current!.style.height = `${Math.max(height, minHeight)}px`
+    if (finalHeight > 3000) {
+      textareaRef.current!.style.height = '95vh'
+      setDisableHighlight(true)
+    } else {
+      textareaRef.current!.style.height = `${finalHeight}px`
+      setDisableHighlight(false)
+    }
   }, [])
 
   const checkForRecalculate = useCallback((text: string) => {
@@ -54,7 +62,10 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   }, [])
 
   return (
-    <div ref={scrollAreaRef} className={s.scrollArea}>
+    <div
+      ref={scrollAreaRef}
+      className={`${s.scrollArea} ${disableHighlight ? s.disableHighlight : ''}`}
+    >
       <div className={s.container}>
         <textarea
           ref={textareaRef}
@@ -66,14 +77,16 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
             checkForRecalculate(event.currentTarget.value)
           }}
         ></textarea>
-        <div className={s.overlay}>
-          {file.name?.endsWith('.xit') && (
-            <XitOverlay value={value} />
-          )}
-          {(file.name?.endsWith('.md') || file.name?.endsWith('.gmi')) && (
-            <MarkdownOverlay value={value} />
-          )}
-        </div>
+        {!disableHighlight && (
+          <div className={`font-monospace ${s.overlay}`}>
+            {file.name?.endsWith('.xit') && (
+              <XitOverlay value={value} />
+            )}
+            {(file.name?.endsWith('.md') || file.name?.endsWith('.gmi')) && (
+              <MarkdownOverlay value={value} />
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

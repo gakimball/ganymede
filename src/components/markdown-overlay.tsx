@@ -25,7 +25,6 @@ export const MarkdownOverlay = memo<MarkdownOverlayProps>(({
 
   return (
     <div
-      className="font-monospace"
       dangerouslySetInnerHTML={{
         __html: html,
       }}

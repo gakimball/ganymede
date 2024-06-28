@@ -28,20 +28,10 @@ export const XitOverlay = memo<XitOverlayProps>(({
       const status = statuses[match.groups.status]
       const isResolved = ['checked', 'obsolete'].includes(status)
 
-      html += `
-        <span class="${s[`checkbox-status-${status}`]}">
-          ${line.slice(0, 3)}
-        </span>
-        <span class="${isResolved ? s['text-resolved'] : ''}">
-          ${line.slice(3)}
-        </span>
-        <br />
-      `
+      html += `<span class="${s[`checkbox-status-${status}`]}">${line.slice(0, 3)}</span>`
+      html += `<span class="${isResolved ? s['text-resolved'] : 'text-body-secondary'}">${line.slice(3)}</span><br>`
     } else if (line.trim() !== '') {
-      html += `
-        <span class="${s['text-title']}">${line}</span>
-        <br />
-      `
+      html += `<span class="${s['text-title']}">${line}</span><br>`
     } else {
       html += `${line}<br />`
     }
@@ -49,7 +39,6 @@ export const XitOverlay = memo<XitOverlayProps>(({
 
   return (
     <div
-      className="font-monospace"
       dangerouslySetInnerHTML={{
         __html: html,
       }}

@@ -2,7 +2,7 @@
   padding-top: 24px;
   height: 95vh;
   overflow-y: auto;
-  }
+}
 
 .container {
   position: relative;
@@ -12,8 +12,13 @@
 
 .textarea {
   height: 100%;
-  color: transparent;
+  color: transparent !important;
   caret-color: var(--bs-body-color);
+}
+
+.disableHighlight .textarea {
+  color: var(--bs-body-color) !important;
+  overflow-y: auto;
 }
 
 .textarea:focus {
@@ -28,4 +33,5 @@
   height: 100%;
   padding: .375rem .75rem;
   pointer-events: none;
+  white-space: pre;
 }

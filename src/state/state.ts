@@ -50,6 +50,10 @@ export class State {
     return [...this.files.value].sort((a, b) => a.name!.localeCompare(b.name!))
   })
 
+  readonly currentViewType = computed(() => {
+    return this.currentView.value?.type
+  })
+
   private readonly persistCurrentView = effect(() => {
     const currentView = this.currentView.value
 

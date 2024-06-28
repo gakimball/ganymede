@@ -37,7 +37,7 @@ export const FileBrowser = memo(({
         file={file}
         isActive={file === selectedFile}
         isDisabled={disabled}
-        indent={0}
+        indent={indent}
         onClick={handleClickItem}
       />
       {file.children && expandedDirs.includes(file.path) && file.children.map(file => {

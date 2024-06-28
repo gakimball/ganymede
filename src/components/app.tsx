@@ -9,6 +9,7 @@ import { RecordViewer } from './record-viewer'
 import { ViewSelect } from './view-select'
 import { TextViewer } from './text-viewer'
 import { DatabaseTextViewer } from './database-text-viewer'
+import { StateContext } from '../state/state-context'
 
 const views = {
   Table,
@@ -20,93 +21,78 @@ const initialState = new State()
 
 export const App = () => {
   const { current: state } = useRef(initialState)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-
-  const handleFile = useCallback(async (file: File) => {
-    // setFileName(file.name)
-    // setDatabase(parseRecfile(await file.text()))
-  }, [])
-
-  // const updateViewConfig = useCallback(() => {
-  //   const db = parseRecfile(textareaRef.current!.value)
-  //   setViewsDb(db)
-  //   setSelectedView(db.records[0].Name!)
-  // }, [])
-
-  useEffect(() => {
-    state.initialize()
-  }, [state])
+  const handleFile = useCallback(async (file: File) => {}, [])
 
   const currentView = state.currentView.value
   const CurrentViewComponent = (currentView?.type === 'database' && currentView.view?.Layout)
     ? views[currentView?.view.Layout]
     : undefined
 
+  useEffect(() => {
+    state.initialize()
+  }, [state])
+
   return (
-    <Container>
-      <div class="d-flex flex-row">
-        <div style={{ width: '300px', paddingRight: '16px' }}>
-          <FileBrowser
-            files={state.files.value}
-            views={state.viewsList.value}
-            selectedFile={state.currentView.value?.file}
-            favorites={state.favorites.value}
-            onSetDirectory={state.openDirectoryPicker}
-            onSelectFile={state.openFile}
-          />
-          {/* <textarea
-            ref={textareaRef}
-            className="form-control"
-            defaultValue={defaultViewConfig}
-            rows={10}
-          ></textarea>
-          <br />
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={updateViewConfig}
-          >
-            Update
-          </button> */}
-        </div>
-        <div style={{ flex: '1', overflow: 'hidden' }}>
-          <DropHandler onDroppedFile={handleFile}>
-            {currentView?.type === 'database' && (
-              <>
-                <ViewSelect
+    <StateContext.Provider value={state}>
+      <Container>
+        <div class="d-flex flex-row">
+          <div style={{ width: '300px', paddingRight: '16px' }}>
+            <FileBrowser />
+            {/* <textarea
+              ref={textareaRef}
+              className="form-control"
+              defaultValue={defaultViewConfig}
+              rows={10}
+            ></textarea>
+            <br />
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={updateViewConfig}
+            >
+              Update
+            </button> */}
+          </div>
+          <div style={{ flex: '1', overflow: 'hidden' }}>
+            <DropHandler onDroppedFile={handleFile}>
+              {currentView?.type === 'database' && (
+                <>
+                  <ViewSelect
+                    file={currentView.file}
+                    views={state.viewsForCurrentFile.value}
+                    current={currentView.view}
+                    onChange={state.openView}
+                  />
+                  {CurrentViewComponent && (
+                    <CurrentViewComponent
+                      {...currentView.database}
+                      config={currentView.view!}
+                      onSelectRecord={state.openRecord}
+                      directory={state.directory}
+                    />
+                  )}
+                  {currentView.view && state.currentRecord.value && (
+                    <RecordViewer
+                      fields={currentView.database.fields}
+                      record={state.currentRecord.value}
+                      viewConfig={currentView.view}
+                      onSave={state.updateRecord}
+                      onClose={state.closeRecord}
+                    />
+                  )}
+                </>
+              )}
+              {currentView?.type === 'text' && (
+                <TextViewer
+                  key={currentView.file.path}
                   file={currentView.file}
-                  views={state.viewsForCurrentFile.value}
-                  current={currentView.view}
-                  onChange={state.openView}
+                  contents={currentView.contents}
                 />
-                {CurrentViewComponent && (
-                  <CurrentViewComponent
-                    {...currentView.database}
-                    config={currentView.view!}
-                    onSelectRecord={state.openRecord}
-                    directory={state.directory}
-                  />
-                )}
-                {currentView.view && state.currentRecord.value && (
-                  <RecordViewer
-                    fields={currentView.database.fields}
-                    record={state.currentRecord.value}
-                    viewConfig={currentView.view}
-                    onSave={state.updateRecord}
-                    onClose={state.closeRecord}
-                  />
-                )}
-              </>
-            )}
-            {currentView?.type === 'text' && (
-              <TextViewer
-                file={currentView.file}
-                contents={currentView.contents}
-              />
-            )}
-          </DropHandler>
+              )}
+            </DropHandler>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </StateContext.Provider >
   )
 }

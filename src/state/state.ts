@@ -46,6 +46,10 @@ export class State {
     return this.viewsList.value.filter(view => view.File === file?.name)
   })
 
+  readonly sortedFiles = computed((): FileEntry[] => {
+    return [...this.files.value].sort((a, b) => a.name!.localeCompare(b.name!))
+  })
+
   private readonly persistCurrentView = effect(() => {
     const currentView = this.currentView.value
 

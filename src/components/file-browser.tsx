@@ -1,95 +1,50 @@
-import { Fragment, FunctionComponent } from 'preact';
-import { ViewConfig } from '../types/view-config';
+import { Fragment } from 'preact';
 import type { FileEntry } from '@tauri-apps/api/fs';
-import { FavoritesEntry } from '../types/favorites-entry';
-import getExt from 'get-ext'
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import { swapArrayValue } from '../utils/swap-array-value';
-import { FileBrowserIcon } from './file-browser-icon';
-import { FeatherIconNames } from 'feather-icons';
-import { Icon } from './icon';
-import s from './file-browser.module.css'
+import { useStore } from '../state/use-store';
+import { FileBrowserItem } from './file-browser-item';
+import { memo } from 'preact/compat';
 
-interface FileBrowserProps {
-  files: FileEntry[];
-  views: ViewConfig[];
-  selectedFile?: FileEntry;
-  favorites: FavoritesEntry[];
-  onSetDirectory: () => void,
-  onSelectFile: (file: FileEntry) => void;
-}
-
-export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
-  files,
-  selectedFile,
-  favorites,
-  onSetDirectory,
-  onSelectFile,
+export const FileBrowser = memo(({
 }) => {
-  const recFiles = files
-    .sort((a, b) => a.name!.localeCompare(b.name!))
+  const store = useStore()
+  const files = store.sortedFiles.value
+  const selectedFile = store.currentView.value?.file
+  const favorites = store.favorites.value
+
   const [expandedDirs, setExpandedDirs] = useState<string[]>([])
 
   useEffect(() => {
     setExpandedDirs([])
   }, [files])
 
-  const getIcon = useCallback((file: FileEntry): FeatherIconNames => {
+  const handleClickItem = useCallback((file: FileEntry) => {
     if (file.children) {
-      return 'folder'
+      setExpandedDirs(prev => swapArrayValue(prev, file.path))
+    } else {
+      store.openFile(file)
     }
-    if (file.path.endsWith('.rec')) {
-      return 'database'
-    }
-    if (file.path.endsWith('.xit')) {
-      return 'check-square'
-    }
-    return 'file'
-  }, [])
+  }, [store])
 
-  const renderFile = (file: FileEntry, disabled = false, indent = 0) => {
-    const active = file === selectedFile
-    const name = file?.name ?? file.path
-    const isDir = !!file.children
-    const ext = isDir ? '' : getExt(name)
-
-    return (
-      <Fragment key={file.path}>
-        <button
-          className={`
-            list-group-item
-            list-group-item-action
-            ${active ? 'active' : ''}
-            ${disabled ? 'disabled' : ''}
-            ps-${indent + 3}
-            d-flex
-            align-items-center
-          `}
-          type="button"
-          disabled={disabled}
-          onClick={() => {
-            if (isDir) {
-              setExpandedDirs(prev => swapArrayValue(prev, file.path))
-            } else {
-              onSelectFile(file)
-            }
-          }}
-        >
-          <div className={s.icon}>
-            <Icon size={16} name={getIcon(file)} />
-          </div>
-          {disabled ? '[Broken] ' : ''}
-          {isDir ? file.name : file.name?.slice(0, -ext.length)}
-          <span className="text-body-secondary">
-            {ext}
-          </span>
-        </button>
-        {isDir && expandedDirs.includes(file.path) && file.children?.map(file => {
-          return renderFile(file, false, indent + 1)
-        })}
-      </Fragment>
-    )
-  }
+  const renderFile = (
+    file: FileEntry,
+    disabled = false,
+    indent = 0,
+  ) => (
+    <Fragment key={file.path}>
+      <FileBrowserItem
+        file={file}
+        isActive={file === selectedFile}
+        isDisabled={disabled}
+        indent={0}
+        onClick={handleClickItem}
+      />
+      {file.children && expandedDirs.includes(file.path) && file.children.map(file => {
+        return renderFile(file, false, indent + 1)
+      })}
+    </Fragment>
+  )
 
   return (
     <div className="d-grid gap-2">
@@ -105,15 +60,15 @@ export const FileBrowser: FunctionComponent<FileBrowserProps> = ({
       )}
       <h6>Directory</h6>
       <div className="list-group mb-2">
-        {recFiles.map(file => renderFile(file))}
+        {files.map(file => renderFile(file))}
       </div>
       <button
         className="btn btn-outline-secondary btn-sm"
         type="button"
-        onClick={onSetDirectory}
+        onClick={store.openDirectoryPicker}
       >
         Set directory
       </button>
     </div>
   )
-}
+})

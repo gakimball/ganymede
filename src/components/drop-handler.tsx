@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'preact';
 import { useCallback } from 'preact/hooks'
-import s from './drop-handler.module.css'
 
 interface DropHandlerProps {
   onDroppedFile: (file: File) => void;
@@ -19,7 +18,7 @@ export const DropHandler: FunctionComponent<DropHandlerProps> = ({
 
   return (
     <div
-      className={s.container}
+      className="h-100"
       onDrop={handleDrop}
       onDragOver={event => event.preventDefault()}
     >

@@ -22,7 +22,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   }
 
   return (
-    <ul className="nav nav-tabs">
+    <ul className="nav nav-underline mb-3 pe-3">
       {[...views, textView].map(view => (
         <li key={view} className="nav-item">
           <a
@@ -34,6 +34,14 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
           </a>
         </li>
       ))}
+      <button
+        className="btn btn-sm btn-outline-secondary align-self-center ms-auto"
+        type="button"
+        onClick={() => {}}
+        disabled
+      >
+        Edit view
+      </button>
     </ul>
   )
 }

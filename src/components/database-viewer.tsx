@@ -20,6 +20,7 @@ export const DatabaseViewer = memo(() => {
   const store = useStore()
   const view = store.currentView.value
   const currentRecord = store.currentRecord.value
+  const directory = store.directory.value
 
   if (view?.type !== 'database') {
     return null
@@ -32,7 +33,7 @@ export const DatabaseViewer = memo(() => {
   const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
 
   return (
-    <div style={{ paddingTop: '35px' }}>
+    <div style={{ paddingTop: '10px' }}>
       <ViewSelect
         file={view.file}
         views={store.viewsForCurrentFile.value}
@@ -45,7 +46,7 @@ export const DatabaseViewer = memo(() => {
           config={view.view!}
           file={view.file}
           onSelectRecord={store.openRecord}
-          directory={store.directory}
+          directory={directory}
         />
       )}
       {view.view && currentRecord && (

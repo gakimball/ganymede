@@ -35,7 +35,9 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
               <tr>
                 {[...shownFields.keys()].map((field) => (
                   <th key={field} scope="col">
-                    {field}
+                    <span className="text-body-secondary">
+                      {field}
+                    </span>
                   </th>
                 ))}
               </tr>

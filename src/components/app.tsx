@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'preact/hooks'
 import { DropHandler } from './drop-handler'
-import { Container } from './container'
 import { FileBrowser } from './file-browser'
 import { AppStore } from '../state/app-store'
 import { TextViewer } from './text-viewer'
@@ -20,23 +19,17 @@ export const App = () => {
 
   return (
     <StoreContext.Provider value={store}>
-      <Container>
-        <div class="d-flex flex-row">
-          <div style={{ width: '300px', paddingRight: '16px' }}>
-            <FileBrowser />
-          </div>
-          <div style={{ flex: '1', overflow: 'hidden' }}>
-            <DropHandler onDroppedFile={handleFile}>
-              {viewType === 'database' && (
-                <DatabaseViewer />
-              )}
-              {viewType === 'text' && (
-                <TextViewer />
-              )}
-            </DropHandler>
-          </div>
-        </div>
-      </Container>
+      <FileBrowser />
+      <div className="ps-3" style={{ marginLeft: '300px' }}>
+        <DropHandler onDroppedFile={handleFile}>
+          {viewType === 'database' && (
+            <DatabaseViewer />
+          )}
+          {viewType === 'text' && (
+            <TextViewer />
+          )}
+        </DropHandler>
+      </div>
     </StoreContext.Provider>
   )
 }

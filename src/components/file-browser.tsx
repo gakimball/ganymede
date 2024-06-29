@@ -9,6 +9,7 @@ import { memo } from 'preact/compat';
 export const FileBrowser = memo(({
 }) => {
   const store = useStore()
+  const directoryBase = store.directoryBase.value
   const files = store.sortedFiles.value
   const selectedFile = store.currentView.value?.file
   const favorites = store.favorites.value
@@ -47,28 +48,51 @@ export const FileBrowser = memo(({
   )
 
   return (
-    <div className="d-grid gap-2">
+    <div
+      className={`
+        d-flex flex-column gap-2
+        h-100
+        pt-3 pb-3
+        border-end
+        position-fixed top-0 left-0
+      `}
+      style={{
+        width: '300px',
+        height: '100vh',
+      }}
+    >
       {favorites.length > 0 && (
         <>
-          <h6>Favorites</h6>
-          <div className="list-group mb-3">
+          <h6 className="ps-3">Favorites</h6>
+          <div className="list-group list-group-flush mb-3 border-top">
             {favorites.map(favorite => {
               return renderFile(favorite.file, favorite.isBrokenFile || favorite.isBrokenView)
             })}
           </div>
         </>
       )}
-      <h6>Directory</h6>
-      <div className="list-group mb-2">
+      <h6 className="ps-3">
+        {directoryBase}/
+      </h6>
+      <div className="list-group list-group-flush mb-3 border-top">
         {files.map(file => renderFile(file))}
       </div>
-      <button
-        className="btn btn-outline-secondary btn-sm"
-        type="button"
-        onClick={store.openDirectoryPicker}
-      >
-        Set directory
-      </button>
+      <div className="d-flex gap-2 ms-3 mt-auto">
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          type="button"
+          onClick={store.openDirectoryPicker}
+        >
+          Set directory
+        </button>
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          type="button"
+          onClick={store.reloadDirectory}
+        >
+          Reload directory
+        </button>
+      </div>
     </div>
   )
 })

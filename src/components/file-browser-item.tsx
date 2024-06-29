@@ -30,7 +30,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
       className={`
         list-group-item
         list-group-item-action
-        ${isActive ? 'active' : ''}
+        ${isActive ? 'list-group-item-light' : ''}
         ${isDisabled ? 'disabled' : ''}
         ps-${indent + 3}
         d-flex

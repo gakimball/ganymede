@@ -29,13 +29,20 @@ type PersistedView =
   | Omit<TextView, 'contents'>
 
 export class AppStore {
-  directory = localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY) ?? '';
-
+  readonly directory = signal(
+    localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY) ?? ''
+  );
   readonly files =  signal<FileEntry[]>([]);
   readonly views =  signal(createEmptyDatabase());
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly currentView =  signal<CurrentView | null>(null);
   readonly currentRecord =  signal<DatabaseRecord | null>(null);
+
+  readonly directoryBase = computed((): string => {
+    const segments = this.directory.value.split('/')
+
+    return segments[segments.length - 1] ?? ''
+  })
 
   readonly viewsList = computed((): ViewConfig[] => {
     return this.views.value.records as unknown as ViewConfig[]
@@ -103,7 +110,7 @@ export class AppStore {
   }
 
   private async loadDirectory(path: string): Promise<void> {
-    this.directory = path
+    this.directory.value = path
     localStorage.setItem(DIRECTORY_LOCALSTORAGE_KEY, path)
 
     const files = await readDir(path, {
@@ -146,6 +153,13 @@ export class AppStore {
     }
   }
 
+  async reloadDirectory(): Promise<void> {
+    if (this.directory) {
+      this.currentView.value = null
+      await this.loadDirectory(this.directory.value)
+    }
+  }
+
   async openFile(file: FileEntry): Promise<void> {
     const fileContents = await readTextFile(file.path)
 
@@ -177,8 +191,8 @@ export class AppStore {
   }
 
   initialize(): void {
-    if (this.directory) {
-      this.loadDirectory(this.directory)
+    if (this.directory.value) {
+      this.loadDirectory(this.directory.value)
     }
 
     this.getLastViewed()

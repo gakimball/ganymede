@@ -19,8 +19,8 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   const [disableHighlight, setDisableHighlight] = useState(false)
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const scrollAreaHeightRef = useRef(0)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const containerHeightRef = useRef(0)
+  const containerRef = useRef<HTMLDivElement>(null)
   const resizeObserverRef = useRef<ResizeObserver>()
   const lineCountRef = useRef(0)
 
@@ -29,18 +29,18 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   }, 1000)
 
   const recalculate = useCallback((lineCount: number) => {
-    const minHeight = scrollAreaHeightRef.current
+    const minHeight = containerHeightRef.current
     const height = 12 + (24 * lineCount)
     const finalHeight = Math.max(height, minHeight)
 
     console.log(`Height is ${finalHeight}`)
+    textareaRef.current!.style.height = `${finalHeight}px`
 
     if (finalHeight > 3000) {
-      textareaRef.current!.style.height = '95vh'
-      setDisableHighlight(true)
+      // textareaRef.current!.style.height = '95vh'
+      // setDisableHighlight(true)
     } else {
-      textareaRef.current!.style.height = `${finalHeight}px`
-      setDisableHighlight(false)
+      // setDisableHighlight(false)
     }
   }, [])
 
@@ -55,39 +55,40 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
 
   useEffect(() => {
     resizeObserverRef.current = new ResizeObserver(entries => {
-      scrollAreaHeightRef.current = entries[0].contentRect.height
+      containerHeightRef.current = entries[0].contentRect.height
     })
-    resizeObserverRef.current.observe(scrollAreaRef.current!)
+    resizeObserverRef.current.observe(containerRef.current!)
     checkForRecalculate(textareaRef.current!.value)
   }, [])
 
   return (
     <div
-      ref={scrollAreaRef}
-      className={`${s.scrollArea} ${disableHighlight ? s.disableHighlight : ''}`}
+      className={`
+        ${s.container}
+        ${disableHighlight ? s.disableHighlight : ''}
+      `}
+      ref={containerRef}
     >
-      <div className={s.container}>
-        <textarea
-          ref={textareaRef}
-          className={`form-control font-monospace border-0 ${s.textarea}`}
-          value={value}
-          onChange={event => {
-            autosave()
-            setValue(event.currentTarget.value)
-            checkForRecalculate(event.currentTarget.value)
-          }}
-        ></textarea>
-        {!disableHighlight && (
-          <div className={`font-monospace ${s.overlay}`}>
-            {file.name?.endsWith('.xit') && (
-              <XitOverlay value={value} />
-            )}
-            {(file.name?.endsWith('.md') || file.name?.endsWith('.gmi')) && (
-              <MarkdownOverlay value={value} />
-            )}
-          </div>
-        )}
-      </div>
+      <textarea
+        ref={textareaRef}
+        className={`form-control font-monospace border-0 ${s.textarea}`}
+        value={value}
+        onChange={event => {
+          autosave()
+          setValue(event.currentTarget.value)
+          checkForRecalculate(event.currentTarget.value)
+        }}
+      ></textarea>
+      {!disableHighlight && (
+        <div className={`font-monospace ${s.overlay}`}>
+          {file.name?.endsWith('.xit') && (
+            <XitOverlay value={value} />
+          )}
+          {(file.name?.endsWith('.md') || file.name?.endsWith('.gmi')) && (
+            <MarkdownOverlay value={value} />
+          )}
+        </div>
+      )}
     </div>
   )
 }

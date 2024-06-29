@@ -1,17 +1,11 @@
-.scrollArea {
-  padding-top: 24px;
-  height: 95vh;
-  overflow-y: auto;
-}
-
 .container {
+  margin-top: 24px;
   position: relative;
   min-height: 100%;
-  max-height: none;
 }
 
 .textarea {
-  height: 100%;
+  overflow: hidden;
   color: transparent !important;
   caret-color: var(--bs-body-color);
 }
@@ -26,6 +20,7 @@
 }
 
 .overlay {
+  /* display: none; */
   position: absolute;
   top: 0;
   left: 0;

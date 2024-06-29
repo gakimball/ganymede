@@ -3,6 +3,11 @@ html {
       sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
 }
 
+body {
+  --bs-body-bg: #222;
+  --App-sidebar-width: 250px;
+}
+
 html,
 body {
   overscroll-behavior-y: none;

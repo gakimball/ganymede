@@ -1,11 +1,11 @@
 import { computed, effect, signal } from '@preact/signals'
 import { createEmptyDatabase } from '../utils/create-empty-database'
-import { readDir, readTextFile, type FileEntry } from '@tauri-apps/api/fs'
+import { readDir, readTextFile, removeDir, removeFile, renameFile, type FileEntry } from '@tauri-apps/api/fs'
 import { ViewConfig } from '../types/view-config';
 import { Database, DatabaseRecord } from '../types/database';
 import { DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
 import { parseRecfile } from '../utils/parse-recfile';
-import { open } from '@tauri-apps/api/dialog';
+import { ask, confirm, open } from '@tauri-apps/api/dialog';
 import autoBind from 'auto-bind';
 import { FavoritesEntry } from '../types/favorites-entry';
 
@@ -219,6 +219,34 @@ export class AppStore {
       this.openFile(persistedView.file)
       if (persistedView.type === 'database' && persistedView.view) {
         this.openView(persistedView.view)
+      }
+    }
+  }
+
+  renameFile(file: FileEntry): void {
+    const newName = window.prompt('Enter a new file name.', file.name)
+
+    if (newName) {
+      renameFile(file.path, newName)
+      this.reloadDirectory()
+    }
+  }
+
+  async deleteFile(file: FileEntry): Promise<void> {
+    const addendum = file.children ? ' and its contents?' : ''
+    const confirmed = await confirm(`Are you sure you want to delete ${file.name}${addendum}?`, {
+      okLabel: 'Delete',
+      type: 'warning',
+    })
+
+    if (confirmed) {
+      if (file.children) {
+        removeDir(file.path, {
+          recursive: true,
+        })
+      } else {
+        removeFile(file.path)
+        this.reloadDirectory()
       }
     }
   }

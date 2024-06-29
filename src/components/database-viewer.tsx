@@ -6,6 +6,8 @@ import { Board } from './board';
 import { DatabaseTextViewer } from './database-text-viewer';
 import { RecordViewer } from './record-viewer';
 import { ListView } from './list-view';
+import { parseFieldValue } from '../utils/parse-field-value';
+import { RecordFieldType } from '../types/database';
 
 const views = {
   Table,
@@ -17,6 +19,7 @@ const views = {
 export const DatabaseViewer = memo(() => {
   const store = useStore()
   const view = store.currentView.value
+  const currentRecord = store.currentRecord.value
 
   if (view?.type !== 'database') {
     return null
@@ -25,6 +28,8 @@ export const DatabaseViewer = memo(() => {
   const CurrentViewComponent = view.view?.Layout
     ? views[view.view.Layout]
     : undefined
+  const recordViewerIsFullScreen = parseFieldValue(view.view?.Full_Page, { type: RecordFieldType.BOOL })
+  const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
 
   return (
     <div style={{ paddingTop: '35px' }}>
@@ -34,7 +39,7 @@ export const DatabaseViewer = memo(() => {
         current={view.view}
         onChange={store.openView}
       />
-      {CurrentViewComponent && (
+      {CurrentViewComponent && !hideRecordBrowser && (
         <CurrentViewComponent
           {...view.database}
           config={view.view!}
@@ -43,10 +48,10 @@ export const DatabaseViewer = memo(() => {
           directory={store.directory}
         />
       )}
-      {view.view && store.currentRecord.value && (
+      {view.view && currentRecord && (
         <RecordViewer
           fields={view.database.fields}
-          record={store.currentRecord.value}
+          record={currentRecord}
           viewConfig={view.view}
           onSave={store.updateRecord}
           onClose={store.closeRecord}

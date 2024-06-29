@@ -31,6 +31,7 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     ...shownFields.entries(),
     ...restFields,
   ]
+  const isFullPage = parseFieldValue(viewConfig.Full_Page, { type: RecordFieldType.BOOL })
 
   const handleSubmit = useCallback((event: SubmitEvent) => {
     const formData = new FormData(event.submitter as HTMLFormElement)
@@ -81,7 +82,16 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   }
 
   return (
-    <div className={s.container}>
+    <div className={`${s.container} ${isFullPage ? s.fullPage : s.pane}`}>
+      {isFullPage && (
+        <button
+          className="btn btn-outline-secondary btn-sm mb-3"
+          type="button"
+          onClick={onClose}
+        >
+          &larr; Back
+        </button>
+      )}
       <form onSubmit={handleSubmit}>
         {allFields.map(([fieldName, field]) => (
           <div key={fieldName} className="mb-3">
@@ -92,9 +102,11 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
           </div>
         ))}
         <div className="btn-group">
-          <button className="btn btn-secondary" type="button" onClick={onClose}>
-            Cancel
-          </button>
+          {!isFullPage && (
+            <button className="btn btn-secondary" type="button" onClick={onClose}>
+              Cancel
+            </button>
+          )}
           <button className="btn btn-primary" type="submit">
             Save
           </button>

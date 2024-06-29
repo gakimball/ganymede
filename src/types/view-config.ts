@@ -71,4 +71,6 @@ export interface ViewConfig {
    * ```
    */
   Sum?: string;
+  /** Open records in a full page instead of a popover. */
+  Full_Page?: string;
 }

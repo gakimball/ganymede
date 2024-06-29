@@ -1,4 +1,4 @@
-.container {
+.pane {
   position: fixed;
   top: 0;
   right: 0;
@@ -7,4 +7,8 @@
   background-color: var(--bs-body-bg);
   padding: 16px;
   overflow: auto;
+}
+
+.fullPage {
+  padding-top: 24px;
 }

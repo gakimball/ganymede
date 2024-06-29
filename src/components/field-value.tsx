@@ -4,6 +4,7 @@ import { parseFieldValue } from '../utils/parse-field-value';
 import { RenderRule } from '../utils/get-render-rules';
 import { applyRenderRule } from '../utils/apply-render-rule';
 import { formatDate } from '../utils/format-date';
+import { getEnumColor } from '../utils/get-enum-color';
 
 interface FieldValueProps {
   value: string | undefined;
@@ -24,8 +25,14 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
 
   if (field.type === RecordFieldType.ENUM) {
     return (
-      <span className="badge text-bg-primary">
-        {value}
+      <span
+        className="badge"
+        style={{
+          color: '#fff',
+          backgroundColor: getEnumColor(value, field)
+        }}
+      >
+        {value.replace(/_/g, ' ')}
       </span>
     )
   }

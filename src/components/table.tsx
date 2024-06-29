@@ -25,10 +25,8 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
     <>
       {tables.map(table => (
         <>
-          {table.title && config.Group && (
-            <span className="badge text-bg-primary">
-              {table.title}
-            </span>
+          {table.title && table.field && (
+            <FieldValue value={table.title} field={table.field} />
           )}
           <table className="table table-hover">
             <thead>

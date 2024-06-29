@@ -11,13 +11,13 @@ export const getSums = (
 ): [
   hasSums: boolean,
   sums: {
-    [k: string]: string;
+    [k: string]: string | undefined;
   }
 ] => {
   if (!view.Sum) return [false, {}]
 
   const sumFields = view.Sum.split(' ')
-  const renderRules = getRenderRules(view)
+  const renderRules = getRenderRules(view, fields)
 
   const sums = Object.fromEntries(
     sumFields.map(fieldName => {

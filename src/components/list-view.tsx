@@ -23,10 +23,8 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
     <>
       {lists.map(list => (
         <div key={list.title} className="mt-4 pb-3 pe-3 border-bottom">
-          {list.title && config.Group && (
-            <span className="badge text-bg-primary">
-              {list.title}
-            </span>
+          {list.title && list.field && (
+            <FieldValue value={list.title} field={list.field} />
           )}
           {list.records.map(record => (
             <div

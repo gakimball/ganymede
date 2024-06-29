@@ -19,6 +19,7 @@ export const groupRecordsBy = (
       id: GROUP_NOT_SET,
       title: '(not set)',
       records,
+      field: null,
     }]
   }
 
@@ -43,13 +44,15 @@ export const groupRecordsBy = (
   return [
     ...groupByField.params.map(value => ({
       id: value,
-      title: value.replace(/_/g, ' '),
+      title: value,
       records: recordGroups[value],
+      field: groupByField,
     })),
     {
       id: GROUP_NOT_SET,
       title: '(not set)',
       records: notSetRecords,
+      field: groupByField,
     }
   ]
 }

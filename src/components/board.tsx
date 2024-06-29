@@ -23,9 +23,9 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
     <div className={s.container}>
       {groups.map(group => (
         <div key={group.id} className={s.column}>
-          <span className="badge text-bg-primary mt-3 mb-3">
-            {group.title}
-          </span>
+          {group.field && (
+            <FieldValue value={group.title} field={group.field} />
+          )}
           {group.records.map(record => (
             <div className={`${s.card} card mb-3`} onClick={() => onSelectRecord(record)}>
               <div className="card-body">

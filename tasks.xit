@@ -1,7 +1,15 @@
+Views
+[ ] CRUD records
+[ ] CRUD views
+[x] Enum label colors
+
+Text editing
+[?] Switch to contenteditable
+
 Formatting
 [x] xit
 [x] md/gmi
-[ ] composite?
+[?] composite
 
 Basics
 [x] Sort

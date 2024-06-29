@@ -17,7 +17,7 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
     return createViewGroups({ fields, records }, config)
   }, [fields, records, config])
   const shownFields = getShownFields({ fields, records }, config)
-  const renderRules = getRenderRules(config)
+  const renderRules = getRenderRules(config, fields)
 
   return (
     <div className={s.container}>

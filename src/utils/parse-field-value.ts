@@ -15,6 +15,8 @@ export const parseFieldValue = (value: string | undefined, field: DatabaseField)
       return Number.parseFloat(value?.replace(/,/g, '') ?? '0')
     case RecordFieldType.BOOL:
       return TRUE_REGEX.test(value ?? 'false')
+    case RecordFieldType.DATE:
+      return new Date(value ?? '')
     default:
       return value ?? ''
   }

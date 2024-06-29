@@ -31,10 +31,15 @@ export const parseTypeDef = (value: string) => {
         field,
         type: RecordFieldType.FORMULA,
       }
+    case 'date': {
+      return {
+        field,
+        type: RecordFieldType.DATE,
+      }
+    }
     case 'line':
     case 'size':
     case 'regexp':
-    case 'date':
     case 'email':
     case 'uuid':
     default:

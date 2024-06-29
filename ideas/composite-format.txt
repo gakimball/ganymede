@@ -1,0 +1,14 @@
+Combines Gemtext with xit
+
+Headers: #, ##, ###
+Lists: -, *
+Links: =>
+Code: ```
+Blockquote: >
+
+Tasks:
+[ ] open
+[@] ongoing
+[x] checked
+[~] obsolete
+[?] in-question

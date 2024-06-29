@@ -3,6 +3,7 @@ import { DatabaseField, RecordFieldType } from '../types/database';
 import { parseFieldValue } from '../utils/parse-field-value';
 import { RenderRule } from '../utils/get-render-rules';
 import { applyRenderRule } from '../utils/apply-render-rule';
+import { formatDate } from '../utils/format-date';
 
 interface FieldValueProps {
   value: string | undefined;
@@ -50,6 +51,15 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
         </a>
       </span>
     )
+  }
+
+  if (value && parsedValue instanceof Date) {
+    try {
+      return <span>{formatDate(parsedValue, value, render)}</span>
+    } catch (err) {
+      console.log(err)
+      return null
+    }
   }
 
   if (render && typeof parsedValue === 'number') {

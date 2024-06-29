@@ -1,6 +1,7 @@
 Formatting
-[@] xit
-[@] md/gmi
+[x] xit
+[x] md/gmi
+[ ] composite?
 
 Basics
 [x] Sort
@@ -13,7 +14,7 @@ Sorts
 [x] String
 [x] Number
 [x] Bool
-[ ] Date
+[x] Date
 
 Filters
 [x] set

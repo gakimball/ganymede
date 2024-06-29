@@ -18,7 +18,7 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
     return createViewGroups({ records, fields }, config)
   }, [records, fields, config])
   const shownFields = getShownFields({ fields, records }, config)
-  const renderRules = getRenderRules(config)
+  const renderRules = getRenderRules(config, fields)
   const [hasSums, sums] = getSums(records, fields, config)
 
   return (

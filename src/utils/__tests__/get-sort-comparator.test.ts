@@ -5,16 +5,19 @@ const a: DatabaseRecord = {
   String: 'a',
   Number: '0',
   Bool: 'yes',
+  Date: '2000-01-01',
 }
 const b: DatabaseRecord = {
   String: 'b',
   Number: '1',
   Bool: 'yes',
+  Date: '2000-01-02',
 }
 const c: DatabaseRecord = {
   String: 'c',
   Number: '2',
   Bool: 'no',
+  Date: '2000-01-03',
 }
 const records = [b, c, a]
 
@@ -57,5 +60,19 @@ describe('booleans', () => {
     const compare = getSortComparator('Bool', { type: RecordFieldType.BOOL }, true)
 
     expect([...records].sort(compare)).toEqual([b, a, c])
+  })
+})
+
+describe('dates', () => {
+  test('sorts earliest first asc', () => {
+    const compare = getSortComparator('Date', { type: RecordFieldType.DATE })
+
+    expect([...records].sort(compare)).toEqual([a, b, c])
+  })
+
+  test('sorts latest first desc', () => {
+    const compare = getSortComparator('Date', { type: RecordFieldType.DATE }, true)
+
+    expect([...records].sort(compare)).toEqual([c, b, a])
   })
 })

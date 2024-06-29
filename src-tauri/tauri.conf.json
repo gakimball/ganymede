@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "recdb",
+    "productName": "Ganymede",
     "version": "0.1.0"
   },
   "tauri": {
@@ -16,10 +16,14 @@
       "fs": {
         "readFile": true,
         "writeFile": true,
-        "readDir": true
+        "renameFile": true,
+        "readDir": true,
+        "removeFile": true,
+        "removeDir": true
       },
       "dialog": {
-        "open": true
+        "open": true,
+        "confirm": true
       }
     },
     "bundle": {
@@ -66,7 +70,7 @@
         "fullscreen": false,
         "height": 768,
         "resizable": true,
-        "title": "recdb",
+        "title": "Ganymede",
         "width": 1024
       }
     ]

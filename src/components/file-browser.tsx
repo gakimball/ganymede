@@ -5,6 +5,7 @@ import { swapArrayValue } from '../utils/swap-array-value';
 import { useStore } from '../state/use-store';
 import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
 import { memo } from 'preact/compat';
+import { Icon } from './icon';
 
 export const FileBrowser = memo(({
 }) => {
@@ -86,9 +87,21 @@ export const FileBrowser = memo(({
           </div>
         </>
       )}
-      <h6 className="ps-3">
-        {directoryBase}&nbsp;/
-      </h6>
+      <div className="ps-3 pe-3 mb-2 d-flex align-items-center justify-content-between">
+        <h6 className="mb-0">
+          {directoryBase}&nbsp;/
+        </h6>
+        <button
+          className="reset-button"
+          style={{
+            height: '16px'
+          }}
+          type="button"
+          onClick={store.toggleQuickFind}
+        >
+          <Icon name="search" />
+        </button>
+      </div>
       <div className="list-group list-group-flush mb-3 border-top">
         {files.map(file => renderFile(file))}
       </div>

@@ -12,3 +12,12 @@ html,
 body {
   overscroll-behavior-y: none;
 }
+
+.reset-button {
+  appearance: none;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: inherit;
+  background-color: transparent;
+}

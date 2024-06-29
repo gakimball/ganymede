@@ -16,12 +16,14 @@ interface DatabaseView {
   file: FileEntry;
   view: ViewConfig | null;
   database: Database;
+  hasError: boolean;
 }
 
 interface TextView {
   type: 'text',
   file: FileEntry;
   contents: string;
+  hasError: boolean;
 }
 
 type PersistedView =
@@ -37,6 +39,7 @@ export class AppStore {
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly currentView =  signal<CurrentView | null>(null);
   readonly currentRecord =  signal<DatabaseRecord | null>(null);
+  readonly quickFindOpen = signal(false);
 
   readonly directoryBase = computed((): string => {
     const segments = this.directory.value.split('/')
@@ -61,6 +64,10 @@ export class AppStore {
     return this.currentView.value?.type
   })
 
+  readonly currentViewHasError = computed(() => {
+    return this.currentView.value?.hasError ?? false
+  })
+
   private readonly persistCurrentView = effect(() => {
     const currentView = this.currentView.value
 
@@ -76,11 +83,13 @@ export class AppStore {
         type: 'database',
         file: currentView.file,
         view: currentView.view,
+        hasError: false,
       }
     } else {
       persistedView = {
         type: 'text',
         file: currentView.file,
+        hasError: false,
       }
     }
 
@@ -161,20 +170,30 @@ export class AppStore {
   }
 
   async openFile(file: FileEntry): Promise<void> {
-    const fileContents = await readTextFile(file.path)
+    let fileContents
+    let hasError = false
+
+    try {
+      fileContents = await readTextFile(file.path)
+    } catch {
+      fileContents = ''
+      hasError = true
+    }
 
     if (file.path.endsWith('.rec')) {
       this.currentView.value = {
         type: 'database',
         file,
         view: this.viewsList.value.find(view => view.File === file?.name) ?? null,
-        database: parseRecfile(fileContents)
+        database: parseRecfile(fileContents),
+        hasError,
       }
     } else {
       this.currentView.value = {
         type: 'text',
         file,
         contents: fileContents,
+        hasError,
       }
     }
   }
@@ -249,5 +268,9 @@ export class AppStore {
         this.reloadDirectory()
       }
     }
+  }
+
+  toggleQuickFind(): void {
+    this.quickFindOpen.value = !this.quickFindOpen.value
   }
 }

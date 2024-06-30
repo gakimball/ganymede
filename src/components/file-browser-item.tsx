@@ -1,5 +1,6 @@
 import { FileEntry } from '@tauri-apps/api/fs';
-import { memo, useCallback } from 'preact/compat';
+import { memo } from 'preact/compat';
+import { useCallback } from 'preact/hooks'
 import s from './file-browser-item.module.css'
 import { getFileIcon } from '../utils/get-file-icon';
 import { Icon } from './icon';

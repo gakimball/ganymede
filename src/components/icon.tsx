@@ -1,4 +1,5 @@
-import { memo, useMemo } from 'preact/compat';
+import { memo } from 'preact/compat';
+import { useMemo } from 'preact/hooks'
 import { FeatherIconNames, icons } from 'feather-icons'
 import s from './icon.module.css'
 

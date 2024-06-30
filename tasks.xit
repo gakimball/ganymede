@@ -1,5 +1,7 @@
 Issues
 [ ] Cannot turn off autocomplete
+[ ] Esc should close quick find
+[ ] Views should reference paths, not filenames
 
 Views
 [x] CRUD records

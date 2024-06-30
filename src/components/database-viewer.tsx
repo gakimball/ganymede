@@ -1,4 +1,5 @@
-import { memo, useCallback, useEffect, useState } from 'preact/compat';
+import { memo } from 'preact/compat';
+import { useCallback, useEffect, useState } from 'preact/hooks'
 import { useStore } from '../state/use-store';
 import { ViewSelect } from './view-select';
 import { Table } from './table';

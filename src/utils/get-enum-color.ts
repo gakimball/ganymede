@@ -15,5 +15,5 @@ export const getEnumColor = (value: string, field: DatabaseField) => {
     return '#444'
   }
 
-  return `hsl(${valueIndex * increment}, 30%, 50%)`
+  return `hsl(${valueIndex * increment}, 30%, 30%)`
 }

@@ -1,6 +1,6 @@
 {
-  "name": "preact-boilerplate",
-  "version": "1.0.0",
+  "name": "ganymede",
+  "version": "0.0.1",
   "description": "",
   "source": "src/index.html",
   "scripts": {

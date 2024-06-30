@@ -24,6 +24,7 @@ export enum RecordFieldType {
   REAL = 'REAL',
   STRING = 'STRING',
   ENUM = 'ENUM',
+  ENUM_MULTI = 'ENUM_MULTI',
   BOOL = 'BOOL',
   DATE = 'DATE',
   FORMULA = 'FORMULA',

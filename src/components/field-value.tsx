@@ -5,6 +5,7 @@ import { RenderRule } from '../utils/get-render-rules';
 import { applyRenderRule } from '../utils/apply-render-rule';
 import { formatDate } from '../utils/format-date';
 import { getEnumColor } from '../utils/get-enum-color';
+import { EnumTag } from './enum-tag';
 
 interface FieldValueProps {
   value: string | undefined;
@@ -25,15 +26,17 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
 
   if (field.type === RecordFieldType.ENUM) {
     return (
-      <span
-        className="badge"
-        style={{
-          color: '#fff',
-          backgroundColor: getEnumColor(value, field)
-        }}
-      >
-        {value.replace(/_/g, ' ')}
-      </span>
+      <EnumTag value={value} field={field} />
+    )
+  }
+
+  if (field.type === RecordFieldType.ENUM_MULTI) {
+    return (
+      <div className="d-inline-flex gap-2">
+        {value.split(',').map(item => (
+          <EnumTag value={item} field={field} />
+        ))}
+      </div>
     )
   }
 

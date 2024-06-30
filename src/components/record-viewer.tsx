@@ -57,6 +57,7 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   const renderInput = (fieldName: string, field: DatabaseField) => {
     switch (field.type) {
       case RecordFieldType.STRING:
+      case RecordFieldType.ENUM_MULTI:
         return <input name={fieldName} className="form-control" type="text" defaultValue={record?.[fieldName]} />
       case RecordFieldType.INT:
       case RecordFieldType.RANGE:

@@ -81,6 +81,14 @@ export const parseRecfile = (contents: string): Database => {
           upsertField(fields, fieldName, {
             type: RecordFieldType.BODY,
           })
+          break
+        }
+        case '%multi': {
+          const [, fieldName, ...values] = line.split(' ')
+          upsertField(fields, fieldName, {
+            type: RecordFieldType.ENUM_MULTI,
+            params: values,
+          })
         }
       }
       return

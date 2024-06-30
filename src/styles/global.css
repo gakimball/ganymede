@@ -21,3 +21,31 @@ body {
   color: inherit;
   background-color: transparent;
 }
+
+.macos-theme-0 {
+  --bs-primary: red;
+}
+
+.macos-theme-1 {
+  --bs-primary: orange;
+}
+
+.macos-theme-2 {
+  --bs-primary: yellow;
+}
+
+.macos-theme-3 {
+  --bs-primary: green;
+}
+
+.macos-theme-4 {
+  --bs-primary: blue;
+}
+
+.macos-theme-5 {
+  --bs-primary: violet;
+}
+
+.macos-theme-6 {
+  --bs-primary: magenta;
+}

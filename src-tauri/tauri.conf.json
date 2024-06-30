@@ -37,8 +37,16 @@
             "name": "recdel",
             "cmd": "recdel",
             "args": true
+          },
+          {
+            "name": "read-macos-theme",
+            "cmd": "defaults",
+            "args": ["read", "-g", "AppleAccentColor"]
           }
         ]
+      },
+      "os": {
+        "all": true
       }
     },
     "bundle": {

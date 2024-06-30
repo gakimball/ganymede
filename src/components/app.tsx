@@ -6,6 +6,7 @@ import { StoreContext } from '../state/store-context'
 import { DatabaseViewer } from './database-viewer'
 import img from '../assets/placeholder.png'
 import { QuickFind } from './quick-find'
+import { ThemeManager } from './theme-manager'
 
 const initialState = new AppStore()
 
@@ -20,6 +21,7 @@ export const App = () => {
 
   return (
     <StoreContext.Provider value={store}>
+      <ThemeManager />
       <FileBrowser />
       <div
         className="ps-3 overflow-x-scroll"

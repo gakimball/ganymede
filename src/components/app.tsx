@@ -24,7 +24,7 @@ export const App = () => {
       <ThemeManager />
       <FileBrowser />
       <div
-        className="ps-3 overflow-x-scroll"
+        className="ps-3"
         style={{
           marginLeft: 'var(--App-sidebar-width)',
         }}

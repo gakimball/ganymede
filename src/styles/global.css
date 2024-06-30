@@ -49,3 +49,27 @@ body {
 .macos-theme-6 {
   --bs-primary: magenta;
 }
+
+.highlight-coral {
+  color: coral;
+}
+
+.highlight-aqua {
+  color: aqua;
+}
+
+.highlight-gray {
+  color: #666;
+}
+
+.highlight-violet {
+  color: violet;
+}
+
+.highlight-green {
+  color: green;
+}
+
+.highlight-yellow {
+  color: yellow;
+}

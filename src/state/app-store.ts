@@ -2,12 +2,14 @@ import { computed, effect, signal } from '@preact/signals'
 import { createEmptyDatabase } from '../utils/create-empty-database'
 import { readDir, readTextFile, removeDir, removeFile, renameFile, type FileEntry } from '@tauri-apps/api/fs'
 import { ViewConfig } from '../types/view-config';
-import { Database, DatabaseRecord } from '../types/database';
-import { DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
+import { Database, DatabaseField, DatabaseRecord } from '../types/database';
+import { DATABASE_CHANGE_EVENT, DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
 import { parseRecfile } from '../utils/parse-recfile';
 import { ask, confirm, open } from '@tauri-apps/api/dialog';
 import autoBind from 'auto-bind';
 import { FavoritesEntry } from '../types/favorites-entry';
+import { Command } from '@tauri-apps/api/shell';
+import { createEmptyRecord } from '../utils/create-empty-record';
 
 type CurrentView = DatabaseView | TextView
 
@@ -30,6 +32,8 @@ type PersistedView =
   | Omit<DatabaseView, 'database'>
   | Omit<TextView, 'contents'>
 
+export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
+
 export class AppStore {
   readonly directory = signal(
     localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY) ?? ''
@@ -38,7 +42,7 @@ export class AppStore {
   readonly views =  signal(createEmptyDatabase());
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly currentView =  signal<CurrentView | null>(null);
-  readonly currentRecord =  signal<DatabaseRecord | null>(null);
+  readonly currentRecord = signal<DatabaseRecord | typeof CREATE_NEW_RECORD | null>(null);
   readonly quickFindOpen = signal(false);
 
   readonly directoryBase = computed((): string => {
@@ -95,6 +99,26 @@ export class AppStore {
 
     localStorage.setItem(LAST_VIEWED_LOCALSTORAGE_KEY, JSON.stringify(persistedView))
   })
+
+  private get currentViewRecords(): DatabaseRecord[] {
+    const view = this.currentView.value
+
+    if (view?.type === 'database') {
+      return view.database.records
+    }
+
+    return []
+  }
+
+  private get currentViewFields(): Map<string, DatabaseField> {
+    const view = this.currentView.value
+
+    if (view?.type === 'database') {
+      return view.database.fields
+    }
+
+    return new Map()
+  }
 
   constructor() {
     autoBind(this)
@@ -221,12 +245,93 @@ export class AppStore {
     this.currentRecord.value = record
   }
 
+  openNewRecord(): void {
+    this.currentRecord.value = CREATE_NEW_RECORD
+  }
+
   closeRecord(): void {
     this.currentRecord.value = null
   }
 
-  updateRecord(original: DatabaseRecord, update: DatabaseRecord): void {
-    Object.assign(original, update)
+  async createRecord(record: DatabaseRecord): Promise<void> {
+    const allRecords = this.currentViewRecords
+    const fields = this.currentViewFields
+    const dbPath = this.currentView.value?.file.path
+
+    if (dbPath) {
+      const cmd = new Command('recins', [
+        ...Object.entries(record).flatMap(([field, value]) => {
+          if (!value) {
+            return []
+          }
+
+          return ['-f', field, '-v', value]
+        }),
+        dbPath
+      ])
+
+      await cmd.execute()
+      const newRecord = createEmptyRecord(fields)
+      Object.assign(newRecord, record)
+      allRecords.push(newRecord)
+    }
+
+    this.closeRecord()
+  }
+
+  async updateRecord(original: DatabaseRecord, update: DatabaseRecord): Promise<void> {
+    const allRecords = this.currentViewRecords
+    const index = allRecords.indexOf(original)
+    const dbPath = this.currentView.value?.file.path
+
+    if (index > -1 && dbPath) {
+      const cmd = new Command('recins', [
+        '-n',
+        String(index),
+        ...Object.entries(update).flatMap(([field, value]) => {
+          if (!value) {
+            return []
+          }
+
+          return ['-f', field, '-v', value]
+        }),
+        dbPath
+      ])
+
+      await cmd.execute()
+      Object.assign(original, update)
+      this.signalDatabaseChange()
+    }
+
+    this.closeRecord()
+  }
+
+  async deleteRecord(record: DatabaseRecord): Promise<void> {
+    const confirmed = await confirm('Delete this record?', {
+      okLabel: 'Delete',
+      type: 'warning',
+    })
+
+    if (!confirmed) {
+      return
+    }
+
+    const allRecords = this.currentViewRecords
+    const index = allRecords.indexOf(record)
+    const dbPath = this.currentView.value?.file.path
+
+    if (index > -1 && dbPath) {
+      const cmd = new Command('recdel', [
+        '-n',
+        String(index),
+        dbPath,
+      ])
+
+      await cmd.execute()
+      allRecords.splice(index, 1)
+      this.signalDatabaseChange()
+    }
+
     this.closeRecord()
   }
 
@@ -272,5 +377,10 @@ export class AppStore {
 
   toggleQuickFind(): void {
     this.quickFindOpen.value = !this.quickFindOpen.value
+  }
+
+  private signalDatabaseChange(): void {
+    const event = new CustomEvent(DATABASE_CHANGE_EVENT)
+    window.dispatchEvent(event)
   }
 }

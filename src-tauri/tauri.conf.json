@@ -24,6 +24,21 @@
       "dialog": {
         "open": true,
         "confirm": true
+      },
+      "shell": {
+        "execute": true,
+        "scope": [
+          {
+            "name": "recins",
+            "cmd": "recins",
+            "args": true
+          },
+          {
+            "name": "recdel",
+            "cmd": "recdel",
+            "args": true
+          }
+        ]
       }
     },
     "bundle": {

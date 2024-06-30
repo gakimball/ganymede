@@ -7,6 +7,7 @@ interface ViewSelectProps {
   current: ViewConfig | null;
   onChange: (value: ViewConfig) => void;
   views: ViewConfig[];
+  onCreateNew: () => void;
 }
 
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
@@ -14,6 +15,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   current,
   onChange,
   views,
+  onCreateNew,
 }) => {
   const textView: ViewConfig = {
     File: file.name ?? '',
@@ -35,7 +37,14 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
         </li>
       ))}
       <button
-        className="btn btn-sm btn-outline-secondary align-self-center ms-auto"
+        className="btn btn-sm btn-outline-primary align-self-center ms-auto"
+        type="button"
+        onClick={onCreateNew}
+      >
+        New
+      </button>
+      <button
+        className="btn btn-sm btn-outline-secondary align-self-center"
         type="button"
         onClick={() => {}}
         disabled

@@ -15,7 +15,7 @@ export const ThemeManager = memo(() => {
 
       console.log(`Output is ${output.stdout}`)
 
-      if (/\d/.test(output.stdout)) {
+      if (/(-1|\d)/.test(output.stdout)) {
         document.body.classList.add(`macos-theme-${output.stdout.trim()}`)
       }
     }

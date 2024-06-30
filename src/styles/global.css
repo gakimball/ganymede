@@ -22,6 +22,10 @@ body {
   background-color: transparent;
 }
 
+.macos-theme--1 {
+  --bs-primary: gray;
+}
+
 .macos-theme-0 {
   --bs-primary: red;
 }

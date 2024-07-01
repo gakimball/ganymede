@@ -51,7 +51,7 @@ export const DatabaseViewer = memo(() => {
   const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
 
   return (
-    <div style={{ paddingTop: '10px' }}>
+    <div className="pt-3 ps-3">
       <ViewSelect
         file={view.file}
         views={store.viewsForCurrentFile.value}

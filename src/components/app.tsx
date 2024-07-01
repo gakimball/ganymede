@@ -4,9 +4,10 @@ import { AppStore } from '../state/app-store'
 import { TextViewer } from './text-viewer'
 import { StoreContext } from '../state/store-context'
 import { DatabaseViewer } from './database-viewer'
-import img from '../assets/placeholder.png'
 import { QuickFind } from './quick-find'
 import { ThemeManager } from './theme-manager'
+import { ViewError } from './view-error'
+import { EmptyView } from './empty-view'
 
 const initialState = new AppStore()
 
@@ -23,33 +24,14 @@ export const App = () => {
     <StoreContext.Provider value={store}>
       <ThemeManager />
       <FileBrowser />
-      <div
-        className="ps-3"
-        style={{
-          marginLeft: 'var(--App-sidebar-width)',
-        }}
-      >
+      <div className="ps-3 ms-sidebar">
         {viewError && (
-          <div
-            className="h-100 d-flex align-items-center justify-content-center"
-            style={{
-              paddingTop: '50px'
-            }}
-          >
-            <p>
-              Error loading this file. It might be a binary format.
-            </p>
-          </div>
+          <ViewError />
         )}
         {!viewError && (
           <>
             {!viewType && (
-              <div
-                className="d-flex align-items-center justify-content-center"
-                style={{ height: '100vh' }}
-              >
-                <img src={img} />
-              </div>
+              <EmptyView />
             )}
             {viewType === 'database' && (
               <DatabaseViewer />

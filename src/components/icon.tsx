@@ -1,29 +1,23 @@
 import { memo } from 'preact/compat';
 import { useMemo } from 'preact/hooks'
 import { FeatherIconNames, icons } from 'feather-icons'
-import s from './icon.module.css'
 
 interface IconProps {
   name: FeatherIconNames;
-  size?: number;
 }
 
 export const Icon = memo<IconProps>(({
   name,
-  size = 16,
 }) => {
   const html = useMemo(() => icons[name].toSvg({
-    width: size,
-    height: size,
-    class: s.svg,
-  }), [name, size])
+    width: 16, // @TODO Should reference Tailwind config value
+    height: 16,
+    class: 'size-icon align-top inline-block',
+  }), [name, 16])
 
   return (
     <span
-      className={s.icon}
-      style={{
-        '--Icon-size': size,
-      }}
+      className="align-top"
       dangerouslySetInnerHTML={{
         __html: html,
       }}

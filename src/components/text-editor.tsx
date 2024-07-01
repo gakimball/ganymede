@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'preact/hooks';
 import { FileEntry, writeTextFile } from '@tauri-apps/api/fs';
 import { SyntaxHighlight, SyntaxHighlightRef } from './syntax-highlight';
 import { useEventHandler } from '../hooks/use-event-handler';
-import s from './text-editor.module.css'
 
 interface TextEditorProps {
   file: FileEntry;
@@ -31,10 +30,17 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   }, [])
 
   return (
-    <div className={s.container}>
+    <div className="mt-6 relative min-h-full">
       <div
         ref={editorRef}
-        className={`font-monospace ${s.editor}`}
+        className={`
+          overflow-hidden
+          px-2 py-3
+          font-mono
+          text-transparent text-base caret-content
+          whitespace-pre-wrap
+          focus:outline-none
+        `}
         contentEditable="plaintext-only"
         onInput={() => {
           autosave()
@@ -43,7 +49,16 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
       >
         {contents}
       </div>
-      <div className={`font-monospace ${s.overlay}`}>
+      <div
+        className={`
+          absolute top-0 left-0
+          size-full
+          px-2 py-3
+          font-mono text-base
+          pointer-events-none
+          whitespace-pre-wrap
+        `}
+      >
         <SyntaxHighlight ref={syntaxHighlightRef} fileName={file.path} />
       </div>
     </div>

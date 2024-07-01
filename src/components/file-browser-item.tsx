@@ -1,7 +1,6 @@
 import { FileEntry } from '@tauri-apps/api/fs';
 import { memo } from 'preact/compat';
 import { useCallback } from 'preact/hooks'
-import s from './file-browser-item.module.css'
 import { getFileIcon } from '../utils/get-file-icon';
 import { Icon } from './icon';
 import getExt from 'get-ext';
@@ -53,31 +52,36 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
     })
   }, [])
 
+  const indentClasses = [
+    'ps-3',
+    'ps-6',
+    'ps-9',
+    'ps-12',
+  ]
+
   return (
     <button
       className={`
-        list-group-item
-        list-group-item-action
-        ${isActive ? 'list-group-item-light' : ''}
-        ${isDisabled ? 'disabled' : ''}
-        ps-${indent + 3}
-        d-flex align-items-center
-        text-truncate
+        flex items-center
+        w-full
+        py-2 ${indentClasses[indent] ?? 'ps-6'}
+        border-b-1 border-border
+        select-none
+        hover:bg-background-highlight
+        truncate
+        ${isActive ? 'bg-background-highlight' : ''}
       `}
-      style={{
-        userSelect: 'none',
-      }}
       type="button"
       disabled={isDisabled}
       onClick={() => onAction(file, 'open')}
       onContextMenu={handleContextMenu}
     >
-      <div className={s.icon}>
-        <Icon size={16} name={getFileIcon(file)} />
+      <div className="h-icon me-3">
+        <Icon name={getFileIcon(file)} />
       </div>
       {isDisabled && '[Broken] '}
       {displayName}
-      <span className="text-body-secondary">
+      <span className="text-content-secondary">
         {ext}
       </span>
     </button>

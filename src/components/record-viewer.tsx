@@ -4,8 +4,9 @@ import { DatabaseField, DatabaseRecord, RecordFieldType } from '../types/databas
 import { ViewConfig } from '../types/view-config';
 import { getShownFields } from '../utils/get-shown-fields';
 import { parseFieldValue } from '../utils/parse-field-value';
-import s from './record-viewer.module.css'
-import { FormulaField } from './formula-field';
+import { Button } from './button';
+import classNames from 'classnames';
+import { RecordViewerField } from './record-viewer-field';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
@@ -54,46 +55,28 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     onSave(record, update)
   }, [onSave, onClose, record])
 
-  const renderInput = (fieldName: string, field: DatabaseField) => {
-    switch (field.type) {
-      case RecordFieldType.STRING:
-      case RecordFieldType.ENUM_MULTI:
-        return <input name={fieldName} className="form-control" type="text" defaultValue={record?.[fieldName]} />
-      case RecordFieldType.INT:
-      case RecordFieldType.RANGE:
-      case RecordFieldType.REAL:
-        return <input name={fieldName} className="form-control" type="number" defaultValue={record?.[fieldName]} />
-      case RecordFieldType.DATE:
-        return <input name={fieldName} className="form-control" type="datetime" defaultValue={record?.[fieldName]} />
-      case RecordFieldType.ENUM:
-        return (
-          <select name={fieldName} className="form-select" defaultValue={record?.[fieldName]}>
-            {field.params?.map(value => (
-              <option key={value} value={value}>
-                {value.replace(/_/g, ' ')}
-              </option>
-            ))}
-          </select>
-        )
-      case RecordFieldType.BOOL:
-        return <input className="form-check-input ms-3" name={fieldName} type="checkbox" defaultChecked={parseFieldValue(record?.[fieldName], field) === true} />
-      case RecordFieldType.FORMULA:
-        return <FormulaField value={record?.[fieldName]} field={field} />
-      case RecordFieldType.BODY:
-        return <textarea name={fieldName} className="form-control" rows={5} defaultValue={record?.[fieldName]} />
-    }
-  }
+  const inlineClasses = 'pt-6'
+  const paneClasses = classNames(
+    'fixed top-0 right-0 z-10',
+    'h-full p-4',
+    'overflow-auto',
+    'bg-background',
+    'border-s-1 border-border'
+  )
 
   return (
-    <div className={`${s.container} ${isFullPage ? s.fullPage : s.pane}`}>
+    <div
+      className={isFullPage ? inlineClasses : paneClasses}
+      style={{
+        width: isFullPage ? 'auto' : '400px',
+      }}
+    >
       {isFullPage && (
-        <button
-          className="btn btn-outline-secondary btn-sm mb-3"
-          type="button"
-          onClick={onClose}
-        >
-          &larr; Back
-        </button>
+        <div className="mb-3">
+          <Button theme="secondary" size="small" onClick={onClose}>
+            &larr; Back
+          </Button>
+        </div>
       )}
       <form onSubmit={handleSubmit}>
         {allFields.map(([fieldName, field]) => (
@@ -101,33 +84,34 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
             <label htmlFor={fieldName}>
               {fieldName}
             </label>
-            {renderInput(fieldName, field)}
+            <RecordViewerField
+              defaultValue={record?.[fieldName]}
+              fieldName={fieldName}
+              field={field}
+            />
           </div>
         ))}
-        <div className="d-flex gap-2">
-          <button
-            className="btn btn-outline-primary me-auto"
-            type="submit"
-          >
-            {record ? 'Save' : 'Create'}
-          </button>
+        <div className="flex gap-2">
+          <div className="me-auto">
+            <Button theme="primary" type="submit">
+              {record ? 'Save' : 'Create'}
+            </Button>
+          </div>
           {!isFullPage && (
-            <button
-              className="btn btn-outline-secondary"
-              type="button"
+            <Button
+              theme="secondary"
               onClick={onClose}
             >
               Cancel
-            </button>
+            </Button>
           )}
           {record && (
-            <button
-              className="btn btn-outline-danger"
-              type="button"
+            <Button
+              theme="danger"
               onClick={() => onDelete(record)}
             >
               Delete
-            </button>
+            </Button>
           )}
         </div>
       </form>

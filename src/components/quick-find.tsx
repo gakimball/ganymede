@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { memo } from 'preact/compat';
-import s from './quick-find.module.css'
 import { useStore } from '../state/use-store';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
 import { useEventHandler } from '../hooks/use-event-handler';
+import { TextInput } from './text-input';
 
 export const QuickFind = memo(() => {
   const store = useStore()
@@ -67,27 +67,42 @@ export const QuickFind = memo(() => {
   }
 
   return (
-    <div className={s.overlay}>
-      <div className={s.container}>
-        <input
-          className="form-control mb-3 position-sticky top-0 z-1"
-          type="search"
-          value={search}
-          onChange={e => setSearch(e.currentTarget.value)}
-          onKeyDown={handleKeyAction}
-          autoFocus
-          autocapitalize="off"
-          autocomplete="off"
-        />
-        <div className="list-group list-group-flush">
-          {results.map((result, index) => (
-            <FileBrowserItem
-              file={result}
-              onAction={handleFileAction}
-              isActive={index === focusIndex}
-            />
-          ))}
+    <div
+      className={`
+        fixed inset-0 z-10
+        flex items-center justify-center
+      `}
+    >
+      <div
+        className={`
+          bg-background
+          p-3
+          border-1 border-border rounded-xl
+          overflow-y-auto
+        `}
+        style={{
+          width: '600px',
+          height: '400px',
+        }}
+      >
+        <div className="sticky top-0 z-10 mb-2">
+          <TextInput
+            type="search"
+            value={search}
+            onChange={e => setSearch(e.currentTarget.value)}
+            onKeyDown={handleKeyAction}
+            autoFocus
+            autocapitalize="off"
+            autocomplete="off"
+          />
         </div>
+        {results.map((result, index) => (
+          <FileBrowserItem
+            file={result}
+            onAction={handleFileAction}
+            isActive={index === focusIndex}
+          />
+        ))}
       </div>
     </div>
   )

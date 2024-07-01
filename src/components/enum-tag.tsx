@@ -12,9 +12,8 @@ export const EnumTag: FunctionComponent<EnumTagProps> = ({
   field,
 }) => (
   <span
-    className="badge"
+    className="py-1 px-2 rounded-md text-sm text-content"
     style={{
-      color: '#fff',
       backgroundColor: getEnumColor(value, field)
     }}
   >

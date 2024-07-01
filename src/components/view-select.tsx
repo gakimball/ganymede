@@ -1,6 +1,8 @@
 import { FunctionComponent } from 'preact';
 import { ViewConfig } from '../types/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
+import { Button } from './button';
+import classNames from 'classnames';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -24,33 +26,37 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   }
 
   return (
-    <ul className="nav nav-underline mb-3 pe-3">
-      {[...views, textView].map(view => (
-        <li key={view} className="nav-item">
-          <a
-            className={`nav-link ${view.Name === current?.Name ? 'active' : ''}`}
+    <ul className="flex items-center mb-3 pe-3">
+      {[...views, textView].map(view => {
+        const isActive = view.Name === current?.Name
+        const cls = classNames([
+          'pb-1 me-4',
+          'font-bold',
+          'border-b-2',
+          'hover:text-content',
+          isActive && 'text-content border-content',
+          !isActive && 'text-content-secondary border-transparent',
+        ])
+
+        return (
+          <button
+            key={view}
+            type="button"
+            className={cls}
             onClick={() => onChange(view)}
-            href="#"
           >
             {view.Name}
-          </a>
-        </li>
-      ))}
-      <button
-        className="btn btn-sm btn-outline-primary align-self-center ms-auto"
-        type="button"
-        onClick={onCreateNew}
-      >
-        New
-      </button>
-      <button
-        className="btn btn-sm btn-outline-secondary align-self-center"
-        type="button"
-        onClick={() => {}}
-        disabled
-      >
-        Edit view
-      </button>
+          </button>
+        )
+      })}
+      <div className="flex gap-2 ms-auto">
+        <Button theme="primary" onClick={onCreateNew} size="small">
+          New
+        </Button>
+        <Button theme="secondary" onClick={() => {}} size="small">
+          Edit view
+        </Button>
+      </div>
     </ul>
   )
 }

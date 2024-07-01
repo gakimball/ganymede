@@ -23,19 +23,29 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
   return (
     <>
       {lists.map(list => (
-        <div key={list.title} className="mt-4 pb-3 pe-3 border-bottom">
+        <div key={list.title} className="mt-8 pb-3 pe-3">
           {list.title && list.field && (
-            <FieldValue value={list.title} field={list.field} />
+            <div className="mb-4">
+              <FieldValue value={list.title} field={list.field} />
+            </div>
           )}
           {list.records.map(record => (
             <div
-              className="d-flex gap-3 mt-3"
-              style={{ cursor: 'pointer' }}
+              className="flex gap-3 mt-3 group cursor-pointer"
+              style={{ height: '29px' }}
               onClick={() => onSelectRecord(record)}
             >
-              {[...shownFields.entries()].map(([fieldName, field], index) => (
+              {[...shownFields.entries()].map(([fieldName, field]) => (
                 record[fieldName] && (
-                  <div key={fieldName} className={`${s.field} ${index === 0 ? 'flex-grow-1' : ''}`}>
+                  <div
+                    key={fieldName}
+                    className={`
+                      text-content-secondary
+                      first:text-content
+                      first:group-hover:text-primary
+                      first:flex-1
+                    `}
+                  >
                     <FieldValue
                       value={record[fieldName]}
                       field={field}

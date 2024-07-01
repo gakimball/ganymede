@@ -6,6 +6,7 @@ import { useStore } from '../state/use-store';
 import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
 import { memo } from 'preact/compat';
 import { Icon } from './icon';
+import { Button } from './button';
 
 export const FileBrowser = memo(({
 }) => {
@@ -63,31 +64,28 @@ export const FileBrowser = memo(({
   return (
     <div
       className={`
-        d-flex flex-column gap-2
-        h-100
+        flex flex-col gap-2
+        w-sidebar h-screen
         pt-3 pb-3
-        border-end
-        position-fixed top-0 left-0
+        border-r-1 border-border
+        fixed top-0 left-0
         overflow-y-auto
+        bg-background-secondary
       `}
-      style={{
-        '--bs-body-bg': '#262626',
-        width: 'var(--App-sidebar-width)',
-        height: '100vh',
-        background: 'var(--bs-body-bg)',
-      }}
     >
       {favorites.length > 0 && (
         <>
-          <h6 className="ps-3">Favorites</h6>
-          <div className="list-group list-group-flush mb-3 border-top">
+          <h6 className="ps-3">
+            Favorites
+          </h6>
+          <div className="mb-3 border-t-1 border-border">
             {favorites.map(favorite => {
               return renderFile(favorite.file, favorite.isBrokenFile || favorite.isBrokenView)
             })}
           </div>
         </>
       )}
-      <div className="ps-3 pe-3 mb-2 d-flex align-items-center justify-content-between">
+      <div className="ps-3 pe-3 mb-2 flex items-center justify-between">
         <h6 className="mb-0">
           {directoryBase}&nbsp;/
         </h6>
@@ -102,24 +100,16 @@ export const FileBrowser = memo(({
           <Icon name="search" />
         </button>
       </div>
-      <div className="list-group list-group-flush mb-3 border-top">
+      <div className="mb-3 border-t-1 border-border">
         {files.map(file => renderFile(file))}
       </div>
-      <div className="d-flex gap-2 ms-3 mt-auto">
-        <button
-          className="btn btn-outline-secondary btn-sm"
-          type="button"
-          onClick={store.openDirectoryPicker}
-        >
+      <div className="flex gap-2 ms-3 mt-auto">
+        <Button size="small" onClick={store.openDirectoryPicker}>
           Change...
-        </button>
-        <button
-          className="btn btn-outline-secondary btn-sm"
-          type="button"
-          onClick={store.reloadDirectory}
-        >
+        </Button>
+        <Button size="small" onClick={store.reloadDirectory}>
           Reload
-        </button>
+        </Button>
       </div>
     </div>
   )

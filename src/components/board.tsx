@@ -5,7 +5,6 @@ import { createViewGroups } from '../utils/create-view-groups';
 import { getShownFields } from '../utils/get-shown-fields';
 import { FieldValue } from './field-value';
 import { getRenderRules } from '../utils/get-render-rules';
-import s from './board.module.css'
 
 export const Board: FunctionComponent<ViewComponentProps> = ({
   config,
@@ -20,25 +19,39 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
   const renderRules = getRenderRules(config, fields)
 
   return (
-    <div className={s.container}>
+    <div className="flex flex-nowrap gap-4 overflow-x-auto mt-8">
       {groups.map(group => (
-        <div key={group.id} className={s.column}>
+        <div key={group.id} style={{ flex: '0 0 250px' }}>
           {group.field && (
             <FieldValue value={group.title} field={group.field} />
           )}
           {group.records.map(record => (
-            <div className={`${s.card} card mb-3`} onClick={() => onSelectRecord(record)}>
-              <div className="card-body">
-                {[...shownFields.entries()].map(([fieldName, field]) => (
-                  <div key={fieldName}>
-                    <FieldValue
-                      value={record[fieldName]}
-                      field={field}
-                      render={renderRules[fieldName]}
-                    />
-                  </div>
-                ))}
-              </div>
+            <div
+              className={`
+                p-2 mt-4
+                border-1 border-border rounded-lg
+                bg-background-secondary
+                cursor-pointer
+                hover:border-content-secondary
+                group
+              `}
+              onClick={() => onSelectRecord(record)}
+            >
+              {[...shownFields.entries()].map(([fieldName, field]) => (
+                <div
+                  key={fieldName}
+                  className={`
+                    text-content-secondary
+                    first:text-content
+                  `}
+                >
+                  <FieldValue
+                    value={record[fieldName]}
+                    field={field}
+                    render={renderRules[fieldName]}
+                  />
+                </div>
+              ))}
             </div>
           ))}
         </div>

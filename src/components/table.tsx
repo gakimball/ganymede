@@ -28,11 +28,13 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
           {table.title && table.field && (
             <FieldValue value={table.title} field={table.field} />
           )}
-          <table className="table table-hover">
+          <table className="w-full mb-6">
             <thead>
-              <tr>
+              <tr
+                className="border-b-1 border-border h-10"
+              >
                 {[...shownFields.keys()].map((field) => (
-                  <th key={field} scope="col">
+                  <th key={field} scope="col" className="text-left">
                     <span className="text-body-secondary">
                       {field}
                     </span>
@@ -42,9 +44,20 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
             </thead>
             <tbody>
               {table.records.map(record => (
-                <tr className={s.row} onClick={() => onSelectRecord(record)}>
+                <tr
+                  className="border-b-1 border-border cursor-pointer group"
+                  onClick={() => onSelectRecord(record)}
+                >
                   {[...shownFields.entries()].map(([fieldName, field]) => (
-                    <td key={fieldName}>
+                    <td
+                      key={fieldName}
+                      className={`
+                        h-10
+                        text-content-secondary
+                        first:text-content
+                        first:group-hover:text-primary
+                      `}
+                    >
                       <FieldValue
                         value={record[fieldName]}
                         field={field}
@@ -59,7 +72,7 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
               <tfoot>
                 <tr>
                   {[...shownFields.entries()].map(([fieldName, field]) => (
-                    <td key={fieldName}>
+                    <td key={fieldName} className="h-10">
                       {sums[fieldName]}
                     </td>
                   ))}

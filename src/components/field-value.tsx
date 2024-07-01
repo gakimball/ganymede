@@ -32,7 +32,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
 
   if (field.type === RecordFieldType.ENUM_MULTI) {
     return (
-      <div className="d-inline-flex gap-2">
+      <div className="inline-flex gap-2">
         {value.split(',').map(item => (
           <EnumTag value={item} field={field} />
         ))}
@@ -56,7 +56,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
   if (field.type === RecordFieldType.STRING && value.match(/^https?:\/\//)) {
     return (
       <span>
-        <a href={value}>
+        <a href={value} className="link">
           {(new URL(value)).hostname}
         </a>
       </span>

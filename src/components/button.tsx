@@ -6,6 +6,7 @@ interface ButtonProps {
   type?: 'button' | 'submit';
   size?: 'default' | 'small';
   isExpanded?: boolean;
+  isDisabled?: boolean;
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   size = 'default',
   type,
   isExpanded,
+  isDisabled,
   onClick,
   children,
 }) => {
@@ -33,6 +35,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
     sizeClasses[size],
     {
       'block flex-1': isExpanded,
+      'text-content-secondary border-content-secondary': isDisabled,
     },
   )
 
@@ -41,6 +44,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       className={className}
       type={type}
       onClick={onClick}
+      disabled={isDisabled}
     >
       {children}
     </button>

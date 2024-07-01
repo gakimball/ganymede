@@ -8,6 +8,7 @@ import { QuickFind } from './quick-find'
 import { ThemeManager } from './theme-manager'
 import { ViewError } from './view-error'
 import { EmptyView } from './empty-view'
+import { Prompt } from './prompt'
 
 const initialState = new AppStore()
 
@@ -24,6 +25,8 @@ export const App = () => {
     <StoreContext.Provider value={store}>
       <ThemeManager />
       <FileBrowser />
+      <QuickFind />
+      <Prompt />
       <div className="ps-3 ms-sidebar">
         {viewError && (
           <ViewError />
@@ -42,7 +45,6 @@ export const App = () => {
           </>
         )}
       </div>
-      <QuickFind />
     </StoreContext.Provider>
   )
 }

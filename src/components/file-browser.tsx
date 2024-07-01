@@ -90,10 +90,7 @@ export const FileBrowser = memo(({
           {directoryBase}&nbsp;/
         </h6>
         <button
-          className="reset-button"
-          style={{
-            height: '16px'
-          }}
+          className="h-4"
           type="button"
           onClick={store.toggleQuickFind}
         >

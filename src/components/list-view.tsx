@@ -5,7 +5,6 @@ import { createViewGroups } from '../utils/create-view-groups';
 import { getShownFields } from '../utils/get-shown-fields';
 import { getRenderRules } from '../utils/get-render-rules';
 import { FieldValue } from './field-value';
-import s from './list-view.module.css'
 
 export const ListView: FunctionComponent<ViewComponentProps> = ({
   config,

@@ -4,7 +4,6 @@ import { ViewComponentProps } from '../types/view-component-props';
 import { useMemo } from 'preact/hooks';
 import { createViewGroups } from '../utils/create-view-groups';
 import { getShownFields } from '../utils/get-shown-fields';
-import s from './table.module.css'
 import { getRenderRules } from '../utils/get-render-rules';
 import { getSums } from '../utils/get-sums';
 

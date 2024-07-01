@@ -8,6 +8,7 @@ Views
 [x] CRUD records
 [ ] CRUD views
 [x] Enum label colors
+[ ] Extends field
 
 Text editing
 [x] Switch to contenteditable

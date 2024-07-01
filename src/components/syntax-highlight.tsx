@@ -23,6 +23,9 @@ export const SyntaxHighlight = forwardRef<SyntaxHighlightRef, SyntaxtHighlightPr
     if (fileName.endsWith('.xit')) {
       return syntaxHighlighters.xit
     }
+    if (fileName.endsWith('.rec')) {
+      return syntaxHighlighters.rec
+    }
     return syntaxHighlighters.plaintext
   }, [fileName])
 

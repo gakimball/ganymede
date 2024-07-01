@@ -25,6 +25,8 @@ const XIT_STATUS_COLORS: {
   '?': hl.yellow,
 }
 
+const REC_FIELD_REGEX = /^([a-zA-Z%][a-zA-Z0-9_]*:)(.*)/
+
 const replaceStrikethru = (substr: string) => `<span class="${hl.gray}">${substr}</span>`
 const parseInlineStyle = (line: string) => {
   return line.replace(MD_STRIKETHRU_REGEX, replaceStrikethru)
@@ -71,6 +73,26 @@ export const syntaxHighlighters = {
       } else {
         html += `${line}<br />`
       }
+    })
+
+    return html
+  },
+
+  rec: (text: string) => {
+    let html = ''
+
+    text.split('\n').forEach(line => {
+      let match
+
+      if (line.startsWith('#')) {
+        html += `<span class="${hl.gray}">${line}</span>`
+      } else if (line.startsWith('+')) {
+        html += `<span class="${hl.orange}">+</span>${line.slice(1)}`
+      } else if ((match = line.match(REC_FIELD_REGEX)) !== null) {
+        html += `<span class="${line.startsWith('%') ? hl.blue : hl.red}">${match[1]}</span>${match[2]}`
+      }
+
+      html += '<br>'
     })
 
     return html

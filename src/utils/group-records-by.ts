@@ -34,7 +34,7 @@ export const groupRecordsBy = (
   records.forEach(record => {
     const value = record[groupBy]
 
-    if (value === undefined) {
+    if (!value || !(value in recordGroups)) {
       notSetRecords.push(record)
     } else {
       recordGroups[value].push(record)

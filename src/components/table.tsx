@@ -22,11 +22,13 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
   const [hasSums, sums] = getSums(records, fields, config)
 
   return (
-    <>
+    <div className={tables.length > 1 ? 'mt-8' : 'mt-6'}>
       {tables.map(table => (
-        <>
+        <div>
           {table.title && table.field && (
-            <FieldValue value={table.title} field={table.field} />
+            <div className="mb-4">
+              <FieldValue value={table.title} field={table.field} />
+            </div>
           )}
           <table className="w-full mb-6">
             <thead>
@@ -80,8 +82,8 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
               </tfoot>
             )}
           </table>
-        </>
+        </div>
       ))}
-    </>
+    </div>
   )
 }

@@ -12,6 +12,7 @@ const upsertField = (
   props: Partial<DatabaseField> = {}
 ) => emplaceMap(map, key, {
   insert: () => ({
+    name: key,
     type: RecordFieldType.STRING,
     ...props,
   }),

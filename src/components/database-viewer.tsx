@@ -47,7 +47,10 @@ export const DatabaseViewer = memo(() => {
   const CurrentViewComponent = view.view?.Layout
     ? views[view.view.Layout]
     : undefined
-  const recordViewerIsFullScreen = parseFieldValue(view.view?.Full_Page, { type: RecordFieldType.BOOL })
+  const recordViewerIsFullScreen = parseFieldValue(view.view?.Full_Page, {
+    name: 'Full_Page',
+    type: RecordFieldType.BOOL,
+  })
   const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
 
   return (

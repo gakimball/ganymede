@@ -2,7 +2,7 @@ Issues
 [ ] Cannot turn off autocomplete
 [ ] Esc should close quick find
 [ ] Views should reference paths, not filenames
-[ ] Include field name in DatabaseField interface
+[x] Include field name in DatabaseField interface
 
 Views
 [x] CRUD records

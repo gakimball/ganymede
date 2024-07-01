@@ -6,14 +6,15 @@ import { ViewConfig } from '../types/view-config';
  * Fields config.
  */
 export const getShownFields = (database: Database, config: ViewConfig) => {
+  const fields = [...database.fields.values()]
+
   if (!config.Fields) {
-    return database.fields
+    return fields
   }
 
   const shownFields = config.Fields.split(' ')
-  const fields = [...database.fields.entries()]
-    .filter(([key]) => shownFields.includes(key))
-    .sort(([keyA], [keyB]) => shownFields.indexOf(keyA) - shownFields.indexOf(keyB))
 
-  return new Map(fields)
+  return [...database.fields.values()]
+    .filter(field => shownFields.includes(field.name))
+    .sort((fieldA, fieldB) => shownFields.indexOf(fieldA.name) - shownFields.indexOf(fieldB.name))
 }

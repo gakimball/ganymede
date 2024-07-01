@@ -34,10 +34,10 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
               style={{ height: '29px' }}
               onClick={() => onSelectRecord(record)}
             >
-              {[...shownFields.entries()].map(([fieldName, field]) => (
-                record[fieldName] && (
+              {shownFields.map((field) => (
+                record[field.name] && (
                   <div
-                    key={fieldName}
+                    key={field.name}
                     className={`
                       text-content-secondary
                       first:text-content
@@ -46,9 +46,9 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
                     `}
                   >
                     <FieldValue
-                      value={record[fieldName]}
+                      value={record[field.name]}
                       field={field}
-                      render={renderRules[fieldName]}
+                      render={renderRules[field.name]}
                     />
                   </div>
                 )

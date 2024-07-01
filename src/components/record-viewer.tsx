@@ -30,26 +30,29 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     records: [],
     fields,
   }, viewConfig)
-  const restFields = [...fields.entries()].filter(([fieldName]) => !shownFields.has(fieldName))
+  const restFields = [...fields.values()].filter(field => !shownFields.includes(field))
   const allFields = [
-    ...shownFields.entries(),
+    ...shownFields,
     ...restFields,
   ]
-  const isFullPage = parseFieldValue(viewConfig.Full_Page, { type: RecordFieldType.BOOL })
+  const isFullPage = parseFieldValue(viewConfig.Full_Page, {
+    name: 'Full_Page',
+    type: RecordFieldType.BOOL,
+  })
 
   const handleSubmit = useCallback((event: SubmitEvent) => {
     const formData = new FormData(event.currentTarget as HTMLFormElement)
     const update = Object.fromEntries(
-      [...fields.entries()]
-        .filter(([, field]) => field.type !== RecordFieldType.FORMULA)
-        .map(([fieldName, field]) => {
-          const value = formData.get(fieldName)
+      [...fields.values()]
+        .filter(field => field.type !== RecordFieldType.FORMULA)
+        .map(field => {
+          const value = formData.get(field.name)
 
           if (field.type === RecordFieldType.BOOL) {
-            return [fieldName, value === 'on' ? 'true' : 'false']
+            return [field.name, value === 'on' ? 'true' : 'false']
           }
 
-          return [fieldName, value ? String(value) : undefined]
+          return [field.name, value ? String(value) : undefined]
         })
     )
 
@@ -80,14 +83,13 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        {allFields.map(([fieldName, field]) => (
-          <div key={fieldName} className="mb-3">
-            <FormLabel htmlFor={fieldName}>
-              {fieldName}
+        {allFields.map((field) => (
+          <div key={field.name} className="mb-3">
+            <FormLabel htmlFor={field.name}>
+              {field.name}
             </FormLabel>
             <RecordViewerField
-              defaultValue={record?.[fieldName]}
-              fieldName={fieldName}
+              defaultValue={record?.[field.name]}
               field={field}
             />
           </div>

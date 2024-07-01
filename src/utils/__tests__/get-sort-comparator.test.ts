@@ -23,13 +23,13 @@ const records = [b, c, a]
 
 describe('strings', () => {
   test('sorts alphabetically asc', () => {
-    const compare = getSortComparator('String', { type: RecordFieldType.STRING })
+    const compare = getSortComparator({ name: 'String', type: RecordFieldType.STRING })
 
     expect([...records].sort(compare)).toEqual([a, b, c])
   })
 
   test('sorts alphabetically desc', () => {
-    const compare = getSortComparator('String', { type: RecordFieldType.STRING }, true)
+    const compare = getSortComparator({ name: 'String', type: RecordFieldType.STRING }, true)
 
     expect([...records].sort(compare)).toEqual([c, b, a])
   })
@@ -37,13 +37,13 @@ describe('strings', () => {
 
 describe('numbers', () => {
   test('sorts numerically asc', () => {
-    const compare = getSortComparator('Number', { type: RecordFieldType.INT })
+    const compare = getSortComparator({ name: 'Number', type: RecordFieldType.INT })
 
     expect([...records].sort(compare)).toEqual([a, b, c])
   })
 
   test('sorts numerically desc', () => {
-    const compare = getSortComparator('Number', { type: RecordFieldType.INT }, true)
+    const compare = getSortComparator({ name: 'Number', type: RecordFieldType.INT }, true)
 
     expect([...records].sort(compare)).toEqual([c, b, a])
   })
@@ -51,13 +51,13 @@ describe('numbers', () => {
 
 describe('booleans', () => {
   test('sorts false first asc', () => {
-    const compare = getSortComparator('Bool', { type: RecordFieldType.BOOL })
+    const compare = getSortComparator({ name: 'Bool', type: RecordFieldType.BOOL })
 
     expect([...records].sort(compare)).toEqual([c, b, a])
   })
 
   test('sorts true first desc', () => {
-    const compare = getSortComparator('Bool', { type: RecordFieldType.BOOL }, true)
+    const compare = getSortComparator({ name: 'Bool', type: RecordFieldType.BOOL }, true)
 
     expect([...records].sort(compare)).toEqual([b, a, c])
   })
@@ -65,13 +65,13 @@ describe('booleans', () => {
 
 describe('dates', () => {
   test('sorts earliest first asc', () => {
-    const compare = getSortComparator('Date', { type: RecordFieldType.DATE })
+    const compare = getSortComparator({ name: 'Date', type: RecordFieldType.DATE })
 
     expect([...records].sort(compare)).toEqual([a, b, c])
   })
 
   test('sorts latest first desc', () => {
-    const compare = getSortComparator('Date', { type: RecordFieldType.DATE }, true)
+    const compare = getSortComparator({ name: 'Date', type: RecordFieldType.DATE }, true)
 
     expect([...records].sort(compare)).toEqual([c, b, a])
   })

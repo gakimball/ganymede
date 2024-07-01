@@ -1,4 +1,4 @@
-import { Database, DatabaseField, DatabaseRecord } from '../types/database';
+import { Database, DatabaseRecord } from '../types/database';
 import { getSortComparator } from './get-sort-comparator';
 import { parseFieldValue } from './parse-field-value';
 
@@ -28,7 +28,7 @@ export const testFilter = (
     case 'eq':
       return parseFieldValue(record[test.field], field) === parseFieldValue(test.value, field)
     default: {
-      const comparison = getSortComparator(test.field, field)(record, { [test.field]: test.value })
+      const comparison = getSortComparator(field)(record, { [test.field]: test.value })
 
       switch (test.condition) {
         case 'gt': return comparison > 0

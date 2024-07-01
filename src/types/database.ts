@@ -6,6 +6,7 @@ export interface Database {
 }
 
 export type DatabaseField = {
+  name: string;
   type: RecordFieldType;
   mandatory?: true;
   unique?: true;

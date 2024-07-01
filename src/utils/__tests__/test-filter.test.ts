@@ -8,15 +8,19 @@ const record: DatabaseRecord = {
 }
 const fields = new Map<string, DatabaseField>([
   ['String', {
+    name: 'String',
     type: RecordFieldType.STRING,
   }],
   ['Number', {
+    name: 'Number',
     type: RecordFieldType.INT,
   }],
   ['Bool', {
+    name: 'Bool',
     type: RecordFieldType.BOOL,
   }],
   ['Enum', {
+    name: 'Enum',
     type: RecordFieldType.ENUM,
     params: ['Option'],
   }]

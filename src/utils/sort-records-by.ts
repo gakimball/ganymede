@@ -24,7 +24,7 @@ export const sortRecordsBy = (
       return () => 0
     }
 
-    return getSortComparator(fieldName, field, direction === 'desc')
+    return getSortComparator(field, direction === 'desc')
   })
 
   return [...database.records].sort((a, b) => {

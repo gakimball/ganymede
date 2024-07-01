@@ -17,7 +17,6 @@ const sortFunctions = {
  * Get a sorting function that compares a specific record on two fields.
  */
 export const getSortComparator = (
-  fieldName: string,
   field: DatabaseField,
   descending = false,
 ) => {
@@ -28,8 +27,8 @@ export const getSortComparator = (
 
   return (a: DatabaseRecord, b: DatabaseRecord) => {
     const comp = sortFunc(
-      parseFieldValue(a[fieldName], field),
-      parseFieldValue(b[fieldName], field),
+      parseFieldValue(a[field.name], field),
+      parseFieldValue(b[field.name], field),
     )
     return descending ? -comp : comp
   }

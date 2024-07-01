@@ -34,10 +34,10 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
               <tr
                 className="border-b-1 border-border h-10"
               >
-                {[...shownFields.keys()].map((field) => (
-                  <th key={field} scope="col" className="text-left">
+                {shownFields.map((field) => (
+                  <th key={field.name} scope="col" className="text-left">
                     <span className="text-body-secondary">
-                      {field}
+                      {field.name}
                     </span>
                   </th>
                 ))}
@@ -49,9 +49,9 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
                   className="border-b-1 border-border cursor-pointer group"
                   onClick={() => onSelectRecord(record)}
                 >
-                  {[...shownFields.entries()].map(([fieldName, field]) => (
+                  {shownFields.map(field => (
                     <td
-                      key={fieldName}
+                      key={field.name}
                       className={`
                         h-10
                         text-content-secondary
@@ -60,9 +60,9 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
                       `}
                     >
                       <FieldValue
-                        value={record[fieldName]}
+                        value={record[field.name]}
                         field={field}
-                        render={renderRules[fieldName]}
+                        render={renderRules[field.name]}
                       />
                     </td>
                   ))}
@@ -72,7 +72,7 @@ export const Table: FunctionComponent<ViewComponentProps> = ({
             {hasSums && (
               <tfoot>
                 <tr>
-                  {[...shownFields.entries()].map(([fieldName, field]) => (
+                  {[...shownFields.keys()].map((fieldName) => (
                     <td key={fieldName} className="h-10">
                       {sums[fieldName]}
                     </td>

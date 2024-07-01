@@ -37,18 +37,18 @@ export const Board: FunctionComponent<ViewComponentProps> = ({
               `}
               onClick={() => onSelectRecord(record)}
             >
-              {[...shownFields.entries()].map(([fieldName, field]) => (
+              {shownFields.map((field) => (
                 <div
-                  key={fieldName}
+                  key={field.name}
                   className={`
                     text-content-secondary
                     first:text-content
                   `}
                 >
                   <FieldValue
-                    value={record[fieldName]}
+                    value={record[field.name]}
                     field={field}
-                    render={renderRules[fieldName]}
+                    render={renderRules[field.name]}
                   />
                 </div>
               ))}

@@ -7,6 +7,7 @@ import { parseFieldValue } from '../utils/parse-field-value';
 import { Button } from './button';
 import classNames from 'classnames';
 import { RecordViewerField } from './record-viewer-field';
+import { FormLabel } from './form-label';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
@@ -81,9 +82,9 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
       <form onSubmit={handleSubmit}>
         {allFields.map(([fieldName, field]) => (
           <div key={fieldName} className="mb-3">
-            <label htmlFor={fieldName}>
+            <FormLabel htmlFor={fieldName}>
               {fieldName}
-            </label>
+            </FormLabel>
             <RecordViewerField
               defaultValue={record?.[fieldName]}
               fieldName={fieldName}
@@ -91,20 +92,7 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
             />
           </div>
         ))}
-        <div className="flex gap-2">
-          <div className="me-auto">
-            <Button theme="primary" type="submit">
-              {record ? 'Save' : 'Create'}
-            </Button>
-          </div>
-          {!isFullPage && (
-            <Button
-              theme="secondary"
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-          )}
+        <div className="flex gap-2 mt-7">
           {record && (
             <Button
               theme="danger"
@@ -113,6 +101,17 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
               Delete
             </Button>
           )}
+          {!isFullPage && (
+            <Button
+              theme="secondary"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          )}
+          <Button theme="primary" type="submit" isExpanded>
+            {record ? 'Save' : 'Create'}
+          </Button>
         </div>
       </form>
     </div>

@@ -9,6 +9,7 @@ import { ThemeManager } from './theme-manager'
 import { ViewError } from './view-error'
 import { EmptyView } from './empty-view'
 import { Prompt } from './prompt'
+import { FolderViewer } from './folder-viewer'
 
 const initialState = new AppStore()
 
@@ -41,6 +42,9 @@ export const App = () => {
             )}
             {viewType === 'text' && (
               <TextViewer />
+            )}
+            {viewType === 'folder' && (
+              <FolderViewer />
             )}
           </>
         )}

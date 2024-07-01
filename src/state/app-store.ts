@@ -2,17 +2,16 @@ import { computed, effect, signal } from '@preact/signals'
 import { createEmptyDatabase } from '../utils/create-empty-database'
 import { readDir, readTextFile, removeDir, removeFile, renameFile, type FileEntry } from '@tauri-apps/api/fs'
 import { ViewConfig } from '../types/view-config';
-import { Database, DatabaseField, DatabaseFieldMap, DatabaseRecord } from '../types/database';
+import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { DATABASE_CHANGE_EVENT, DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
 import { parseRecfile } from '../utils/parse-recfile';
-import { ask, confirm, open } from '@tauri-apps/api/dialog';
+import { confirm, open } from '@tauri-apps/api/dialog';
 import autoBind from 'auto-bind';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { Command } from '@tauri-apps/api/shell';
 import { createEmptyRecord } from '../utils/create-empty-record';
-import { dirname } from '@tauri-apps/api/path';
 
-type CurrentView = DatabaseView | TextView
+type CurrentView = DatabaseView | TextView | FolderView
 
 interface DatabaseView {
   type: 'database';
@@ -23,15 +22,22 @@ interface DatabaseView {
 }
 
 interface TextView {
-  type: 'text',
+  type: 'text';
   file: FileEntry;
   contents: string;
+  hasError: boolean;
+}
+
+interface FolderView {
+  type: 'folder';
+  file: FileEntry;
   hasError: boolean;
 }
 
 type PersistedView =
   | Omit<DatabaseView, 'database'>
   | Omit<TextView, 'contents'>
+  | Omit<FolderView, 'contents'>
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 
@@ -207,6 +213,15 @@ export class AppStore {
   async openFile(file: FileEntry): Promise<void> {
     let fileContents
     let hasError = false
+
+    if (file.children) {
+      this.currentView.value = {
+        type: 'folder',
+        file,
+        hasError: false,
+      }
+      return
+    }
 
     try {
       fileContents = await readTextFile(file.path)

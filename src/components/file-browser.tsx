@@ -25,6 +25,10 @@ export const FileBrowser = memo(({
   const handleClickItem = useCallback((file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
       case 'open': {
+        store.openFile(file)
+        break
+      }
+      case 'toggle': {
         if (file.children) {
           setExpandedDirs(prev => swapArrayValue(prev, file.path))
         } else {
@@ -46,20 +50,27 @@ export const FileBrowser = memo(({
     file: FileEntry,
     disabled = false,
     indent = 0,
-  ) => (
-    <Fragment key={file.path}>
-      <FileBrowserItem
-        file={file}
-        isActive={file === selectedFile}
-        isDisabled={disabled}
-        indent={indent}
-        onAction={handleClickItem}
-      />
-      {file.children && expandedDirs.includes(file.path) && file.children.map(file => {
-        return renderFile(file, false, indent + 1)
-      })}
-    </Fragment>
-  )
+  ) => {
+    const isDir = file.children !== undefined
+    const isExpanded = expandedDirs.includes(file.path)
+
+    return (
+      <Fragment key={file.path}>
+        <FileBrowserItem
+          file={file}
+          isActive={file === selectedFile}
+          isDisabled={disabled}
+          indent={indent}
+          onAction={handleClickItem}
+          isExpandable={isDir}
+          isExpanded={isExpanded}
+        />
+        {isDir && isExpanded && file.children?.map(file => {
+          return renderFile(file, false, indent + 1)
+        })}
+      </Fragment>
+    )
+  }
 
   return (
     <div

@@ -6,12 +6,14 @@ import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
 
-export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete'
+export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle'
 
 interface FileBrowserItemProps {
   file: FileEntry;
   isActive?: boolean;
   isDisabled?: boolean;
+  isExpandable?: boolean;
+  isExpanded?: boolean;
   indent?: number;
   onAction: (
     file: FileEntry,
@@ -23,6 +25,8 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   file,
   isActive = false,
   isDisabled = false,
+  isExpandable = false,
+  isExpanded = false,
   indent = 0,
   onAction,
 }) => {
@@ -60,30 +64,50 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   ]
 
   return (
-    <button
-      className={`
-        flex items-center
-        w-full
-        py-2 ${indentClasses[indent] ?? 'ps-6'}
-        border-b-1 border-border
-        select-none
-        hover:bg-background-highlight
-        truncate
-        ${isActive ? 'bg-background-highlight' : ''}
-      `}
-      type="button"
-      disabled={isDisabled}
-      onClick={() => onAction(file, 'open')}
-      onContextMenu={handleContextMenu}
-    >
-      <div className="h-icon me-3">
-        <Icon name={getFileIcon(file)} />
-      </div>
-      {isDisabled && '[Broken] '}
-      {displayName}
-      <span className="text-content-secondary">
-        {ext}
-      </span>
-    </button>
+    <div className="relative">
+      <button
+        className={`
+          flex items-center
+          w-full
+          py-2 ${indentClasses[indent] ?? 'ps-6'}
+          border-b-1 border-border
+          select-none
+          hover:bg-background-highlight
+          truncate
+          ${isActive ? 'bg-background-highlight' : ''}
+        `}
+        type="button"
+        disabled={isDisabled}
+        onClick={() => onAction(file, 'open')}
+        onContextMenu={handleContextMenu}
+      >
+        <div className="h-icon me-3">
+          <Icon name={getFileIcon(file)} />
+        </div>
+
+        {isDisabled && '[Broken] '}{displayName}
+
+        <span className="text-content-secondary">
+          {ext}
+        </span>
+      </button>
+
+      {isExpandable && (
+        <button
+          type="button"
+          className={`
+            absolute top-0 right-0
+            h-full w-10
+            hover:bg-background-highlight
+            cursor-pointer
+          `}
+          onClick={() => onAction(file, 'toggle')}
+        >
+          <div className="relative top-0.5">
+            <Icon name={isExpanded ? 'chevron-down' : 'chevron-left'} />
+          </div>
+        </button>
+      )}
+    </div>
   )
 })

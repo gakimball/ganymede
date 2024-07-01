@@ -20,17 +20,27 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
   let type = 'text'
 
   switch (field.type) {
-    case RecordFieldType.ENUM:
+    case RecordFieldType.ENUM: {
+      const options = field.params?.map(value => ({
+        value,
+        label: value.replace(/_/g, ' ')
+      }))
+
+      if (!field.mandatory) {
+        options?.unshift({
+          value: '',
+          label: '',
+        })
+      }
+
       return (
         <SelectField
           name={fieldName}
           defaultValue={defaultValue}
-          options={field.params?.map(value => ({
-            value,
-            label: value.replace(/_/g, ' ')
-          }))}
+          options={options}
         />
       )
+    }
     case RecordFieldType.BODY:
       return (
         <textarea

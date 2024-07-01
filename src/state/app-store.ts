@@ -2,7 +2,7 @@ import { computed, effect, signal } from '@preact/signals'
 import { createEmptyDatabase } from '../utils/create-empty-database'
 import { readDir, readTextFile, removeDir, removeFile, renameFile, type FileEntry } from '@tauri-apps/api/fs'
 import { ViewConfig } from '../types/view-config';
-import { Database, DatabaseField, DatabaseRecord } from '../types/database';
+import { Database, DatabaseField, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { DATABASE_CHANGE_EVENT, DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
 import { parseRecfile } from '../utils/parse-recfile';
 import { ask, confirm, open } from '@tauri-apps/api/dialog';
@@ -121,7 +121,7 @@ export class AppStore {
     return []
   }
 
-  private get currentViewFields(): Map<string, DatabaseField> {
+  private get currentViewFields(): DatabaseFieldMap {
     const view = this.currentView.value
 
     if (view?.type === 'database') {

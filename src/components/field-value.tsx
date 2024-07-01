@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { DatabaseField, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseFieldType } from '../types/database';
 import { parseFieldValue } from '../utils/parse-field-value';
 import { RenderRule } from '../utils/get-render-rules';
 import { applyRenderRule } from '../utils/apply-render-rule';
@@ -18,19 +18,19 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
   field,
   render,
 }) => {
-  if (value === undefined || field.type === RecordFieldType.BODY) {
+  if (value === undefined || field.type === DatabaseFieldType.BODY) {
     return null
   }
 
   const parsedValue = parseFieldValue(value, field)
 
-  if (field.type === RecordFieldType.ENUM) {
+  if (field.type === DatabaseFieldType.ENUM) {
     return (
       <EnumTag value={value} field={field} />
     )
   }
 
-  if (field.type === RecordFieldType.ENUM_MULTI) {
+  if (field.type === DatabaseFieldType.ENUM_MULTI) {
     return (
       <div className="inline-flex gap-2">
         {value.split(',').map(item => (
@@ -40,7 +40,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
     )
   }
 
-  if (field.type === RecordFieldType.BOOL) {
+  if (field.type === DatabaseFieldType.BOOL) {
     return (
       <div className="form-check">
         <input
@@ -53,7 +53,7 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
     )
   }
 
-  if (field.type === RecordFieldType.STRING && value.match(/^https?:\/\//)) {
+  if (field.type === DatabaseFieldType.STRING && value.match(/^https?:\/\//)) {
     return (
       <span>
         <a href={value} className="link">

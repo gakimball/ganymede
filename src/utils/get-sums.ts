@@ -1,4 +1,4 @@
-import { DatabaseField, DatabaseRecord } from '../types/database';
+import { DatabaseField, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { ViewConfig } from '../types/view-config';
 import { applyRenderRule } from './apply-render-rule';
 import { getRenderRules } from './get-render-rules';
@@ -6,7 +6,7 @@ import { parseFieldValue } from './parse-field-value';
 
 export const getSums = (
   records: DatabaseRecord[],
-  fields: Map<string, DatabaseField>,
+  fields: DatabaseFieldMap,
   view: ViewConfig,
 ): [
   hasSums: boolean,

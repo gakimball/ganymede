@@ -1,4 +1,4 @@
-import { DatabaseField, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseFieldType } from '../types/database';
 
 const TRUE_REGEX = /(true|yes|1)/
 
@@ -7,15 +7,15 @@ const TRUE_REGEX = /(true|yes|1)/
  */
 export const parseFieldValue = (value: string | undefined, field: DatabaseField) => {
   switch (field.type) {
-    case RecordFieldType.FORMULA:
+    case DatabaseFieldType.FORMULA:
       return value
-    case RecordFieldType.INT:
-    case RecordFieldType.RANGE:
-    case RecordFieldType.REAL:
+    case DatabaseFieldType.INT:
+    case DatabaseFieldType.RANGE:
+    case DatabaseFieldType.REAL:
       return Number.parseFloat(value?.replace(/,/g, '') ?? '0')
-    case RecordFieldType.BOOL:
+    case DatabaseFieldType.BOOL:
       return TRUE_REGEX.test(value ?? 'false')
-    case RecordFieldType.DATE:
+    case DatabaseFieldType.DATE:
       return new Date(value ?? '')
     default:
       return value ?? ''

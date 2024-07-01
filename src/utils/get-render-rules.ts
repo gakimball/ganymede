@@ -1,4 +1,4 @@
-import { DatabaseField, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseFieldMap, DatabaseFieldType } from '../types/database';
 import { ViewConfig } from '../types/view-config';
 import { chunkArray } from '../utils/chunk-array';
 
@@ -10,7 +10,7 @@ export type RenderRuleMap = Record<string, RenderRule | undefined>
 
 export const getRenderRules = (
   view: ViewConfig,
-  fields: Map<string, DatabaseField>,
+  fields: DatabaseFieldMap,
 ): RenderRuleMap => {
   if (!view.Render) {
     return {}
@@ -21,7 +21,7 @@ export const getRenderRules = (
       if (rule === 'money' || rule === 'percent') {
         return [fieldName, { type: rule }]
       }
-      if (fields.get(fieldName)?.type === RecordFieldType.DATE) {
+      if (fields.get(fieldName)?.type === DatabaseFieldType.DATE) {
         return [fieldName, { type: 'date', format: rule.replace(/_/g, ' ') }]
       }
       return [fieldName, undefined]

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database'
+import { DatabaseField, DatabaseRecord, DatabaseFieldType } from '../types/database'
 import { SelectField } from './select-field';
 import { FormulaField } from './formula-field';
 import { parseFieldValue } from '../utils/parse-field-value';
@@ -18,7 +18,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
   let type = 'text'
 
   switch (field.type) {
-    case RecordFieldType.ENUM: {
+    case DatabaseFieldType.ENUM: {
       const options = field.params?.map(value => ({
         value,
         label: value.replace(/_/g, ' ')
@@ -39,7 +39,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
         />
       )
     }
-    case RecordFieldType.BODY:
+    case DatabaseFieldType.BODY:
       return (
         <textarea
           name={field.name}
@@ -48,17 +48,17 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
           defaultValue={defaultValue}
         />
       )
-    case RecordFieldType.FORMULA:
+    case DatabaseFieldType.FORMULA:
       return <FormulaField value={defaultValue} field={field} />
-    case RecordFieldType.INT:
-    case RecordFieldType.RANGE:
-    case RecordFieldType.REAL:
+    case DatabaseFieldType.INT:
+    case DatabaseFieldType.RANGE:
+    case DatabaseFieldType.REAL:
       type = 'number'
       break
-    case RecordFieldType.DATE:
+    case DatabaseFieldType.DATE:
       type = 'datetime'
       break
-    case RecordFieldType.BOOL:
+    case DatabaseFieldType.BOOL:
       type = 'checkbox'
       defaultChecked = parseFieldValue(defaultValue, field) === true
       break

@@ -1,12 +1,12 @@
-import { DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database';
 import { parseFieldValue } from './parse-field-value';
 
-export const createEmptyRecord = (fields: Map<string, DatabaseField>): DatabaseRecord => {
+export const createEmptyRecord = (fields: DatabaseFieldMap): DatabaseRecord => {
   const proxy = new Proxy<DatabaseRecord>({}, {
     get(target, key) {
       const field = fields.get(String(key))
 
-      if (field?.type === RecordFieldType.FORMULA) {
+      if (field?.type === DatabaseFieldType.FORMULA) {
         // Why it works this way for now: when you call `evaluate()`, it iterates through every key
         // on the object you pass before executing the formula. That means we can't pass an empty
         // Proxied object, because there's nothing to iterate through. The library doesn't do this

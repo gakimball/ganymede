@@ -1,8 +1,8 @@
-import { DatabaseField, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseFieldType } from '../types/database';
 
 export const getEnumColor = (value: string, field: DatabaseField) => {
   if (
-    ![RecordFieldType.ENUM, RecordFieldType.ENUM_MULTI].includes(field.type)
+    ![DatabaseFieldType.ENUM, DatabaseFieldType.ENUM_MULTI].includes(field.type)
     || !field.params?.length
   ) {
     return '#444'

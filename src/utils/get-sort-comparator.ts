@@ -1,5 +1,5 @@
 import { compareAsc } from 'date-fns'
-import { DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database'
+import { DatabaseField, DatabaseRecord, DatabaseFieldType } from '../types/database'
 import { parseFieldValue } from './parse-field-value'
 
 const sortFunctions = {
@@ -21,9 +21,9 @@ export const getSortComparator = (
   descending = false,
 ) => {
   let sortFunc: (a: any, b: any) => number = sortFunctions.string
-  if (field.type === RecordFieldType.INT) sortFunc = sortFunctions.number
-  if (field.type === RecordFieldType.BOOL) sortFunc = sortFunctions.bool
-  if (field.type === RecordFieldType.DATE) sortFunc = sortFunctions.date
+  if (field.type === DatabaseFieldType.INT) sortFunc = sortFunctions.number
+  if (field.type === DatabaseFieldType.BOOL) sortFunc = sortFunctions.bool
+  if (field.type === DatabaseFieldType.DATE) sortFunc = sortFunctions.date
 
   return (a: DatabaseRecord, b: DatabaseRecord) => {
     const comp = sortFunc(

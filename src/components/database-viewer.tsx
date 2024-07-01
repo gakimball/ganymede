@@ -8,7 +8,7 @@ import { DatabaseTextViewer } from './database-text-viewer';
 import { RecordViewer } from './record-viewer';
 import { ListView } from './list-view';
 import { parseFieldValue } from '../utils/parse-field-value';
-import { DatabaseRecord, RecordFieldType } from '../types/database';
+import { DatabaseRecord, DatabaseFieldType } from '../types/database';
 import { DATABASE_CHANGE_EVENT } from '../utils/constants';
 import { CREATE_NEW_RECORD } from '../state/app-store';
 
@@ -49,7 +49,7 @@ export const DatabaseViewer = memo(() => {
     : undefined
   const recordViewerIsFullScreen = parseFieldValue(view.view?.Full_Page, {
     name: 'Full_Page',
-    type: RecordFieldType.BOOL,
+    type: DatabaseFieldType.BOOL,
   })
   const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
 

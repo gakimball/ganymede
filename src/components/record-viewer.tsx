@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import { DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database';
+import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database';
 import { ViewConfig } from '../types/view-config';
 import { getShownFields } from '../utils/get-shown-fields';
 import { parseFieldValue } from '../utils/parse-field-value';
@@ -11,7 +11,7 @@ import { FormLabel } from './form-label';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
-  fields: Map<string, DatabaseField>;
+  fields: DatabaseFieldMap;
   viewConfig: ViewConfig;
   onSave: (original: DatabaseRecord | undefined, record: DatabaseRecord) => void;
   onClose: () => void;
@@ -37,18 +37,18 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   ]
   const isFullPage = parseFieldValue(viewConfig.Full_Page, {
     name: 'Full_Page',
-    type: RecordFieldType.BOOL,
+    type: DatabaseFieldType.BOOL,
   })
 
   const handleSubmit = useCallback((event: SubmitEvent) => {
     const formData = new FormData(event.currentTarget as HTMLFormElement)
     const update = Object.fromEntries(
       [...fields.values()]
-        .filter(field => field.type !== RecordFieldType.FORMULA)
+        .filter(field => field.type !== DatabaseFieldType.FORMULA)
         .map(field => {
           const value = formData.get(field.name)
 
-          if (field.type === RecordFieldType.BOOL) {
+          if (field.type === DatabaseFieldType.BOOL) {
             return [field.name, value === 'on' ? 'true' : 'false']
           }
 

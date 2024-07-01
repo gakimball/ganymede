@@ -1,4 +1,4 @@
-import { DatabaseField, DatabaseRecord, RecordFieldType } from '../../types/database';
+import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
 import { FilterTest, testFilter } from '../test-filter';
 
 const record: DatabaseRecord = {
@@ -6,22 +6,22 @@ const record: DatabaseRecord = {
   Number: '1',
   Bool: 'yes',
 }
-const fields = new Map<string, DatabaseField>([
+const fields: DatabaseFieldMap = new Map([
   ['String', {
     name: 'String',
-    type: RecordFieldType.STRING,
+    type: DatabaseFieldType.STRING,
   }],
   ['Number', {
     name: 'Number',
-    type: RecordFieldType.INT,
+    type: DatabaseFieldType.INT,
   }],
   ['Bool', {
     name: 'Bool',
-    type: RecordFieldType.BOOL,
+    type: DatabaseFieldType.BOOL,
   }],
   ['Enum', {
     name: 'Enum',
-    type: RecordFieldType.ENUM,
+    type: DatabaseFieldType.ENUM,
     params: ['Option'],
   }]
 ])

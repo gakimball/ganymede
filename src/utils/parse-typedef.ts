@@ -1,4 +1,4 @@
-import { RecordFieldType } from '../types/database'
+import { DatabaseFieldType } from '../types/database'
 
 /**
  * Parse a `%type` type from a recfile. Some related types (e.g. `int` and `real`) are currently
@@ -13,28 +13,28 @@ export const parseTypeDef = (value: string) => {
     case 'real':
       return {
         field,
-        type: RecordFieldType.INT,
+        type: DatabaseFieldType.INT,
       }
     case 'enum':
       return {
         field,
-        type: RecordFieldType.ENUM,
+        type: DatabaseFieldType.ENUM,
         params,
       }
     case 'bool':
       return {
         field,
-        type: RecordFieldType.BOOL,
+        type: DatabaseFieldType.BOOL,
       }
     case 'Formula':
       return {
         field,
-        type: RecordFieldType.FORMULA,
+        type: DatabaseFieldType.FORMULA,
       }
     case 'date': {
       return {
         field,
-        type: RecordFieldType.DATE,
+        type: DatabaseFieldType.DATE,
       }
     }
     case 'line':
@@ -45,7 +45,7 @@ export const parseTypeDef = (value: string) => {
     default:
       return {
         field,
-        type: RecordFieldType.STRING
+        type: DatabaseFieldType.STRING
       }
   }
 }

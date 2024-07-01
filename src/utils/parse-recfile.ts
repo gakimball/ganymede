@@ -1,4 +1,4 @@
-import { Database, DatabaseField, DatabaseRecord, RecordFieldType } from '../types/database'
+import { Database, DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database'
 import { createEmptyRecord } from './create-empty-record'
 import { emplaceMap } from './emplace-map'
 import { parseTypeDef } from './parse-typedef'
@@ -7,13 +7,13 @@ import { createFormula } from './create-formula'
 const FIELD_REGEX = /^(?<name>[a-zA-Z%][a-zA-Z0-9_]*):(?<valueExists>\s(?<value>.+))?/
 
 const upsertField = (
-  map: Map<string, DatabaseField>,
+  map: DatabaseFieldMap,
   key: string,
   props: Partial<DatabaseField> = {}
 ) => emplaceMap(map, key, {
   insert: () => ({
     name: key,
-    type: RecordFieldType.STRING,
+    type: DatabaseFieldType.STRING,
     ...props,
   }),
   update: existing => ({
@@ -26,7 +26,7 @@ const upsertField = (
  * Convert a raw recfile into a database, containing a map of fields and a list of records.
  */
 export const parseRecfile = (contents: string): Database => {
-  const fields = new Map<string, DatabaseField>()
+  const fields: DatabaseFieldMap = new Map()
   const records = new Set<DatabaseRecord>()
   let currentRecord: DatabaseRecord = {}
   let multilineParse: { name: string; value: string } | undefined
@@ -72,7 +72,7 @@ export const parseRecfile = (contents: string): Database => {
         case '%formula': {
           const [, fieldName, ...rest] = line.split(' ')
           upsertField(fields, fieldName, {
-            type: RecordFieldType.FORMULA,
+            type: DatabaseFieldType.FORMULA,
             formula: createFormula(rest.join(' ')),
           })
           break
@@ -80,14 +80,14 @@ export const parseRecfile = (contents: string): Database => {
         case '%body': {
           const [, fieldName] = line.split(' ')
           upsertField(fields, fieldName, {
-            type: RecordFieldType.BODY,
+            type: DatabaseFieldType.BODY,
           })
           break
         }
         case '%multi': {
           const [, fieldName, ...values] = line.split(' ')
           upsertField(fields, fieldName, {
-            type: RecordFieldType.ENUM_MULTI,
+            type: DatabaseFieldType.ENUM_MULTI,
             params: values,
           })
         }

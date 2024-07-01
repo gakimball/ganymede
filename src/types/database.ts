@@ -1,13 +1,15 @@
 import type Formula from 'fparser'
 
 export interface Database {
-  fields: Map<string, DatabaseField>;
+  fields: DatabaseFieldMap;
   records: DatabaseRecord[];
 }
 
+export type DatabaseFieldMap = Map<string, DatabaseField>;
+
 export type DatabaseField = {
   name: string;
-  type: RecordFieldType;
+  type: DatabaseFieldType;
   mandatory?: true;
   unique?: true;
   auto?: true;
@@ -15,11 +17,9 @@ export type DatabaseField = {
   formula?: Formula;
 };
 
-export type DatabaseRecord = Record<string, RecordField | undefined>
+export type DatabaseRecord = Record<string, string | undefined>
 
-export type RecordField = string
-
-export enum RecordFieldType {
+export enum DatabaseFieldType {
   INT = 'INT',
   RANGE = 'RANGE',
   REAL = 'REAL',

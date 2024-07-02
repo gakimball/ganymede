@@ -6,44 +6,44 @@ import { FormLabel } from '../forms/form-label';
 import { Button } from '../common/button';
 
 export const Prompt = memo(() => {
-  const store = useStore()
-  const prompt = store.currentPrompt.value
-  const defaultValue = prompt?.defaultValue
+  const { prompt } = useStore()
+  const current = prompt.current.value
+  const defaultValue = current?.defaultValue
   const [value, setValue] = useState('')
 
   useEffect(() => {
     setValue(defaultValue ?? '')
   }, [defaultValue])
 
-  if (!prompt) {
+  if (!current) {
     return null
   }
 
   return (
     <Modal width="300px">
       <FormLabel>
-        {prompt.text}
+        {current.text}
       </FormLabel>
       <TextInput
         value={value}
         onChange={e => setValue(e.currentTarget.value)}
-        placeholder={prompt.placeholder}
+        placeholder={current.placeholder}
         autoFocus
       />
       <div className="flex gap-2 mt-7">
         <Button
           theme="secondary"
-          onClick={() => store.resolvePrompt(null)}
+          onClick={() => prompt.resolve(null)}
         >
           Cancel
         </Button>
         <Button
           theme="primary"
-          onClick={() => store.resolvePrompt(value)}
+          onClick={() => prompt.resolve(value)}
           isExpanded
           isDisabled={value.length === 0}
         >
-          {prompt.submitText ?? 'Submit'}
+          {current.submitText ?? 'Submit'}
         </Button>
       </div>
     </Modal>

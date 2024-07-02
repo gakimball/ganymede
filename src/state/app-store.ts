@@ -10,6 +10,7 @@ import autoBind from 'auto-bind';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { Command } from '@tauri-apps/api/shell';
 import { createEmptyRecord } from '../utils/create-empty-record';
+import { PromptStore } from './prompt-store';
 
 type CurrentView = DatabaseView | TextView | FolderView
 
@@ -41,14 +42,9 @@ type PersistedView =
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 
-export interface PromptPayload {
-  text: string;
-  placeholder?: string;
-  defaultValue?: string;
-  submitText?: string;
-}
-
 export class AppStore {
+  readonly prompt = new PromptStore()
+
   readonly directory = signal(
     localStorage.getItem(DIRECTORY_LOCALSTORAGE_KEY) ?? ''
   );
@@ -58,9 +54,6 @@ export class AppStore {
   readonly currentView =  signal<CurrentView | null>(null);
   readonly currentRecord = signal<DatabaseRecord | typeof CREATE_NEW_RECORD | null>(null);
   readonly quickFindOpen = signal(false);
-  readonly currentPrompt = signal<PromptPayload | null>(null)
-
-  private promptResolver?: (value: string | null) => void;
 
   readonly directoryBase = computed((): string => {
     const segments = this.directory.value.split('/')
@@ -390,7 +383,7 @@ export class AppStore {
   }
 
   async renameFile(file: FileEntry): Promise<void> {
-    const newName = await this.prompt({
+    const newName = await this.prompt.create({
       text: 'Enter a new file name',
       defaultValue: file.path,
       submitText: 'Rename',
@@ -428,21 +421,5 @@ export class AppStore {
   private signalDatabaseChange(): void {
     const event = new CustomEvent(DATABASE_CHANGE_EVENT)
     window.dispatchEvent(event)
-  }
-
-  prompt(payload: PromptPayload): Promise<string | null> {
-    this.currentPrompt.value = payload
-
-    return new Promise<string | null>((resolve) => {
-      // Resolve an existing Promise just in case
-      this.promptResolver?.(null)
-      this.promptResolver = resolve
-    })
-  }
-
-  resolvePrompt(value: string | null): void {
-    this.promptResolver?.(value)
-    this.promptResolver = undefined
-    this.currentPrompt.value = null
   }
 }

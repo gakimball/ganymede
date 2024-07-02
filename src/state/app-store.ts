@@ -90,12 +90,6 @@ export class AppStore {
   })
 
   readonly flatFiles = computed(() => {
-    const mapFile = (file: FileEntry): FileEntry[] => file.children?.flatMap(mapFile) ?? [file]
-
-    return this.files.value.flatMap(mapFile)
-  })
-
-  readonly flatFilesAndDirectories = computed(() => {
     const mapFile = (file: FileEntry): FileEntry[] => {
       if (file.children) {
         return [file, ...file.children.flatMap(mapFile)]
@@ -228,7 +222,7 @@ export class AppStore {
   }
 
   async openFileByPath(path: string): Promise<void> {
-    const file = this.flatFilesAndDirectories.value.find(file => file.path === path)
+    const file = this.flatFiles.value.find(file => file.path === path)
     if (file) await this.openFile(file)
   }
 

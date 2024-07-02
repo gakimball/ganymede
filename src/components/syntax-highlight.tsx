@@ -17,8 +17,11 @@ export const SyntaxHighlight = forwardRef<SyntaxHighlightRef, SyntaxtHighlightPr
   const containerRef = useRef<HTMLDivElement>(null)
 
   const highlighter = useMemo(() => {
-    if (fileName.endsWith('.md') || fileName.endsWith('.gmi')) {
+    if (fileName.endsWith('.md')) {
       return syntaxHighlighters.markdown
+    }
+    if (fileName.endsWith('.gmi')) {
+      return syntaxHighlighters.gemtext
     }
     if (fileName.endsWith('.xit')) {
       return syntaxHighlighters.xit

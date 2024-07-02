@@ -25,8 +25,8 @@ module.exports = {
       'syntax-yellow': 'yellow',
       'syntax-green': 'green',
       'syntax-blue': 'aqua',
-      'syntax-indigo': 'indigo',
-      'syntax-violet': 'violet',
+      'syntax-purple': '#945EBB',
+      'syntax-pink': 'violet',
       'syntax-gray': '#666',
     },
     fontFamily: {

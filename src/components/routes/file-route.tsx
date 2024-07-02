@@ -1,7 +1,7 @@
 import { useRoute } from 'preact-iso'
 import { useStore } from '../../state/use-store'
 import { useEffect } from 'preact/hooks'
-import { ViewError } from '../view-error'
+import { ErrorLayout } from '../layouts/error-layout'
 import { EmptyLayout } from '../layouts/empty-layout'
 import { DatabaseLayout } from '../layouts/database-layout'
 import { TextLayout } from '../layouts/text-layout'
@@ -21,7 +21,7 @@ export const FileRoute = () => {
   }, [path])
 
   if (viewError) {
-    return <ViewError />
+    return <ErrorLayout />
   }
 
   if (!viewType) {

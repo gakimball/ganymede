@@ -1,7 +1,7 @@
 import { forwardRef } from 'preact/compat';
 import { useImperativeHandle, useMemo, useRef } from 'preact/hooks'
-import { useEventHandler } from '../hooks/use-event-handler';
-import { syntaxHighlighters } from '../utils/syntax-highlighters';
+import { useEventHandler } from '../../hooks/use-event-handler';
+import { syntaxHighlighters } from '../../utils/syntax-highlighters';
 
 interface SyntaxtHighlightProps {
   fileName: string;

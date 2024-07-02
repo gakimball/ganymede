@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
-import { DatabaseField } from '../types/database';
-import { Button } from './button';
+import { DatabaseField } from '../../types/database';
+import { Button } from '../common/button';
 import { TextInput } from './text-input';
 
 interface FormulaFieldProps {

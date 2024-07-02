@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
-import { DatabaseField } from '../types/database';
-import { getEnumColor } from '../utils/get-enum-color';
+import { DatabaseField } from '../../types/database';
+import { getEnumColor } from '../../utils/get-enum-color';
 
 interface EnumTagProps {
   value: string;

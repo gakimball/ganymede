@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'preact';
-import { useDebounce } from '../hooks/use-debounce';
+import { useDebounce } from '../../hooks/use-debounce';
 import { useEffect, useRef } from 'preact/hooks';
 import { FileEntry, writeTextFile } from '@tauri-apps/api/fs';
 import { SyntaxHighlight, SyntaxHighlightRef } from './syntax-highlight';
-import { useEventHandler } from '../hooks/use-event-handler';
+import { useEventHandler } from '../../hooks/use-event-handler';
 
 interface TextEditorProps {
   file: FileEntry;

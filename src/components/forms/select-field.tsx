@@ -1,5 +1,5 @@
 import { FunctionComponent, HTMLAttributes } from 'preact/compat'
-import { Icon } from './icon';
+import { Icon } from '../common/icon';
 
 interface SelectFieldProps extends HTMLAttributes<HTMLSelectElement> {
   options?: Array<{ value: string; label: string }>;

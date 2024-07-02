@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
 import { memo } from 'preact/compat';
-import { useStore } from '../state/use-store';
+import { useStore } from '../../state/use-store';
 import { FileEntry } from '@tauri-apps/api/fs';
-import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
-import { useEventHandler } from '../hooks/use-event-handler';
-import { TextInput } from './text-input';
-import { Modal } from './modal';
+import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item';
+import { useEventHandler } from '../../hooks/use-event-handler';
+import { TextInput } from '../forms/text-input';
+import { Modal } from '../common/modal';
 
 export const QuickFind = memo(() => {
   const store = useStore()

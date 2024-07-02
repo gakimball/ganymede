@@ -1,6 +1,6 @@
 import { memo } from 'preact/compat';
 import { useStore } from '../../state/use-store';
-import { TextEditor } from '../text-editor';
+import { TextEditor } from '../common/text-editor';
 
 export const TextLayout = memo(() => {
   const store = useStore()

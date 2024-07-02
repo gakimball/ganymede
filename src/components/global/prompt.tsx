@@ -1,9 +1,9 @@
 import { memo, useEffect, useState } from 'preact/compat';
-import { useStore } from '../state/use-store';
-import { Modal } from './modal';
-import { TextInput } from './text-input';
-import { FormLabel } from './form-label';
-import { Button } from './button';
+import { useStore } from '../../state/use-store';
+import { Modal } from '../common/modal';
+import { TextInput } from '../forms/text-input';
+import { FormLabel } from '../forms/form-label';
+import { Button } from '../common/button';
 
 export const Prompt = memo(() => {
   const store = useStore()

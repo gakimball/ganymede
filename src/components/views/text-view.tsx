@@ -1,10 +1,10 @@
 import { FunctionComponent } from 'preact'
 import { useCallback, useEffect, useState } from 'preact/hooks'
-import { ViewComponentProps } from '../types/view-component-props'
+import { ViewComponentProps } from '../../types/view-component-props'
 import { readTextFile } from '@tauri-apps/api/fs'
-import { TextEditor } from './text-editor'
+import { TextEditor } from '../common/text-editor'
 
-export const DatabaseTextViewer: FunctionComponent<ViewComponentProps> = ({
+export const TextView: FunctionComponent<ViewComponentProps> = ({
   file,
 }) => {
   const [contents, setContents] = useState('')

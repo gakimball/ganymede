@@ -1,6 +1,6 @@
 import { memo } from 'preact/compat';
 import { useStore } from '../../state/use-store';
-import { FileBrowserAction, FileBrowserItem } from '../file-browser-item';
+import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { FileEntry } from '@tauri-apps/api/fs';
 

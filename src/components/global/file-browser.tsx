@@ -1,13 +1,12 @@
 import { Fragment } from 'preact';
 import type { FileEntry } from '@tauri-apps/api/fs';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import queryString from 'query-string'
-import { swapArrayValue } from '../utils/swap-array-value';
-import { useStore } from '../state/use-store';
-import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
+import { swapArrayValue } from '../../utils/swap-array-value';
+import { useStore } from '../../state/use-store';
+import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item';
 import { memo } from 'preact/compat';
-import { Icon } from './icon';
-import { Button } from './button';
+import { Icon } from '../common/icon';
+import { Button } from '../common/button';
 
 export const FileBrowser = memo(({
 }) => {

@@ -1,12 +1,12 @@
 import { FunctionComponent } from 'preact';
 import { useMemo } from 'preact/hooks';
-import { ViewComponentProps } from '../types/view-component-props';
-import { createViewGroups } from '../utils/create-view-groups';
-import { getShownFields } from '../utils/get-shown-fields';
-import { FieldValue } from './field-value';
-import { getRenderRules } from '../utils/get-render-rules';
+import { ViewComponentProps } from '../../types/view-component-props';
+import { createViewGroups } from '../../utils/create-view-groups';
+import { getShownFields } from '../../utils/get-shown-fields';
+import { FieldValue } from '../common/field-value';
+import { getRenderRules } from '../../utils/get-render-rules';
 
-export const Board: FunctionComponent<ViewComponentProps> = ({
+export const BoardView: FunctionComponent<ViewComponentProps> = ({
   config,
   fields,
   records,

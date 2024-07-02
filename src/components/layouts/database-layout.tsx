@@ -1,21 +1,21 @@
 import { memo } from 'preact/compat';
 import { useCallback, useEffect, useState } from 'preact/hooks'
 import { useStore } from '../../state/use-store';
-import { ViewSelect } from '../view-select';
-import { Table } from '../table';
-import { Board } from '../board';
-import { DatabaseTextViewer } from '../database-text-viewer';
-import { RecordViewer } from '../record-viewer';
-import { ListView } from '../list-view';
+import { ViewSelect } from '../common/view-select';
+import { TableView } from '../views/table-view';
+import { BoardView } from '../views/board-view';
+import { TextView } from '../views/text-view';
+import { RecordViewer } from '../common/record-viewer';
+import { ListView } from '../views/list-view';
 import { parseFieldValue } from '../../utils/parse-field-value';
 import { DatabaseRecord, DatabaseFieldType } from '../../types/database';
 import { DATABASE_CHANGE_EVENT } from '../../utils/constants';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
 
 const views = {
-  Table,
-  Board,
-  Text: DatabaseTextViewer,
+  Table: TableView,
+  Board: BoardView,
+  Text: TextView,
   List: ListView,
 }
 

@@ -1,13 +1,13 @@
 import { Fragment, FunctionComponent } from 'preact';
-import { FieldValue } from './field-value';
-import { ViewComponentProps } from '../types/view-component-props';
+import { FieldValue } from '../common/field-value';
+import { ViewComponentProps } from '../../types/view-component-props';
 import { useMemo } from 'preact/hooks';
-import { createViewGroups } from '../utils/create-view-groups';
-import { getShownFields } from '../utils/get-shown-fields';
-import { getRenderRules } from '../utils/get-render-rules';
-import { getSums } from '../utils/get-sums';
+import { createViewGroups } from '../../utils/create-view-groups';
+import { getShownFields } from '../../utils/get-shown-fields';
+import { getRenderRules } from '../../utils/get-render-rules';
+import { getSums } from '../../utils/get-sums';
 
-export const Table: FunctionComponent<ViewComponentProps> = ({
+export const TableView: FunctionComponent<ViewComponentProps> = ({
   fields,
   records,
   config,

@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'preact';
-import { DatabaseField, DatabaseRecord, DatabaseFieldType } from '../types/database'
-import { SelectField } from './select-field';
-import { FormulaField } from './formula-field';
-import { parseFieldValue } from '../utils/parse-field-value';
-import { TextInput } from './text-input';
+import { DatabaseField, DatabaseRecord, DatabaseFieldType } from '../../types/database'
+import { SelectField } from '../forms/select-field';
+import { FormulaField } from '../forms/formula-field';
+import { parseFieldValue } from '../../utils/parse-field-value';
+import { TextInput } from '../forms/text-input';
 
 interface RecordViewerFieldProps {
   defaultValue?: string;

@@ -1,13 +1,13 @@
 import { FunctionComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database';
-import { ViewConfig } from '../types/view-config';
-import { getShownFields } from '../utils/get-shown-fields';
-import { parseFieldValue } from '../utils/parse-field-value';
+import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
+import { ViewConfig } from '../../types/view-config';
+import { getShownFields } from '../../utils/get-shown-fields';
+import { parseFieldValue } from '../../utils/parse-field-value';
 import { Button } from './button';
 import classNames from 'classnames';
 import { RecordViewerField } from './record-viewer-field';
-import { FormLabel } from './form-label';
+import { FormLabel } from '../forms/form-label';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;

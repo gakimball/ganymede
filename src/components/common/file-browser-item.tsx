@@ -1,7 +1,7 @@
 import { FileEntry } from '@tauri-apps/api/fs';
 import { memo } from 'preact/compat';
 import { useCallback } from 'preact/hooks'
-import { getFileIcon } from '../utils/get-file-icon';
+import { getFileIcon } from '../../utils/get-file-icon';
 import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';

@@ -9,23 +9,18 @@ import { Modal } from './modal';
 
 export const QuickFind = memo(() => {
   const store = useStore()
-  const files = store.files.value
+  const files = store.flatFiles.value
   const fileCount = files.length
   const isOpen = store.quickFindOpen.value
 
   const [search, setSearch] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
 
-  const flatFiles = useMemo(() => {
-    const mapFile = (file: FileEntry): FileEntry[] => file.children?.flatMap(mapFile) ?? [file]
-    return files.flatMap(mapFile)
-  }, [files])
-
   const results = useMemo(() => {
     const searchLower = search.toLocaleLowerCase().trim()
     if (searchLower === '') return []
-    return flatFiles.filter(file => file.name?.toLocaleLowerCase().includes(searchLower))
-  }, [search, flatFiles])
+    return files.filter(file => file.name?.toLocaleLowerCase().includes(searchLower))
+  }, [search, files])
 
   const handleFileAction = useCallback((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open') {

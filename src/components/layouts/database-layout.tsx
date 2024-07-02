@@ -1,16 +1,16 @@
 import { memo } from 'preact/compat';
 import { useCallback, useEffect, useState } from 'preact/hooks'
-import { useStore } from '../state/use-store';
-import { ViewSelect } from './view-select';
-import { Table } from './table';
-import { Board } from './board';
-import { DatabaseTextViewer } from './database-text-viewer';
-import { RecordViewer } from './record-viewer';
-import { ListView } from './list-view';
-import { parseFieldValue } from '../utils/parse-field-value';
-import { DatabaseRecord, DatabaseFieldType } from '../types/database';
-import { DATABASE_CHANGE_EVENT } from '../utils/constants';
-import { CREATE_NEW_RECORD } from '../state/app-store';
+import { useStore } from '../../state/use-store';
+import { ViewSelect } from '../view-select';
+import { Table } from '../table';
+import { Board } from '../board';
+import { DatabaseTextViewer } from '../database-text-viewer';
+import { RecordViewer } from '../record-viewer';
+import { ListView } from '../list-view';
+import { parseFieldValue } from '../../utils/parse-field-value';
+import { DatabaseRecord, DatabaseFieldType } from '../../types/database';
+import { DATABASE_CHANGE_EVENT } from '../../utils/constants';
+import { CREATE_NEW_RECORD } from '../../state/app-store';
 
 const views = {
   Table,
@@ -19,7 +19,7 @@ const views = {
   List: ListView,
 }
 
-export const DatabaseViewer = memo(() => {
+export const DatabaseLayout = memo(() => {
   const store = useStore()
   const view = store.currentView.value
   const currentRecord = store.currentRecord.value

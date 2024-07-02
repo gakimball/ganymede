@@ -5,6 +5,7 @@ import { getFileIcon } from '../utils/get-file-icon';
 import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
+import queryString from 'query-string';
 
 export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle'
 
@@ -65,7 +66,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
 
   return (
     <div className="relative">
-      <button
+      <a
         className={`
           flex items-center
           w-full
@@ -76,7 +77,12 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           truncate
           ${isActive ? 'bg-background-highlight' : ''}
         `}
-        type="button"
+        href={queryString.stringifyUrl({
+          url: '/file',
+          query: {
+            path: file.path,
+          }
+        })}
         disabled={isDisabled}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}
@@ -90,7 +96,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         <span className="text-content-secondary">
           {ext}
         </span>
-      </button>
+      </a>
 
       {isExpandable && (
         <button

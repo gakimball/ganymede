@@ -89,6 +89,23 @@ export class AppStore {
     return this.currentView.value?.hasError ?? false
   })
 
+  readonly flatFiles = computed(() => {
+    const mapFile = (file: FileEntry): FileEntry[] => file.children?.flatMap(mapFile) ?? [file]
+
+    return this.files.value.flatMap(mapFile)
+  })
+
+  readonly flatFilesAndDirectories = computed(() => {
+    const mapFile = (file: FileEntry): FileEntry[] => {
+      if (file.children) {
+        return [file, ...file.children.flatMap(mapFile)]
+      }
+      return [file]
+    }
+
+    return this.files.value.flatMap(mapFile)
+  })
+
   private readonly persistCurrentView = effect(() => {
     const currentView = this.currentView.value
 
@@ -208,6 +225,11 @@ export class AppStore {
       this.currentView.value = null
       await this.loadDirectory(this.directory.value)
     }
+  }
+
+  async openFileByPath(path: string): Promise<void> {
+    const file = this.flatFilesAndDirectories.value.find(file => file.path === path)
+    if (file) await this.openFile(file)
   }
 
   async openFile(file: FileEntry): Promise<void> {

@@ -1,10 +1,10 @@
 import { memo } from 'preact/compat';
-import { useStore } from '../state/use-store';
-import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
-import { useEventHandler } from '../hooks/use-event-handler';
+import { useStore } from '../../state/use-store';
+import { FileBrowserAction, FileBrowserItem } from '../file-browser-item';
+import { useEventHandler } from '../../hooks/use-event-handler';
 import { FileEntry } from '@tauri-apps/api/fs';
 
-export const FolderViewer = memo(() => {
+export const FolderLayout = memo(() => {
   const store = useStore()
   const view = store.currentView.value
 

@@ -1,6 +1,7 @@
 import { Fragment } from 'preact';
 import type { FileEntry } from '@tauri-apps/api/fs';
 import { useCallback, useEffect, useState } from 'preact/hooks';
+import queryString from 'query-string'
 import { swapArrayValue } from '../utils/swap-array-value';
 import { useStore } from '../state/use-store';
 import { FileBrowserAction, FileBrowserItem } from './file-browser-item';
@@ -24,16 +25,8 @@ export const FileBrowser = memo(({
 
   const handleClickItem = useCallback((file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
-      case 'open': {
-        store.openFile(file)
-        break
-      }
       case 'toggle': {
-        if (file.children) {
-          setExpandedDirs(prev => swapArrayValue(prev, file.path))
-        } else {
-          store.openFile(file)
-        }
+        setExpandedDirs(prev => swapArrayValue(prev, file.path))
         break
       }
       case 'rename': {

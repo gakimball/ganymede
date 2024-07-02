@@ -1,9 +1,9 @@
 import { platform } from '@tauri-apps/api/os';
 import { memo } from 'preact/compat';
 import { useEffect } from 'preact/hooks'
-import { useEventHandler } from '../hooks/use-event-handler';
+import { useEventHandler } from '../../hooks/use-event-handler';
 import { Command } from '@tauri-apps/api/shell';
-import { useTauriEvent } from '../hooks/use-tauri-event';
+import { useTauriEvent } from '../../hooks/use-tauri-event';
 
 export const ThemeManager = memo(() => {
   const getTheme = useEventHandler(async () => {

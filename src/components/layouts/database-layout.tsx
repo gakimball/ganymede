@@ -1,5 +1,6 @@
 import { memo } from 'preact/compat';
-import { useCallback, useEffect, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useRoute } from 'preact-iso';
 import { useStore } from '../../state/use-store';
 import { ViewSelect } from '../common/view-select';
 import { TableView } from '../views/table-view';
@@ -8,78 +9,90 @@ import { TextView } from '../views/text-view';
 import { RecordViewer } from '../common/record-viewer';
 import { ListView } from '../views/list-view';
 import { parseFieldValue } from '../../utils/parse-field-value';
-import { DatabaseRecord, DatabaseFieldType } from '../../types/database';
+import { DatabaseFieldType } from '../../types/database';
 import { DATABASE_CHANGE_EVENT } from '../../utils/constants';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
+import { DatabaseFile } from '../../state/file-store';
 
-const views = {
+const viewComponents = {
   Table: TableView,
   Board: BoardView,
   Text: TextView,
   List: ListView,
 }
 
-export const DatabaseLayout = memo(() => {
-  const store = useStore()
-  const view = store.currentView.value
-  const currentRecord = store.currentRecord.value
-  const directory = store.directory.value
+export const DatabaseLayout = memo<DatabaseFile>(({
+  file,
+  database,
+}) => {
+  const { view: viewName } = useRoute().query
+
+  const { files, views } = useStore()
+  const directory = files.directory.value
+  const viewsList = views.list.value
+  const currentView = views.current.value
+  const editing = views.editing.value
+  const loadingViews = views.loadingViews.value
+
   const [lastUpdate, setLastUpdate] = useState(0)
 
-  const handleSave = useCallback((record: DatabaseRecord | undefined, update: DatabaseRecord) => {
-    if (record) {
-      store.updateRecord(record, update)
-    } else {
-      store.createRecord(update)
-    }
-  }, [store])
+  const fileViews = useMemo(() => {
+    return viewsList.filter(view => view.File === file.name)
+  }, [file, viewsList])
 
+  // Force re-render when a database change is made
   useEffect(() => {
     const handle = () => setLastUpdate(Date.now())
     window.addEventListener(DATABASE_CHANGE_EVENT, handle)
     return () => window.removeEventListener(DATABASE_CHANGE_EVENT, handle)
   }, [])
 
-  if (view?.type !== 'database') {
-    return null
-  }
+  // Load a view based on the route
+  useEffect(() => {
+    if (file && !loadingViews) {
+      if (viewName) {
+        views.openViewByName(file, viewName)
+      } else {
+        views.openDefaultViewForFile(file)
+      }
+    }
+  }, [file, viewName, loadingViews])
 
-  const CurrentViewComponent = view.view?.Layout
-    ? views[view.view.Layout]
-    : undefined
-  const recordViewerIsFullScreen = parseFieldValue(view.view?.Full_Page, {
+  const View = currentView && viewComponents[currentView.Layout]
+  const recordViewerIsFullScreen = parseFieldValue(currentView?.Full_Page, {
     name: 'Full_Page',
     type: DatabaseFieldType.BOOL,
   })
-  const hideRecordBrowser = currentRecord !== null && recordViewerIsFullScreen
+  const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
 
   return (
     <div className="pt-3 ps-3">
       <ViewSelect
-        file={view.file}
-        views={store.viewsForCurrentFile.value}
-        current={view.view}
-        onChange={store.openView}
-        onCreateNew={store.openNewRecord}
+        file={file}
+        views={fileViews}
+        current={currentView}
+        onChange={views.openView}
+        onCreateNew={views.openCreateRecord}
       />
-      {CurrentViewComponent && !hideRecordBrowser && (
-        <CurrentViewComponent
+      {View && !hideRecordBrowser && (
+        <View
           key={lastUpdate}
-          {...view.database}
-          config={view.view!}
-          file={view.file}
-          onSelectRecord={store.openRecord}
+          {...database}
+          config={currentView}
+          file={file}
+          onSelectRecord={views.openEditRecord}
           directory={directory}
         />
       )}
-      {view.view && currentRecord && (
+      {editing && (
         <RecordViewer
-          fields={view.database.fields}
-          record={currentRecord === CREATE_NEW_RECORD ? undefined : currentRecord}
-          viewConfig={view.view}
-          onSave={handleSave}
-          onClose={store.closeRecord}
-          onDelete={store.deleteRecord}
+          fields={database.fields}
+          record={editing === CREATE_NEW_RECORD ? undefined : editing}
+          viewConfig={currentView}
+          onCreate={views.createRecord}
+          onUpdate={views.updateRecord}
+          onDelete={views.deleteRecord}
+          onClose={views.closeEditor}
         />
       )}
     </div>

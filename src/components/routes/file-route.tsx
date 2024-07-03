@@ -8,31 +8,31 @@ import { TextLayout } from '../layouts/text-layout'
 import { FolderLayout } from '../layouts/folder-layout'
 
 export const FileRoute = () => {
+  const { files } = useStore()
   const { path } = useRoute().query
-
-  const store = useStore()
-  const viewType = store.currentViewType.value
-  const viewError = store.currentViewHasError.value
+  const currentFile = files.current.value
 
   useEffect(() => {
     if (path) {
-      store.openFileByPath(path)
+      files.openFileByPath(path)
     }
-  }, [path])
+  }, [files, path])
 
-  if (viewError) {
-    return <ErrorLayout />
-  }
-
-  if (!viewType) {
+  if (!currentFile) {
     return <EmptyLayout />
   }
 
-  const Layout = {
-    database: DatabaseLayout,
-    text: TextLayout,
-    folder: FolderLayout,
-  }[viewType]
+  if (currentFile.hasError) {
+    return <ErrorLayout />
+  }
 
-  return <Layout />
+  if (currentFile.type === 'database') {
+    return <DatabaseLayout {...currentFile} />
+  }
+
+  if (currentFile.type === 'folder') {
+    return <FolderLayout {...currentFile} />
+  }
+
+  return <TextLayout {...currentFile} />
 }

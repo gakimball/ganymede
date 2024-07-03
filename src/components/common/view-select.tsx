@@ -3,6 +3,7 @@ import { ViewConfig } from '../../types/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
 import classNames from 'classnames';
+import queryString from 'query-string';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -15,7 +16,6 @@ interface ViewSelectProps {
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   file,
   current,
-  onChange,
   views,
   onCreateNew,
 }) => {
@@ -39,14 +39,19 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
         ])
 
         return (
-          <button
-            key={view}
-            type="button"
+          <a
+            key={view.Name}
+            href={queryString.stringifyUrl({
+              url: '/file',
+              query: {
+                path: file.path,
+                view: view.Name,
+              }
+            })}
             className={cls}
-            onClick={() => onChange(view)}
           >
             {view.Name}
-          </button>
+          </a>
         )
       })}
       <div className="flex gap-2 ms-auto">

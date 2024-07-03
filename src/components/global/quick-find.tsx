@@ -8,10 +8,10 @@ import { TextInput } from '../forms/text-input';
 import { Modal } from '../common/modal';
 
 export const QuickFind = memo(() => {
-  const store = useStore()
-  const files = store.flatFiles.value
-  const fileCount = files.length
-  const isOpen = store.quickFindOpen.value
+  const { files, quickFindOpen, toggleQuickFind } = useStore()
+  const fileList = files.files.value
+  const fileCount = fileList.length
+  const isOpen = quickFindOpen.value
 
   const [search, setSearch] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
@@ -19,13 +19,13 @@ export const QuickFind = memo(() => {
   const results = useMemo(() => {
     const searchLower = search.toLocaleLowerCase().trim()
     if (searchLower === '') return []
-    return files.filter(file => file.name?.toLocaleLowerCase().includes(searchLower))
-  }, [search, files])
+    return fileList.filter(file => file.name?.toLocaleLowerCase().includes(searchLower))
+  }, [search, fileList])
 
   const handleFileAction = useCallback((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open') {
-      store.openFile(file)
-      store.toggleQuickFind()
+      files.openFile(file)
+      toggleQuickFind()
     }
   }, [])
 
@@ -51,7 +51,7 @@ export const QuickFind = memo(() => {
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
       if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
-        store.toggleQuickFind()
+        toggleQuickFind()
       }
     }
     window.addEventListener('keypress', handle)

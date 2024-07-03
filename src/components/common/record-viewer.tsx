@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useCallback, useState } from 'preact/hooks';
-import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
+import { DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
 import { ViewConfig } from '../../types/view-config';
 import { getShownFields } from '../../utils/get-shown-fields';
 import { parseFieldValue } from '../../utils/parse-field-value';
@@ -8,23 +7,26 @@ import { Button } from './button';
 import classNames from 'classnames';
 import { RecordViewerField } from './record-viewer-field';
 import { FormLabel } from '../forms/form-label';
+import { useEventHandler } from '../../hooks/use-event-handler';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
   fields: DatabaseFieldMap;
-  viewConfig: ViewConfig;
-  onSave: (original: DatabaseRecord | undefined, record: DatabaseRecord) => void;
-  onClose: () => void;
+  viewConfig: ViewConfig | null;
+  onCreate: (record: DatabaseRecord) => void;
+  onUpdate: (original: DatabaseRecord, record: DatabaseRecord) => void;
   onDelete: (record: DatabaseRecord) => void;
+  onClose: () => void;
 }
 
 export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   record,
   fields,
   viewConfig,
-  onSave,
-  onClose,
+  onCreate,
+  onUpdate,
   onDelete,
+  onClose,
 }) => {
   const shownFields = getShownFields({
     records: [],
@@ -35,12 +37,12 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     ...shownFields,
     ...restFields,
   ]
-  const isFullPage = parseFieldValue(viewConfig.Full_Page, {
+  const isFullPage = parseFieldValue(viewConfig?.Full_Page, {
     name: 'Full_Page',
     type: DatabaseFieldType.BOOL,
   })
 
-  const handleSubmit = useCallback((event: SubmitEvent) => {
+  const handleSubmit = useEventHandler((event: SubmitEvent) => {
     const formData = new FormData(event.currentTarget as HTMLFormElement)
     const update = Object.fromEntries(
       [...fields.values()]
@@ -56,8 +58,12 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
         })
     )
 
-    onSave(record, update)
-  }, [onSave, onClose, record])
+    if (record) {
+      onUpdate(record, update)
+    } else {
+      onCreate(update)
+    }
+  })
 
   const inlineClasses = 'pt-6'
   const paneClasses = classNames(

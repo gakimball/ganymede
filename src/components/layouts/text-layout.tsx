@@ -1,20 +1,16 @@
 import { memo } from 'preact/compat';
-import { useStore } from '../../state/use-store';
 import { TextEditor } from '../common/text-editor';
+import { TextFile } from '../../state/file-store';
 
-export const TextLayout = memo(() => {
-  const store = useStore()
-  const view = store.currentView.value
-
-  if (view?.type !== 'text') {
-    return null
-  }
-
+export const TextLayout = memo<TextFile>(({
+  file,
+  contents,
+}) => {
   return (
     <TextEditor
-      key={view.file.path}
-      file={view.file}
-      contents={view.contents}
+      key={file.path}
+      file={file}
+      contents={contents}
     />
   )
 })

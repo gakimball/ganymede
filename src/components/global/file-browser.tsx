@@ -7,36 +7,42 @@ import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item'
 import { memo } from 'preact/compat';
 import { Icon } from '../common/icon';
 import { Button } from '../common/button';
+import { useEventHandler } from '../../hooks/use-event-handler';
 
 export const FileBrowser = memo(({
 }) => {
-  const store = useStore()
-  const directoryBase = store.directoryBase.value
-  const files = store.sortedFiles.value
-  const selectedFile = store.currentView.value?.file
-  const favorites = store.favorites.value
+  const { files, prompt, toggleQuickFind } = useStore()
+  const directoryBase = files.directoryBase.value
+  const fileList = files.files.value
+  const currentFile = files.current.value
+  const favorites = files.favorites.value
 
   const [expandedDirs, setExpandedDirs] = useState<string[]>([])
 
   useEffect(() => {
     setExpandedDirs([])
-  }, [files])
+  }, [fileList])
 
-  const handleClickItem = useCallback((file: FileEntry, action: FileBrowserAction) => {
+  const handleClickItem = useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
       case 'toggle': {
         setExpandedDirs(prev => swapArrayValue(prev, file.path))
         break
       }
       case 'rename': {
-        store.renameFile(file)
+        const newName = await prompt.create({
+          text: 'Enter a new file name',
+          defaultValue: file.path,
+          submitText: 'Rename',
+        })
+        if (newName) files.renameFile(file, newName)
         break
       }
       case 'delete': {
-        store.deleteFile(file)
+        files.deleteFile(file)
       }
     }
-  }, [store])
+  })
 
   const renderFile = (
     file: FileEntry,
@@ -50,7 +56,7 @@ export const FileBrowser = memo(({
       <Fragment key={file.path}>
         <FileBrowserItem
           file={file}
-          isActive={file === selectedFile}
+          isActive={file === currentFile?.file}
           isDisabled={disabled}
           indent={indent}
           onAction={handleClickItem}
@@ -83,7 +89,7 @@ export const FileBrowser = memo(({
           </h6>
           <div className="mb-3 border-t-1 border-border">
             {favorites.map(favorite => {
-              return renderFile(favorite.file, favorite.isBrokenFile || favorite.isBrokenView)
+              return renderFile(favorite.file, favorite.isBroken)
             })}
           </div>
         </>
@@ -95,19 +101,19 @@ export const FileBrowser = memo(({
         <button
           className="h-4"
           type="button"
-          onClick={store.toggleQuickFind}
+          onClick={toggleQuickFind}
         >
           <Icon name="search" />
         </button>
       </div>
       <div className="mb-3 border-t-1 border-border">
-        {files.map(file => renderFile(file))}
+        {fileList.map(file => renderFile(file))}
       </div>
       <div className="flex gap-2 ms-3 mt-auto">
-        <Button size="small" onClick={store.openDirectoryPicker}>
+        <Button size="small" onClick={files.openDirectoryPicker}>
           Change...
         </Button>
-        <Button size="small" onClick={store.reloadDirectory}>
+        <Button size="small" onClick={files.reloadDirectory}>
           Reload
         </Button>
       </div>

@@ -3,7 +3,5 @@ import { ViewConfig } from './view-config';
 
 export interface FavoritesEntry {
   file: FileEntry;
-  isBrokenFile: boolean;
-  isBrokenView: boolean;
-  view?: ViewConfig;
+  isBroken: boolean;
 }

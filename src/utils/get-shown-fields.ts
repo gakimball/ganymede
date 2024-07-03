@@ -5,10 +5,10 @@ import { ViewConfig } from '../types/view-config';
  * Return a Map of fields to display on each record within a view, based on the view's
  * Fields config.
  */
-export const getShownFields = (database: Database, config: ViewConfig) => {
+export const getShownFields = (database: Database, config: ViewConfig | null) => {
   const fields = [...database.fields.values()]
 
-  if (!config.Fields) {
+  if (!config?.Fields) {
     return fields
   }
 

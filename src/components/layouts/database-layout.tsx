@@ -66,7 +66,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
 
   return (
-    <div className="pt-3 ps-3">
+    <div className="pt-3 ps-4">
       <ViewSelect
         file={file}
         views={fileViews}

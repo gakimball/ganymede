@@ -30,7 +30,7 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
   }, [])
 
   return (
-    <div className="mt-6 relative min-h-full">
+    <div className="mt-3 ms-3 relative min-h-full">
       <div
         ref={editorRef}
         className={`

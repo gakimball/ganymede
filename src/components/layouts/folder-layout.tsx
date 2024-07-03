@@ -17,10 +17,7 @@ export const FolderLayout = memo<Folder>(({
   })
 
   return (
-    <div className="pt-6">
-      <p className="ps-3 pb-3 border-b-1 border-border">
-        {file.name}&nbsp;/
-      </p>
+    <div>
       {file.children?.map(file => (
         <FileBrowserItem
           key={file.path}

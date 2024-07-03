@@ -6,11 +6,13 @@ import { EmptyLayout } from '../layouts/empty-layout'
 import { DatabaseLayout } from '../layouts/database-layout'
 import { TextLayout } from '../layouts/text-layout'
 import { FolderLayout } from '../layouts/folder-layout'
+import { FileBreadcrumbs } from '../common/file-breadcrumbs'
 
 export const FileRoute = () => {
   const { files } = useStore()
   const { path } = useRoute().query
   const currentFile = files.current.value
+  const directory = files.directory.value
 
   useEffect(() => {
     if (path) {
@@ -22,17 +24,28 @@ export const FileRoute = () => {
     return <EmptyLayout />
   }
 
-  if (currentFile.hasError) {
-    return <ErrorLayout />
-  }
+  return (
+    <>
+      <FileBreadcrumbs
+        key={currentFile.file.path}
+        file={currentFile.file}
+        directory={directory}
+      />
+      {(() => {
+        if (currentFile.hasError) {
+          return <ErrorLayout />
+        }
 
-  if (currentFile.type === 'database') {
-    return <DatabaseLayout {...currentFile} />
-  }
+        if (currentFile.type === 'database') {
+          return <DatabaseLayout {...currentFile} />
+        }
 
-  if (currentFile.type === 'folder') {
-    return <FolderLayout {...currentFile} />
-  }
+        if (currentFile.type === 'folder') {
+          return <FolderLayout {...currentFile} />
+        }
 
-  return <TextLayout {...currentFile} />
+        return <TextLayout {...currentFile} />
+      })()}
+    </>
+  )
 }

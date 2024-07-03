@@ -27,7 +27,7 @@ export const App = () => {
         <FileBrowser />
         <QuickFind />
         <Prompt />
-        <div className="ps-3 ms-sidebar">
+        <div className="ms-sidebar">
           <Router>
             <Route path="/" component={EmptyLayout} />
             <Route path="/file" component={FileRoute} />

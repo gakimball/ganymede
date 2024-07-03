@@ -25,6 +25,9 @@
         "open": true,
         "confirm": true
       },
+      "path": {
+        "all": true
+      },
       "shell": {
         "execute": true,
         "scope": [

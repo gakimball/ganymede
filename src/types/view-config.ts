@@ -15,21 +15,7 @@ export interface ViewConfig {
    */
   Sort?: string;
   /**
-   * Fields to filter by. A single filter has the format:
-   * ```txt
-   * <field> <not?> <condition>
-   * ```
-   * `condition` can be one of:
-   *   - `set`: has any value
-   *   - `eq <value>`: equals
-   *   - `lt <value>`: less than
-   *   - `lte <value>`: less than or equal to
-   *   - `gt <value>`: greater than
-   *   - `gte <value>`: greater than or equal to
-   * Multiple conditions can be joined with `and` or `or`. Operator precedence imitates JavaScript.
-   * ```txt
-   * Category not eq Dog and Name set
-   * ```
+   * Fields to filter by. This is used as a selection expression with `recsel`.
    */
   Filter?: string;
   /**

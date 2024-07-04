@@ -6,6 +6,10 @@ import { RecfileParser } from './recfile-parser'
 export const queryRecfile = async (path: string, view?: ViewConfig) => {
   const args = [path, '--include-descriptors']
 
+  if (view?.Filter) {
+    args.push('-e', view.Filter)
+  }
+
   if (view?.Sort) {
     args.push('-S', view.Sort.replace(/ desc$/, ''))
   }

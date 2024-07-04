@@ -1,22 +1,18 @@
 import { FunctionComponent } from 'preact';
-import { useMemo } from 'preact/hooks';
 import { ViewComponentProps } from '../../types/view-component-props';
-import { createViewGroups } from '../../utils/create-view-groups';
-import { getShownFields } from '../../utils/get-shown-fields';
 import { FieldValue } from '../common/field-value';
-import { getRenderRules } from '../../utils/get-render-rules';
+import { useView } from '../../hooks/use-view';
 
 export const BoardView: FunctionComponent<ViewComponentProps> = ({
+  database,
   config,
-  fields,
-  records,
   onSelectRecord,
 }) => {
-  const groups = useMemo(() => {
-    return createViewGroups({ fields, records }, config)
-  }, [fields, records, config])
-  const shownFields = getShownFields({ fields, records }, config)
-  const renderRules = getRenderRules(config, fields)
+  const {
+    groups,
+    renderRules,
+    shownFields,
+  } = useView(database, config)
 
   return (
     <div className="flex flex-nowrap gap-4 overflow-x-auto mt-8">

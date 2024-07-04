@@ -32,6 +32,11 @@
         "execute": true,
         "scope": [
           {
+            "name": "recinf",
+            "cmd": "recinf",
+            "args": true
+          },
+          {
             "name": "recins",
             "cmd": "recins",
             "args": true

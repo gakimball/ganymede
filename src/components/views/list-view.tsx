@@ -1,27 +1,22 @@
-import { Fragment, FunctionComponent } from 'preact';
+import { FunctionComponent } from 'preact';
 import { ViewComponentProps } from '../../types/view-component-props';
-import { useMemo } from 'preact/hooks';
-import { createViewGroups } from '../../utils/create-view-groups';
-import { getShownFields } from '../../utils/get-shown-fields';
-import { getRenderRules } from '../../utils/get-render-rules';
 import { FieldValue } from '../common/field-value';
+import { useView } from '../../hooks/use-view';
 
 export const ListView: FunctionComponent<ViewComponentProps> = ({
+  database,
   config,
-  fields,
-  records,
-  directory,
   onSelectRecord,
 }) => {
-  const lists = useMemo(() => {
-    return createViewGroups({ records, fields }, config)
-  }, [records, fields, config])
-  const shownFields = getShownFields({ fields, records }, config)
-  const renderRules = getRenderRules(config, fields)
+  const {
+    groups,
+    renderRules,
+    shownFields,
+  } = useView(database, config)
 
   return (
     <>
-      {lists.map(list => (
+      {groups.map(list => (
         <div key={list.title} className="mt-8 pb-3 pe-3">
           {list.title && list.field && (
             <div className="mb-4">

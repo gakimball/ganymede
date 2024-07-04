@@ -77,7 +77,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
       {View && !hideRecordBrowser && (
         <View
           key={lastUpdate}
-          {...database}
+          database={database}
           config={currentView}
           file={file}
           onSelectRecord={views.openEditRecord}

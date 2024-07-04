@@ -1,9 +1,8 @@
-import { Signal, batch, computed, effect, signal } from '@preact/signals';
+import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
 import { ViewConfig } from '../types/view-config';
 import { Database, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
-import { DATABASE_CHANGE_EVENT } from '../utils/constants';
 import { Command } from '@tauri-apps/api/shell';
 import { createEmptyRecord } from '../utils/create-empty-record';
 import { CurrentFile } from './file-store';
@@ -98,9 +97,8 @@ export class ViewStore {
 
   async createRecord(record: DatabaseRecord): Promise<void> {
     const dbPath = this.currentFile.value?.file.path
-    const database = this.current.value?.database
 
-    if (dbPath && database) {
+    if (dbPath) {
       const cmd = new Command('recins', [
         ...Object.entries(record).flatMap(([field, value]) => {
           if (!value) {
@@ -113,9 +111,6 @@ export class ViewStore {
       ])
 
       await cmd.execute()
-      const newRecord = createEmptyRecord(database.fields)
-      Object.assign(newRecord, record)
-      database.records.push(newRecord)
     }
 
     this.closeEditor()
@@ -141,8 +136,7 @@ export class ViewStore {
       ])
 
       await cmd.execute()
-      Object.assign(original, update)
-      this.signalDatabaseChange()
+      this.reloadCurrentView()
     }
 
     this.closeEditor()
@@ -173,15 +167,14 @@ export class ViewStore {
       ])
 
       await cmd.execute()
-      database.records.splice(index, 1)
-      this.signalDatabaseChange()
+      this.reloadCurrentView()
     }
 
     this.closeEditor()
   }
 
-  private signalDatabaseChange(): void {
-    const event = new CustomEvent(DATABASE_CHANGE_EVENT)
-    window.dispatchEvent(event)
+  private reloadCurrentView(): void {
+    const view = this.current.value?.config
+    if (view) this.openView(view)
   }
 }

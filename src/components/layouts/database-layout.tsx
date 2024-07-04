@@ -10,7 +10,6 @@ import { RecordViewer } from '../common/record-viewer';
 import { ListView } from '../views/list-view';
 import { parseFieldValue } from '../../utils/parse-field-value';
 import { DatabaseFieldType } from '../../types/database';
-import { DATABASE_CHANGE_EVENT } from '../../utils/constants';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
 import { DatabaseFile } from '../../state/file-store';
 
@@ -38,13 +37,6 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const fileViews = useMemo(() => {
     return viewsList.filter(view => view.File === file.name)
   }, [file, viewsList])
-
-  // Force re-render when a database change is made
-  useEffect(() => {
-    const handle = () => setLastUpdate(Date.now())
-    window.addEventListener(DATABASE_CHANGE_EVENT, handle)
-    return () => window.removeEventListener(DATABASE_CHANGE_EVENT, handle)
-  }, [])
 
   // Load a view based on the route
   useEffect(() => {

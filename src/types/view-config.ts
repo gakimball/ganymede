@@ -9,14 +9,9 @@ export interface ViewConfig {
   /** Filename, including extension. */
   File: string;
   /**
-   * Fields to sort by. A sort rule is a field name plus `asc` or `desc`:
-   * ```txt
-   * Name asc
-   * ```
-   * Multiple sorts can be separated by spaces:
-   * ```txt
-   * Name asc Created desc
-   * ```
+   * Fields to sort by, separated by a space. The `recsel` command does the sorting under
+   * the hood. Ascending order is used by default; append `desc` to the value to reverse
+   * the order.
    */
   Sort?: string;
   /**

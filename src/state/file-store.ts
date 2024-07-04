@@ -1,17 +1,15 @@
-import { Signal, computed, effect, signal } from '@preact/signals';
+import { computed, signal } from '@preact/signals';
 import { FileEntry, readDir, readTextFile, removeDir, removeFile, renameFile } from '@tauri-apps/api/fs';
-import { parseRecfile } from '../utils/parse-recfile';
-import { Database } from '../types/database';
-import { DIRECTORY_LOCALSTORAGE_KEY, LAST_VIEWED_LOCALSTORAGE_KEY } from '../utils/constants';
+import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { confirm, open } from '@tauri-apps/api/dialog';
+import { queryRecfile } from '../utils/query-recfile';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
 export interface DatabaseFile {
   type: 'database';
   file: FileEntry;
-  database: Database;
   hasError: boolean;
 }
 
@@ -68,38 +66,36 @@ export class FileStore {
   }
 
   async openFile(file: FileEntry): Promise<void> {
-    let fileContents
-    let hasError = false
-
     if (file.children) {
       this.current.value = {
         type: 'folder',
         file,
         hasError: false,
       }
-      return
-    }
-
-    try {
-      fileContents = await readTextFile(file.path)
-    } catch {
-      fileContents = ''
-      hasError = true
-    }
-
-    if (file.path.endsWith('.rec')) {
-      this.current.value = {
-        type: 'database',
-        file,
-        database: parseRecfile(fileContents),
-        hasError,
-      }
     } else {
-      this.current.value = {
-        type: 'text',
-        file,
-        contents: fileContents,
-        hasError,
+      let fileContents
+      let hasError = false
+
+      try {
+        fileContents = await readTextFile(file.path)
+      } catch {
+        fileContents = ''
+        hasError = true
+      }
+
+      if (file.path.endsWith('.rec')) {
+        this.current.value = {
+          type: 'database',
+          file,
+          hasError,
+        }
+      } else {
+        this.current.value = {
+          type: 'text',
+          file,
+          contents: fileContents,
+          hasError,
+        }
       }
     }
   }
@@ -157,7 +153,7 @@ export class FileStore {
     }
 
     if (favoritesFile) {
-      const favoritesDb = parseRecfile(await readTextFile(favoritesFile.path))
+      const favoritesDb = await queryRecfile(favoritesFile.path)
 
       this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
         const fileName = record.File as string

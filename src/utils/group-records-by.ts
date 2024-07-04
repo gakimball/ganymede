@@ -1,7 +1,14 @@
-import { Database, DatabaseRecord, DatabaseFieldType } from '../types/database';
+import { Database, DatabaseRecord, DatabaseFieldType, DatabaseField } from '../types/database';
 import { ViewConfig } from '../types/view-config';
 
 export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
+
+export interface ViewRecordGroup {
+  id: string | typeof GROUP_NOT_SET;
+  title: string;
+  records: DatabaseRecord[];
+  field: DatabaseField | null;
+}
 
 /**
  * Convert a flat list of records into a list of groups, based on the `Group` property of a view.
@@ -9,7 +16,7 @@ export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
 export const groupRecordsBy = (
   database: Database,
   view: ViewConfig,
-) => {
+): ViewRecordGroup[] => {
   const { records, fields } = database
   const groupBy = view.Group
   const groupByField = groupBy ? fields.get(groupBy) : undefined

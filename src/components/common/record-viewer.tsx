@@ -12,7 +12,7 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 interface RecordViewerProps {
   record?: DatabaseRecord;
   fields: DatabaseFieldMap;
-  viewConfig: ViewConfig | null;
+  viewConfig: ViewConfig | undefined;
   onCreate: (record: DatabaseRecord) => void;
   onUpdate: (original: DatabaseRecord, record: DatabaseRecord) => void;
   onDelete: (record: DatabaseRecord) => void;

@@ -23,7 +23,6 @@ const viewComponents = {
 
 export const DatabaseLayout = memo<DatabaseFile>(({
   file,
-  database,
 }) => {
   const { view: viewName } = useRoute().query
 
@@ -58,8 +57,8 @@ export const DatabaseLayout = memo<DatabaseFile>(({
     }
   }, [file, viewName, loadingViews])
 
-  const View = currentView && viewComponents[currentView.Layout]
-  const recordViewerIsFullScreen = parseFieldValue(currentView?.Full_Page, {
+  const View = currentView && viewComponents[currentView.config.Layout]
+  const recordViewerIsFullScreen = parseFieldValue(currentView?.config.Full_Page, {
     name: 'Full_Page',
     type: DatabaseFieldType.BOOL,
   })
@@ -70,25 +69,24 @@ export const DatabaseLayout = memo<DatabaseFile>(({
       <ViewSelect
         file={file}
         views={fileViews}
-        current={currentView}
+        current={currentView?.config}
         onChange={views.openView}
         onCreateNew={views.openCreateRecord}
       />
       {View && !hideRecordBrowser && (
         <View
           key={lastUpdate}
-          database={database}
-          config={currentView}
+          {...currentView}
           file={file}
           onSelectRecord={views.openEditRecord}
           directory={directory}
         />
       )}
-      {editing && (
+      {currentView && editing && (
         <RecordViewer
-          fields={database.fields}
+          fields={currentView.database.fields}
           record={editing === CREATE_NEW_RECORD ? undefined : editing}
-          viewConfig={currentView}
+          viewConfig={currentView.config}
           onCreate={views.createRecord}
           onUpdate={views.updateRecord}
           onDelete={views.deleteRecord}

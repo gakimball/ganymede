@@ -8,13 +8,17 @@ import { Command } from '@tauri-apps/api/shell';
 import { createEmptyRecord } from '../utils/create-empty-record';
 import { CurrentFile } from './file-store';
 import { confirm } from '@tauri-apps/api/dialog';
-import { FileEntry, readTextFile } from '@tauri-apps/api/fs';
-import { parseRecfile } from '../utils/parse-recfile';
-import { when } from '../utils/when-signal';
+import { FileEntry } from '@tauri-apps/api/fs';
+import { queryRecfile } from '../utils/query-recfile';
+
+interface CurrentView {
+  config: ViewConfig;
+  database: Database;
+}
 
 export class ViewStore {
   private readonly views = signal(createEmptyDatabase());
-  readonly current = signal<ViewConfig | null>(null);
+  readonly current = signal<CurrentView | null>(null);
   readonly editing = signal<DatabaseRecord | typeof CREATE_NEW_RECORD | null>(null);
   readonly loadingViews = signal(true)
 
@@ -30,11 +34,9 @@ export class ViewStore {
       const file = viewsFile.value
 
       if (file) {
-        readTextFile(file.path).then((contents) => {
-          batch(() => {
-            this.views.value = parseRecfile(contents)
-            this.loadingViews.value = false
-          })
+        queryRecfile(file.path).then(database => {
+          this.views.value = database
+          this.loadingViews.value = false
         })
       }
     })
@@ -44,8 +46,15 @@ export class ViewStore {
     this.views.value = database
   }
 
-  openView(view: ViewConfig): void {
-    this.current.value = view
+  async openView(view: ViewConfig): Promise<void> {
+    const dbPath = this.currentFile.value?.file.path
+
+    if (dbPath) {
+      this.current.value = {
+        config: view,
+        database: await queryRecfile(dbPath, view),
+      }
+    }
   }
 
   openViewByName(file: FileEntry, viewName: string): void {
@@ -88,16 +97,10 @@ export class ViewStore {
   }
 
   async createRecord(record: DatabaseRecord): Promise<void> {
-    const currentFile = this.currentFile.value
+    const dbPath = this.currentFile.value?.file.path
+    const database = this.current.value?.database
 
-    if (currentFile?.type !== 'database') {
-      return
-    }
-
-    const { records, fields } = currentFile.database
-    const dbPath = currentFile.file.path
-
-    if (dbPath) {
+    if (dbPath && database) {
       const cmd = new Command('recins', [
         ...Object.entries(record).flatMap(([field, value]) => {
           if (!value) {
@@ -110,24 +113,18 @@ export class ViewStore {
       ])
 
       await cmd.execute()
-      const newRecord = createEmptyRecord(fields)
+      const newRecord = createEmptyRecord(database.fields)
       Object.assign(newRecord, record)
-      records.push(newRecord)
+      database.records.push(newRecord)
     }
 
     this.closeEditor()
   }
 
   async updateRecord(original: DatabaseRecord, update: DatabaseRecord): Promise<void> {
-    const currentFile = this.currentFile.value
-
-    if (currentFile?.type !== 'database') {
-      return
-    }
-
-    const { records } = currentFile.database
-    const dbPath = currentFile.file.path
-    const index = records.indexOf(original)
+    const dbPath = this.currentFile.value?.file.path
+    const database = this.current.value?.database
+    const index = database?.records.indexOf(original) ?? -1
 
     if (index > -1 && dbPath) {
       const cmd = new Command('recins', [
@@ -161,17 +158,14 @@ export class ViewStore {
       return
     }
 
-    const currentFile = this.currentFile.value
+    const dbPath = this.currentFile.value?.file.path
+    const database = this.current.value?.database
 
-    if (currentFile?.type !== 'database') {
-      return
-    }
+    if (!dbPath || !database) return
 
-    const { records } = currentFile.database
-    const dbPath = currentFile.file.path
-    const index = records.indexOf(record)
+    const index = database.records.indexOf(record)
 
-    if (index > -1 && dbPath) {
+    if (index > -1) {
       const cmd = new Command('recdel', [
         '-n',
         String(index),
@@ -179,7 +173,7 @@ export class ViewStore {
       ])
 
       await cmd.execute()
-      records.splice(index, 1)
+      database.records.splice(index, 1)
       this.signalDatabaseChange()
     }
 

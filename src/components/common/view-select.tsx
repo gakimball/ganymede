@@ -7,7 +7,7 @@ import queryString from 'query-string';
 
 interface ViewSelectProps {
   file: FileEntry;
-  current: ViewConfig | null;
+  current: ViewConfig | undefined;
   onChange: (value: ViewConfig) => void;
   views: ViewConfig[];
   onCreateNew: () => void;

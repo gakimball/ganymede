@@ -32,8 +32,8 @@
         "execute": true,
         "scope": [
           {
-            "name": "recinf",
-            "cmd": "recinf",
+            "name": "recsel",
+            "cmd": "recsel",
             "args": true
           },
           {

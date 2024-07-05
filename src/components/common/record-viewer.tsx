@@ -52,10 +52,10 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     }
   })
 
-  const inlineClasses = 'pt-6'
+  const inlineClasses = 'pt-6 w-auto'
   const paneClasses = classNames(
     'fixed top-0 right-0 z-10',
-    'h-full p-4',
+    'w-[400px] h-full p-4',
     'overflow-auto',
     'bg-background',
     'border-s-1 border-border'
@@ -64,9 +64,6 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   return (
     <div
       className={isFullPage ? inlineClasses : paneClasses}
-      style={{
-        width: isFullPage ? 'auto' : '400px',
-      }}
     >
       {isFullPage && (
         <div className="mb-3">

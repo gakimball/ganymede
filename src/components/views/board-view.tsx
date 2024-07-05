@@ -17,7 +17,7 @@ export const BoardView: FunctionComponent<ViewComponentProps> = ({
   return (
     <div className="flex flex-nowrap gap-4 overflow-x-auto mt-8">
       {groups.map(group => (
-        <div key={group.id} style={{ flex: '0 0 250px' }}>
+        <div key={group.id} className="grow-0 shrink-0 basis-64">
           {group.field && (
             <FieldValue value={group.title} field={group.field} />
           )}

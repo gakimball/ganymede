@@ -12,9 +12,9 @@ export const EnumTag: FunctionComponent<EnumTagProps> = ({
   field,
 }) => (
   <span
-    className="py-1 px-2 rounded-md text-sm text-content"
+    className="py-1 px-2 rounded-md text-sm text-content bg-[--EnumTag-color]"
     style={{
-      backgroundColor: getEnumColor(value, field)
+      '--EnumTag-color': getEnumColor(value, field),
     }}
   >
     {value.replace(/_/g, ' ')}

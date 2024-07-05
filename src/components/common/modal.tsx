@@ -15,6 +15,7 @@ export const Modal: FunctionComponent<ModalProps> = ({
       className={`
         fixed inset-0 z-10
         flex items-center justify-center
+        bg-background-overlay
       `}
     >
       <div
@@ -27,6 +28,7 @@ export const Modal: FunctionComponent<ModalProps> = ({
         style={{
           width,
           height,
+          maxHeight: '90vh',
         }}
       >
         {children}

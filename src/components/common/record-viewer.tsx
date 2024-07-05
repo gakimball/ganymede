@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { RecordViewerField } from './record-viewer-field';
 import { FormLabel } from '../forms/form-label';
 import { useEventHandler } from '../../hooks/use-event-handler';
+import { parseFormData } from '../../utils/parse-form-data';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
@@ -28,10 +29,7 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   onDelete,
   onClose,
 }) => {
-  const shownFields = getShownFields({
-    records: [],
-    fields,
-  }, viewConfig)
+  const shownFields = getShownFields(fields, viewConfig)
   const restFields = [...fields.values()].filter(field => !shownFields.includes(field))
   const allFields = [
     ...shownFields,
@@ -43,20 +41,9 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   })
 
   const handleSubmit = useEventHandler((event: SubmitEvent) => {
+    event.preventDefault()
     const formData = new FormData(event.currentTarget as HTMLFormElement)
-    const update = Object.fromEntries(
-      [...fields.values()]
-        .filter(field => field.type !== DatabaseFieldType.FORMULA)
-        .map(field => {
-          const value = formData.get(field.name)
-
-          if (field.type === DatabaseFieldType.BOOL) {
-            return [field.name, value === 'on' ? 'true' : 'false']
-          }
-
-          return [field.name, value ? String(value) : undefined]
-        })
-    )
+    const update = parseFormData(formData, fields)
 
     if (record) {
       onUpdate(record, update)

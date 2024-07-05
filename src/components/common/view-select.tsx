@@ -11,6 +11,7 @@ interface ViewSelectProps {
   onChange: (value: ViewConfig) => void;
   views: ViewConfig[];
   onCreateNew: () => void;
+  onEditView: () => void;
 }
 
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
@@ -18,6 +19,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   current,
   views,
   onCreateNew,
+  onEditView,
 }) => {
   const textView: ViewConfig = {
     File: file.name ?? '',
@@ -56,11 +58,13 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
       })}
       <div className="flex gap-2 ms-auto">
         <Button theme="primary" onClick={onCreateNew} size="small">
-          New
+          New record
         </Button>
-        <Button theme="secondary" onClick={() => {}} size="small">
-          Edit view
-        </Button>
+        {current?.Layout !== 'Text' && (
+          <Button theme="secondary" onClick={onEditView} size="small">
+            Edit view
+          </Button>
+        )}
       </div>
     </ul>
   )

@@ -12,6 +12,7 @@ module.exports = {
       'background': '#222',
       'background-secondary': '#262626',
       'background-highlight': 'rgba(255, 255, 255, 0.1)',
+      'background-overlay': 'rgba(0, 0, 0, 0.5)',
 
       'border': '#495057',
 

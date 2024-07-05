@@ -1,7 +1,7 @@
 import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
 import { ViewConfig } from '../types/view-config';
-import { Database, DatabaseRecord } from '../types/database';
+import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
 import { Command } from '@tauri-apps/api/shell';
 import { createEmptyRecord } from '../utils/create-empty-record';
@@ -9,6 +9,8 @@ import { CurrentFile } from './file-store';
 import { confirm } from '@tauri-apps/api/dialog';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { queryRecfile } from '../utils/query-recfile';
+import { recins } from '../utils/recins';
+import queryString from 'query-string';
 
 interface CurrentView {
   config: ViewConfig;
@@ -20,25 +22,27 @@ export class ViewStore {
   readonly current = signal<CurrentView | null>(null);
   readonly editing = signal<DatabaseRecord | typeof CREATE_NEW_RECORD | null>(null);
   readonly loadingViews = signal(true)
+  readonly editingView = signal(false)
 
   readonly list = computed((): ViewConfig[] => {
     return this.views.value.records as unknown as ViewConfig[]
   })
 
+  readonly fields = computed((): DatabaseFieldMap => this.views.value.fields)
+
   constructor(
     private readonly currentFile: Signal<CurrentFile | null>,
-    viewsFile: Signal<FileEntry | null>
+    private readonly viewsFile: Signal<FileEntry | null>
   ) {
     effect(() => {
       const file = viewsFile.value
-
-      if (file) {
-        queryRecfile(file.path).then(database => {
-          this.views.value = database
-          this.loadingViews.value = false
-        })
-      }
+      if (file) this.reloadViews(file.path)
     })
+  }
+
+  async reloadViews(dbPath: string): Promise<void> {
+    this.views.value = await queryRecfile(dbPath)
+    this.loadingViews.value = false
   }
 
   setViews(database: Database): void {
@@ -83,6 +87,35 @@ export class ViewStore {
     this.openView(view)
   }
 
+  async editCurrentView(changes: ViewConfig): Promise<void> {
+    const view = this.current.value?.config
+    const dbPath = this.viewsFile.value?.path
+
+    if (!view || !dbPath) return
+
+    const index = this.list.value.indexOf(view)
+
+    if (index > -1) {
+      await recins(dbPath, index, changes as unknown as DatabaseRecord)
+      await this.reloadViews(dbPath)
+      await this.openViewByName(this.currentFile.value!.file, changes.Name)
+
+      // if (view.Name !== changes.Name && this.currentFile.value) {
+      //   history.pushState(null, '', queryString.stringifyUrl({
+      //     url: '/file',
+      //     query: {
+      //       path: this.currentFile.value.file.path,
+      //       view: changes.Name,
+      //     },
+      //   }))
+      // } else {
+      //   location.reload()
+      // }
+    }
+
+    this.toggleViewEditor()
+  }
+
   openEditRecord(record: DatabaseRecord): void {
     this.editing.value = record
   }
@@ -122,20 +155,7 @@ export class ViewStore {
     const index = database?.records.indexOf(original) ?? -1
 
     if (index > -1 && dbPath) {
-      const cmd = new Command('recins', [
-        '-n',
-        String(index),
-        ...Object.entries(update).flatMap(([field, value]) => {
-          if (!value) {
-            return []
-          }
-
-          return ['-f', field, '-v', value]
-        }),
-        dbPath
-      ])
-
-      await cmd.execute()
+      await recins(dbPath, index, update)
       this.reloadCurrentView()
     }
 
@@ -176,5 +196,9 @@ export class ViewStore {
   private reloadCurrentView(): void {
     const view = this.current.value?.config
     if (view) this.openView(view)
+  }
+
+  toggleViewEditor(): void {
+    this.editingView.value = !this.editingView.value
   }
 }

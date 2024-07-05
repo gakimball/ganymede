@@ -1,6 +1,7 @@
 import type Formula from 'fparser'
 
 export interface Database {
+  type: string | undefined;
   fields: DatabaseFieldMap;
   records: DatabaseRecord[];
 }

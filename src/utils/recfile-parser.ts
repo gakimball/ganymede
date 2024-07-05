@@ -11,9 +11,11 @@ export class RecfileParser {
 
   private readonly records = new Set<DatabaseRecord>()
 
+  private type?: string;
+
   private currentRecord: DatabaseRecord = {}
 
-  private multilineParse: { name: string; value: string } | undefined
+  private multilineParse?: { name: string; value: string }
 
   private upsertField(
     key: string,
@@ -34,6 +36,7 @@ export class RecfileParser {
 
   toDatabase(): Database {
     return {
+      type: this.type,
       fields: this.fields,
       records: [...this.records],
     }
@@ -72,6 +75,10 @@ export class RecfileParser {
 
     if (name.startsWith('%')) {
       switch (name) {
+        case '%rec': {
+          this.type = line.split(' ')[1]
+          break
+        }
         case '%type': {
           const { field, ...props } = parseTypeDef(value)
           this.upsertField(field, props)

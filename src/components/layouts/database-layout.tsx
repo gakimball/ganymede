@@ -12,6 +12,7 @@ import { parseFieldValue } from '../../utils/parse-field-value';
 import { DatabaseFieldType } from '../../types/database';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
 import { DatabaseFile } from '../../state/file-store';
+import { ViewEditor } from '../common/view-editor';
 
 const viewComponents = {
   Table: TableView,
@@ -31,8 +32,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const currentView = views.current.value
   const editing = views.editing.value
   const loadingViews = views.loadingViews.value
-
-  const [lastUpdate, setLastUpdate] = useState(0)
+  const editingView = views.editingView.value
 
   const fileViews = useMemo(() => {
     return viewsList.filter(view => view.File === file.name)
@@ -64,14 +64,23 @@ export const DatabaseLayout = memo<DatabaseFile>(({
         current={currentView?.config}
         onChange={views.openView}
         onCreateNew={views.openCreateRecord}
+        onEditView={views.toggleViewEditor}
       />
       {View && !hideRecordBrowser && (
         <View
-          key={lastUpdate}
           {...currentView}
           file={file}
           onSelectRecord={views.openEditRecord}
           directory={directory}
+        />
+      )}
+      {currentView && editingView && (
+        <ViewEditor
+          view={currentView.config}
+          viewFields={views.fields.value}
+          recordFields={currentView.database.fields}
+          onChange={views.editCurrentView}
+          onClose={views.toggleViewEditor}
         />
       )}
       {currentView && editing && (

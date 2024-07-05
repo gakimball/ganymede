@@ -1,20 +1,20 @@
-import { Database } from '../types/database';
+import { Database, DatabaseFieldMap } from '../types/database';
 import { ViewConfig } from '../types/view-config';
 
 /**
  * Return a Map of fields to display on each record within a view, based on the view's
  * Fields config.
  */
-export const getShownFields = (database: Database, config: ViewConfig | null | undefined) => {
-  const fields = [...database.fields.values()]
+export const getShownFields = (fields: DatabaseFieldMap, config: ViewConfig | null | undefined) => {
+  const fieldList = [...fields.values()]
 
   if (!config?.Fields) {
-    return fields
+    return fieldList
   }
 
   const shownFields = config.Fields.split(' ')
 
-  return [...database.fields.values()]
+  return fieldList
     .filter(field => shownFields.includes(field.name))
     .sort((fieldA, fieldB) => shownFields.indexOf(fieldA.name) - shownFields.indexOf(fieldB.name))
 }

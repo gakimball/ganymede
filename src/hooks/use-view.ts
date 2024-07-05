@@ -22,8 +22,11 @@ export const useView = (
   }
 
   return {
-    groups: groupRecordsBy({ records, fields }, view),
-    shownFields: getShownFields(database, view),
+    groups: groupRecordsBy({
+      ...database,
+      records,
+    }, view),
+    shownFields: getShownFields(database.fields, view),
     renderRules: getRenderRules(view, database.fields),
   }
 }

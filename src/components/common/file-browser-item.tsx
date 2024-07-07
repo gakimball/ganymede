@@ -6,6 +6,7 @@ import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
 import queryString from 'query-string';
+import { ROUTES } from '../../utils/routes';
 
 export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle'
 
@@ -77,12 +78,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           truncate
           ${isActive ? 'bg-background-highlight' : ''}
         `}
-        href={queryString.stringifyUrl({
-          url: '/file',
-          query: {
-            path: file.path,
-          }
-        })}
+        href={ROUTES.file(file.path)}
         disabled={isDisabled}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}

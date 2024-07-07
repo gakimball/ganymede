@@ -10,6 +10,7 @@ import { FileEntry } from '@tauri-apps/api/fs';
 import { queryRecfile } from '../utils/query-recfile';
 import { recins } from '../utils/recins';
 import { recdel } from '../utils/recdel';
+import { ROUTES } from '../utils/routes';
 
 interface CurrentView {
   config: ViewConfig;
@@ -89,15 +90,18 @@ export class ViewStore {
   async editCurrentView(changes: ViewConfig): Promise<void> {
     const current = this.current.value
     const dbPath = this.viewsFile.value?.path
+    const file = this.currentFile.value?.file
 
-    if (!current || !dbPath) return
+    if (!current || !dbPath || !file) return
 
     const index = this.list.value.indexOf(current.config)
 
     if (index > -1) {
       await recins(dbPath, this.views.value.type, index, changes as unknown as DatabaseRecord)
       await this.reloadViews(dbPath)
-      await this.openViewByName(this.currentFile.value!.file, changes.Name)
+      // x-ref: GNY-01
+      history.replaceState(null, '', ROUTES.file(file.path, changes))
+      this.openViewByName(file, changes.Name)
     }
 
     this.toggleViewEditor()
@@ -122,7 +126,9 @@ export class ViewStore {
     if (index > -1) {
       await recdel(dbPath, this.views.value.type, index)
       await this.reloadViews(dbPath)
-      await this.openDefaultViewForFile(file)
+      // x-ref: GNY-01
+      history.replaceState(null, '', ROUTES.file(file.path))
+      this.openDefaultViewForFile(file)
     }
   }
 

@@ -3,6 +3,7 @@ import { Fragment, FunctionComponent } from 'preact';
 import { useMemoAsync } from '../../utils/use-memo-async';
 import { join } from '@tauri-apps/api/path';
 import queryString from 'query-string';
+import { ROUTES } from '../../utils/routes';
 
 interface FileBreadcrumbsProps {
   directory: string;
@@ -47,12 +48,7 @@ export const FileBreadcrumbs: FunctionComponent<FileBreadcrumbsProps> = ({
         <Fragment key={href}>
           <a
             className="hover:underline truncate"
-            href={queryString.stringifyUrl({
-              url: '/file',
-              query: {
-                path: href,
-              }
-            })}
+            href={ROUTES.file(href)}
           >
             {label}
           </a>

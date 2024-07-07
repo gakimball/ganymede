@@ -4,6 +4,7 @@ import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
 import classNames from 'classnames';
 import queryString from 'query-string';
+import { ROUTES } from '../../utils/routes';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -43,13 +44,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
         return (
           <a
             key={view.Name}
-            href={queryString.stringifyUrl({
-              url: '/file',
-              query: {
-                path: file.path,
-                view: view.Name,
-              }
-            })}
+            href={ROUTES.file(file.path, view)}
             className={cls}
           >
             {view.Name}

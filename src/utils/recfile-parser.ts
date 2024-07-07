@@ -76,7 +76,7 @@ export class RecfileParser {
     if (name.startsWith('%')) {
       switch (name) {
         case '%rec': {
-          this.type = line.split(' ')[1]
+          this.type = value
           break
         }
         case '%type': {

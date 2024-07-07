@@ -81,6 +81,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
           recordFields={currentView.database.fields}
           onChange={views.editCurrentView}
           onClose={views.toggleViewEditor}
+          onDelete={views.deleteCurrentView}
         />
       )}
       {currentView && editing && (

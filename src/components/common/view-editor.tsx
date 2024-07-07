@@ -17,6 +17,7 @@ interface ViewEditorProps {
   recordFields: DatabaseFieldMap;
   onChange: (view: ViewConfig) => void;
   onClose: () => void;
+  onDelete: () => void;
 }
 
 export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
@@ -25,6 +26,7 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
   recordFields,
   onChange,
   onClose,
+  onDelete,
 }) => {
   const handleSubmit = useEventHandler((event: SubmitEvent) => {
     event.preventDefault()
@@ -107,6 +109,9 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
           defaultValue={view.Full_Page}
         />
         <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
+          <Button theme="danger" onClick={onDelete}>
+            Delete
+          </Button>
           <Button onClick={onClose}>
             Cancel
           </Button>

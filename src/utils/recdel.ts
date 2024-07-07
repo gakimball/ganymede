@@ -1,11 +1,9 @@
 import { Command } from '@tauri-apps/api/shell'
-import { DatabaseRecord } from '../types/database'
 
-export const recins = async (
+export const recdel = async (
   dbPath: string,
   recordType: string | undefined,
   recordIndex: number,
-  record: DatabaseRecord,
 ) => {
   const args = ['-n', String(recordIndex)]
 
@@ -13,17 +11,9 @@ export const recins = async (
     args.push('-t', recordType)
   }
 
-  Object.entries(record).forEach(([field, value]) => {
-    if (value) {
-      args.push('-f', field, '-v', value)
-    }
-  })
-
   args.push(dbPath)
 
-  console.log(args)
-
-  const cmd = new Command('recins', args)
+  const cmd = new Command('recdel', args)
   const res = await cmd.execute()
 
   if (res.stderr) console.log(res.stderr)

@@ -116,6 +116,8 @@ export const syntaxHighlighters = {
         html += `<span class="${hl.orange}">+</span>${line.slice(1)}`
       } else if ((match = line.match(REC_FIELD_REGEX)) !== null) {
         html += `<span class="${line.startsWith('%') ? hl.blue : hl.red}">${match[1]}</span>${match[2]}`
+      } else {
+        html += line
       }
 
       html += '<br>'

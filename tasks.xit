@@ -18,10 +18,11 @@ Issues
 [ ] First route change doesn't fire
 [x] Finish view editing
 [ ] GNY-1: preact-iso does not re-render routes after replaceState is called
+[ ] Text layouts do not need to query the whole DB; recinf is sufficient
 
 Views
 [x] CRUD records
-[ ] CRUD views
+[x] CRUD views
 [x] Enum label colors
 [ ] Extends field
 

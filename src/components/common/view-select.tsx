@@ -11,15 +11,26 @@ interface ViewSelectProps {
   current: ViewConfig | undefined;
   onChange: (value: ViewConfig) => void;
   views: ViewConfig[];
-  onCreateNew: () => void;
+  onCreateView: () => void;
+  onCreateRecord: () => void;
   onEditView: () => void;
 }
+
+const tabClasses = (isActive: boolean) => classNames([
+  'pb-1 me-4',
+  'font-bold',
+  'border-b-2',
+  'hover:text-content',
+  isActive && 'text-content border-content',
+  !isActive && 'text-content-secondary border-transparent',
+])
 
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   file,
   current,
   views,
-  onCreateNew,
+  onCreateRecord,
+  onCreateView,
   onEditView,
 }) => {
   const textView: ViewConfig = {
@@ -32,27 +43,22 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
     <ul className="flex items-center mb-3 pe-3">
       {[...views, textView].map(view => {
         const isActive = view.Name === current?.Name
-        const cls = classNames([
-          'pb-1 me-4',
-          'font-bold',
-          'border-b-2',
-          'hover:text-content',
-          isActive && 'text-content border-content',
-          !isActive && 'text-content-secondary border-transparent',
-        ])
 
         return (
           <a
             key={view.Name}
             href={ROUTES.file(file.path, view)}
-            className={cls}
+            className={tabClasses(isActive)}
           >
             {view.Name}
           </a>
         )
       })}
+      <button className={tabClasses(false)} type="button" onClick={onCreateView}>
+        + Add
+      </button>
       <div className="flex gap-2 ms-auto">
-        <Button theme="primary" onClick={onCreateNew} size="small">
+        <Button theme="primary" onClick={onCreateRecord} size="small">
           New record
         </Button>
         {current?.Layout !== 'Text' && (

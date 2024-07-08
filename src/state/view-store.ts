@@ -23,6 +23,7 @@ export class ViewStore {
   readonly editing = signal<DatabaseRecord | typeof CREATE_NEW_RECORD | null>(null);
   readonly loadingViews = signal(true)
   readonly editingView = signal(false)
+  readonly creatingView = signal(false)
 
   readonly list = computed((): ViewConfig[] => {
     return this.views.value.records as unknown as ViewConfig[]
@@ -85,6 +86,22 @@ export class ViewStore {
       }
 
     this.openView(view)
+  }
+
+  async createView(view: ViewConfig): Promise<void> {
+    const dbPath = this.viewsFile.value?.path
+    const file = this.currentFile.value?.file
+
+    if (!dbPath || !file) return
+
+    const views = this.views.value
+
+    await recins(dbPath, views.type, undefined, view as unknown as DatabaseRecord)
+    await this.reloadViews(dbPath)
+    // x-ref: GNY-01
+    history.replaceState(null, '', ROUTES.file(file.path, view))
+    this.openViewByName(file, view.Name)
+    this.toggleViewCreator()
   }
 
   async editCurrentView(changes: ViewConfig): Promise<void> {
@@ -210,5 +227,9 @@ export class ViewStore {
 
   toggleViewEditor(): void {
     this.editingView.value = !this.editingView.value
+  }
+
+  toggleViewCreator(): void {
+    this.creatingView.value = !this.creatingView.value
   }
 }

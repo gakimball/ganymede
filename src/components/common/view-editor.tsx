@@ -10,17 +10,20 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { TextInput } from '../forms/text-input';
 import { DatabaseFieldMap } from '../../types/database';
 import { parseFormData } from '../../utils/parse-form-data';
+import { FileEntry } from '@tauri-apps/api/fs';
 
 interface ViewEditorProps {
-  view: ViewConfig;
+  file: FileEntry;
+  view?: ViewConfig;
   viewFields: DatabaseFieldMap;
   recordFields: DatabaseFieldMap;
   onChange: (view: ViewConfig) => void;
   onClose: () => void;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
+  file,
   view,
   viewFields,
   recordFields,
@@ -32,7 +35,7 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
     event.preventDefault()
     const formData = new FormData(event.currentTarget as HTMLFormElement)
     const config = parseFormData(formData, viewFields) as unknown as ViewConfig
-    config.File = view.File
+    config.File = file.name!
     onChange(config)
   })
 
@@ -42,13 +45,13 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Name</FormLabel>
         <TextInput
           name="Name"
-          defaultValue={view.Name}
+          defaultValue={view?.Name}
         />
         <br />
         <FormLabel>Layout</FormLabel>
         <SelectField
           name="Layout"
-          defaultValue={view.Layout}
+          defaultValue={view?.Layout}
           options={[
             { label: 'List', value: 'List' },
             { label: 'Table', value: 'Table' },
@@ -59,19 +62,19 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Filter</FormLabel>
         <TextInput
           name="Filter"
-          defaultValue={view.Filter}
+          defaultValue={view?.Filter}
         />
         <br />
         <FormLabel>Sort</FormLabel>
         <TextInput
           name="Sort"
-          defaultValue={view.Sort}
+          defaultValue={view?.Sort}
         />
         <br />
         <FormLabel>Group</FormLabel>
         <SelectField
           name="Group"
-          defaultValue={view.Group ?? ''}
+          defaultValue={view?.Group ?? ''}
           options={[
             {
               value: '',
@@ -87,36 +90,38 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Fields</FormLabel>
         <TextInput
           name="Fields"
-          defaultValue={view.Fields}
+          defaultValue={view?.Fields}
         />
         <br />
         <FormLabel>Render</FormLabel>
         <TextInput
           name="Render"
-          defaultValue={view.Render}
+          defaultValue={view?.Render}
         />
         <br />
         <FormLabel>Sum</FormLabel>
         <TextInput
           name="Sum"
-          defaultValue={view.Sum}
+          defaultValue={view?.Sum}
         />
         <br />
         <FormLabel>Full Page</FormLabel>
         <TextInput
           name="Full_Page"
           type="checkbox"
-          defaultValue={view.Full_Page}
+          defaultValue={view?.Full_Page}
         />
         <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
-          <Button theme="danger" onClick={onDelete}>
-            Delete
-          </Button>
+          {onDelete && (
+            <Button theme="danger" onClick={onDelete}>
+              Delete
+            </Button>
+          )}
           <Button onClick={onClose}>
             Cancel
           </Button>
           <Button type="submit" theme="primary" isExpanded>
-            Save
+            {view ? 'Save' : 'Create'}
           </Button>
         </div>
       </form>

@@ -35,6 +35,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const editing = views.editing.value
   const loadingViews = views.loadingViews.value
   const editingView = views.editingView.value
+  const creatingView = views.creatingView.value
 
   const fileViews = useMemo(() => {
     return viewsList.filter(view => view.File === file.name)
@@ -65,7 +66,8 @@ export const DatabaseLayout = memo<DatabaseFile>(({
         views={fileViews}
         current={currentView?.config}
         onChange={views.openView}
-        onCreateNew={views.openCreateRecord}
+        onCreateRecord={views.openCreateRecord}
+        onCreateView={views.toggleViewCreator}
         onEditView={views.toggleViewEditor}
       />
       {View && !hideRecordBrowser && (
@@ -78,12 +80,22 @@ export const DatabaseLayout = memo<DatabaseFile>(({
       )}
       {currentView && editingView && (
         <ViewEditor
+          file={file}
           view={currentView.config}
           viewFields={views.fields.value}
           recordFields={currentView.database.fields}
           onChange={views.editCurrentView}
           onClose={views.toggleViewEditor}
           onDelete={views.deleteCurrentView}
+        />
+      )}
+      {currentView && creatingView && (
+        <ViewEditor
+          file={file}
+          viewFields={views.fields.value}
+          recordFields={currentView.database.fields}
+          onChange={views.createView}
+          onClose={views.toggleViewCreator}
         />
       )}
       {currentView && editing && (

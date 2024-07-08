@@ -4,13 +4,17 @@ import { DatabaseRecord } from '../types/database'
 export const recins = async (
   dbPath: string,
   recordType: string | undefined,
-  recordIndex: number,
+  recordIndex: number | undefined,
   record: DatabaseRecord,
 ) => {
-  const args = ['-n', String(recordIndex)]
+  const args: string[] = []
 
   if (recordType) {
     args.push('-t', recordType)
+  }
+
+  if (recordIndex !== undefined) {
+    args.push('-n', String(recordIndex))
   }
 
   Object.entries(record).forEach(([field, value]) => {

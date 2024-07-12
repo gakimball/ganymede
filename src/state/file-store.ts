@@ -1,9 +1,10 @@
 import { computed, signal } from '@preact/signals';
-import { FileEntry, readDir, readTextFile, removeDir, removeFile, renameFile } from '@tauri-apps/api/fs';
+import { FileEntry, readDir, readTextFile, removeDir, removeFile, renameFile, writeFile } from '@tauri-apps/api/fs';
 import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { confirm, open } from '@tauri-apps/api/dialog';
 import { queryRecfile } from '../utils/query-recfile';
+import { normalize } from '@tauri-apps/api/path';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -58,6 +59,12 @@ export class FileStore {
 
   setFiles(files: FileEntry[]): void {
     this.files.value = files
+  }
+
+  async createFile(path: string): Promise<void> {
+    await writeFile(path, '')
+    await this.reloadDirectory()
+    await this.openFileByPath(path)
   }
 
   async openFileByPath(path: string): Promise<void> {

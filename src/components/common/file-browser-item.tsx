@@ -8,7 +8,7 @@ import { showMenu } from 'tauri-plugin-context-menu';
 import queryString from 'query-string';
 import { ROUTES } from '../../utils/routes';
 
-export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle'
+export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -42,6 +42,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
 
     showMenu({
       items: [
+        {
+          label: 'New file here',
+          event: () => onAction(file, 'new'),
+        },
         {
           label: 'Add to favorites',
           event: () => onAction(file, 'favorite'),

@@ -8,6 +8,7 @@ import { memo } from 'preact/compat';
 import { Icon } from '../common/icon';
 import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
+import { join, normalize, sep } from '@tauri-apps/api/path';
 
 export const FileBrowser = memo(({
 }) => {
@@ -40,6 +41,18 @@ export const FileBrowser = memo(({
       }
       case 'delete': {
         files.deleteFile(file)
+        break
+      }
+      case 'new': {
+        const name = await prompt.create({
+          text: 'Enter a file name',
+          submitText: 'Create',
+        })
+        if (name) {
+          const path = await normalize(await join(file.path, '..', name))
+          await files.createFile(path)
+        }
+        break
       }
     }
   })

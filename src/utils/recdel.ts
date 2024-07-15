@@ -1,4 +1,5 @@
 import { Command } from '@tauri-apps/api/shell'
+import { logger } from './logger'
 
 export const recdel = async (
   dbPath: string,
@@ -16,5 +17,8 @@ export const recdel = async (
   const cmd = new Command('recdel', args)
   const res = await cmd.execute()
 
-  if (res.stderr) console.log(res.stderr)
+  if (res.stderr) logger.error('Error running recdel', {
+    error: res.stderr,
+    args,
+  })
 }

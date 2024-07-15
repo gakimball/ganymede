@@ -6,6 +6,7 @@ import { applyRenderRule } from '../../utils/apply-render-rule';
 import { formatDate } from '../../utils/format-date';
 import { getEnumColor } from '../../utils/get-enum-color';
 import { EnumTag } from './enum-tag';
+import { logger } from '../../utils/logger';
 
 interface FieldValueProps {
   value: string | undefined;
@@ -67,7 +68,11 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
     try {
       return <span>{formatDate(parsedValue, value, render)}</span>
     } catch (err) {
-      console.log(err)
+      logger.warn('Could not format date', {
+        date: parsedValue,
+        string: value,
+        format: render,
+      })
       return null
     }
   }

@@ -1,5 +1,6 @@
 import { Database, DatabaseRecord, DatabaseFieldType, DatabaseField } from '../types/database';
 import { ViewConfig } from '../types/view-config';
+import { emplaceMap } from './emplace-map';
 
 export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
 
@@ -21,7 +22,7 @@ export const groupRecordsBy = (
   const groupBy = view.Group
   const groupByField = groupBy ? fields.get(groupBy) : undefined
 
-  if (!groupBy || groupByField?.type !== DatabaseFieldType.ENUM || !groupByField.params) {
+  if (!groupByField) {
     return [{
       id: GROUP_NOT_SET,
       title: '(not set)',
@@ -30,31 +31,44 @@ export const groupRecordsBy = (
     }]
   }
 
-  const recordGroups: {
-    [key: string]: DatabaseRecord[];
-  } = Object.fromEntries(groupByField.params.map(value => [
-    value,
-    [],
-  ]))
+  const recordGroups = new Map<string, ViewRecordGroup>()
   const notSetRecords: DatabaseRecord[] = []
 
-  records.forEach(record => {
-    const value = record[groupBy]
+  // Use a pre-defined group order for enums
+  if (groupByField.type === DatabaseFieldType.ENUM) {
+    groupByField.params?.forEach(enumValue => {
+      recordGroups.set(enumValue, {
+        id: enumValue,
+        title: enumValue,
+        records: [],
+        field: groupByField,
+      })
+    })
+  }
 
-    if (!value || !(value in recordGroups)) {
+  records.forEach(record => {
+    const value = record[groupByField.name]
+
+    if (value === undefined) {
       notSetRecords.push(record)
     } else {
-      recordGroups[value].push(record)
+      emplaceMap(recordGroups, value, {
+        insert: () => ({
+          id: value,
+          title: value,
+          records: [record],
+          field: groupByField,
+        }),
+        update: group => {
+          group.records.push(record)
+          return group
+        }
+      })
     }
   })
 
   return [
-    ...groupByField.params.map(value => ({
-      id: value,
-      title: value,
-      records: recordGroups[value],
-      field: groupByField,
-    })),
+    ...recordGroups.values(),
     {
       id: GROUP_NOT_SET,
       title: '(not set)',

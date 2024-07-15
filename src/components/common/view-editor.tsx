@@ -48,6 +48,12 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
           defaultValue={view?.Name}
         />
         <br />
+        <FormLabel>Record Type</FormLabel>
+        <TextInput
+          name="Type"
+          defaultValue={view?.Type}
+        />
+        <br />
         <FormLabel>Layout</FormLabel>
         <SelectField
           name="Layout"
@@ -94,10 +100,18 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         />
         <br />
         <FormLabel>Render</FormLabel>
-        <TextInput
-          name="Render"
-          defaultValue={view?.Render}
-        />
+        {view?.Render?.map((value, index) => (
+          <TextInput
+            key={value}
+            name={`Render.${index}`}
+            defaultValue={value}
+          />
+        ))}
+        {!view?.Render && (
+          <TextInput
+            name="Render.0"
+          />
+        )}
         <br />
         <FormLabel>Sum</FormLabel>
         <TextInput

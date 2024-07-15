@@ -37,17 +37,14 @@ export interface ViewConfig {
   /**
    * Per-field formatting rules with the format:
    * ```txt
-   * <field> <format> <field> <format> ...
+   * <field> <format>
    * ```
-   * As a visual aid, you can add semicolons to separate each field:
-   * ```txt
-   * Amount money; Percent percent;
-   * ```
+   * Multiple `Render` fields can be defined on a view.
    * Supported formats:
    *   - `money`: dollar amount
    *   - `percent`: a value from 0–1 formatted as a %, up to 2 decimal places
    */
-  Render?: string;
+  Render?: string[];
   /**
    * Add a sum to the bottom of a column in the Table layout. Only works with numeric and
    * formula fields.
@@ -70,7 +67,7 @@ export const toDatabaseRecord = (view: ViewConfig): DatabaseRecord => {
     Filter: view.Filter ? [view.Filter] : undefined,
     Group: view.Group ? [view.Group] : undefined,
     Fields: view.Fields ? [view.Fields] : undefined,
-    Render: view.Render ? [view.Render] : undefined,
+    Render: view.Render,
     Sum: view.Sum ? [view.Sum] : undefined,
     Full_Page: view.Full_Page ? [view.Full_Page] : undefined,
   }
@@ -86,7 +83,7 @@ export const toViewConfig = (record: DatabaseRecord): ViewConfig => {
     Filter: record.Filter?.[0],
     Group: record.Group?.[0],
     Fields: record.Fields?.[0],
-    Render: record.Render?.[0],
+    Render: record.Render,
     Sum: record.Sum?.[0],
     Full_Page: record.Full_Page?.[0],
   }

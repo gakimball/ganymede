@@ -17,13 +17,17 @@ export const getRenderRules = (
   }
 
   return Object.fromEntries(
-    chunkArray(view.Render.replace(/;/g, '').split(' '), 2).map(([fieldName, rule]) => {
+    view.Render.map((value) => {
+      const [fieldName, rule] = value.split(' ')
+
       if (rule === 'money' || rule === 'percent') {
         return [fieldName, { type: rule }]
       }
+
       if (fields.get(fieldName)?.type === DatabaseFieldType.DATE) {
         return [fieldName, { type: 'date', format: rule.replace(/_/g, ' ') }]
       }
+
       return [fieldName, undefined]
     })
   )

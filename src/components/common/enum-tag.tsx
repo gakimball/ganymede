@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseField } from '../../types/database';
 import { getEnumColor } from '../../utils/get-enum-color';
+import { Tag } from './tag';
 
 interface EnumTagProps {
   value: string;
@@ -11,12 +12,7 @@ export const EnumTag: FunctionComponent<EnumTagProps> = ({
   value,
   field,
 }) => (
-  <span
-    className="py-1 px-2 rounded-md text-sm text-content bg-[--EnumTag-color]"
-    style={{
-      '--EnumTag-color': getEnumColor(value, field),
-    }}
-  >
+  <Tag color={getEnumColor(value, field)}>
     {value.replace(/_/g, ' ')}
-  </span>
+  </Tag>
 )

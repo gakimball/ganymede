@@ -68,9 +68,9 @@ export const TableView: FunctionComponent<ViewComponentProps> = ({
             {hasSums && (
               <tfoot>
                 <tr>
-                  {[...shownFields.keys()].map((fieldName) => (
+                  {shownFields.map((fieldName) => (
                     <td key={fieldName} className="h-10">
-                      {sums[fieldName]}
+                      {sums[fieldName.name]}
                     </td>
                   ))}
                 </tr>

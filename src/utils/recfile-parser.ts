@@ -2,6 +2,7 @@ import { Database, DatabaseField, DatabaseFieldMap, DatabaseFieldType, DatabaseR
 import { createEmptyRecord } from './create-empty-record';
 import { createFormula } from './create-formula';
 import { emplaceMap } from './emplace-map';
+import { logger } from './logger';
 import { parseTypeDef } from './parse-typedef';
 
 const FIELD_REGEX = /^(?<name>[a-zA-Z%][a-zA-Z0-9_]*):(?<valueExists>\s(?<value>.+))?/
@@ -16,6 +17,8 @@ export class RecfileParser {
   private currentRecord: DatabaseRecord = {}
 
   private multilineParse?: { name: string; value: string }
+
+  private errors: string[] = []
 
   private upsertField(
     key: string,
@@ -39,6 +42,7 @@ export class RecfileParser {
       type: this.type,
       fields: this.fields,
       records: [...this.records],
+      errors: this.errors,
     }
   }
 
@@ -86,9 +90,21 @@ export class RecfileParser {
         }
         case '%formula': {
           const [, fieldName, ...rest] = line.split(' ')
+          let formula
+          const formulaText = rest.join(' ')
+          try {
+            formula = createFormula(formulaText)
+          } catch (err) {
+            logger.warn('Error parsing formula', {
+              formula: formulaText,
+              error: err,
+            })
+            this.errors.push(`Error parsing this formula:\n\n${formulaText}\n\n${(err as Error).message}`)
+            break
+          }
           this.upsertField(fieldName, {
             type: DatabaseFieldType.FORMULA,
-            formula: createFormula(rest.join(' ')),
+            formula,
           })
           break
         }

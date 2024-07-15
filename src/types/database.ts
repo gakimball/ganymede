@@ -4,6 +4,7 @@ export interface Database {
   type: string | undefined;
   fields: DatabaseFieldMap;
   records: DatabaseRecord[];
+  errors: string[];
 }
 
 export type DatabaseFieldMap = Map<string, DatabaseField>;

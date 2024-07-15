@@ -40,7 +40,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   }
 
   return (
-    <ul className="flex items-center mb-3 pe-3">
+    <ul className="flex items-center mb-3">
       {[...views, textView].map(view => {
         const isActive = view.Name === current?.Name
 

@@ -2,9 +2,14 @@ import { Command } from '@tauri-apps/api/shell'
 import { ViewConfig } from '../types/view-config'
 import { Database } from '../types/database'
 import { RecfileParser } from './recfile-parser'
+import { logger } from './logger'
 
 export const queryRecfile = async (path: string, view?: ViewConfig) => {
   const args = [path, '--include-descriptors']
+
+  if (view?.Type) {
+    args.push('-t', view.Type)
+  }
 
   if (view?.Filter) {
     args.push('-e', view.Filter)
@@ -18,14 +23,18 @@ export const queryRecfile = async (path: string, view?: ViewConfig) => {
   const parser = new RecfileParser()
   let error = ''
 
+  logger.debug('Running recsel', args)
+
   cmd.stdout.on('data', data => parser.parseLine(data))
   cmd.stderr.on('data', data => (error += data))
 
   return new Promise<Database>((resolve) => {
     cmd.on('close', () => {
       if (error) {
-        console.log('recsel error')
-        console.log(error)
+        logger.error('Error running recsel', {
+          error,
+          args,
+        })
       }
 
       resolve(parser.toDatabase())

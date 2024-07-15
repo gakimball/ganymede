@@ -26,6 +26,7 @@ export const createEmptyRecord = (fields: DatabaseFieldMap): DatabaseRecord => {
       if (typeof key === 'symbol') return 0;
       const value = parseFieldValue(proxy[key], fields.get(key)!)
       if (typeof value === 'string') return value ? 1 : 0
+      if (value instanceof Date) return value.valueOf()
       return Number(value)
     },
   })

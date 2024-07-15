@@ -29,7 +29,7 @@ export const FormulaField: FunctionComponent<FormulaFieldProps> = ({
           )}
         />
       </div>
-      <Button theme="secondary" onClick={() => setShowFormula(v => !v)}>
+      <Button type="button" theme="secondary" onClick={() => setShowFormula(v => !v)}>
         {showFormula ? 'Hide' : 'Show'} formula
       </Button>
     </div>

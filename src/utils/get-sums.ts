@@ -1,5 +1,5 @@
 import { Database } from '../types/database';
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig } from '../utils/view-config';
 import { applyRenderRule } from './apply-render-rule';
 import { getRenderRules } from './get-render-rules';
 import { parseFieldValue } from './parse-field-value';
@@ -21,13 +21,15 @@ export const getSums = (
   const sums = Object.fromEntries(
     sumFields.map(fieldName => {
       const sum = database.records.reduce((total, record) => {
-        const value = parseFieldValue(record[fieldName], database.fields.get(fieldName)!)
+        record[fieldName]?.forEach(value => {
+          const parsedValue = parseFieldValue(value, database.fields.get(fieldName)!)
 
-        if (typeof value !== 'number' || Number.isNaN(value)) {
-          return total
-        }
+          if (typeof parsedValue === 'number' && !Number.isNaN(parsedValue)) {
+            total += parsedValue
+          }
+        })
 
-        return total + value
+        return total
       }, 0)
 
       const renderRule = renderRules[fieldName]

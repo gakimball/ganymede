@@ -1,6 +1,6 @@
 import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig, toDatabaseRecord, toViewConfig } from '../utils/view-config';
 import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
 import { Command } from '@tauri-apps/api/shell';
@@ -26,7 +26,7 @@ export class ViewStore {
   readonly creatingView = signal(false)
 
   readonly list = computed((): ViewConfig[] => {
-    return this.views.value.records as unknown as ViewConfig[]
+    return this.views.value.records.map(record => toViewConfig(record))
   })
 
   readonly fields = computed((): DatabaseFieldMap => this.views.value.fields)
@@ -88,7 +88,7 @@ export class ViewStore {
     this.openView(view)
   }
 
-  async createView(view: ViewConfig): Promise<void> {
+  async createView(view: DatabaseRecord): Promise<void> {
     const dbPath = this.viewsFile.value?.path
     const file = this.currentFile.value?.file
 
@@ -96,15 +96,16 @@ export class ViewStore {
 
     const views = this.views.value
 
-    await recins(dbPath, views.type, undefined, view as unknown as DatabaseRecord)
+    await recins(dbPath, views.type, undefined, view)
     await this.reloadViews(dbPath)
+    const asConfig = toViewConfig(view)
     // x-ref: GNY-01
-    history.replaceState(null, '', ROUTES.file(file.path, view))
-    this.openViewByName(file, view.Name)
+    history.replaceState(null, '', ROUTES.file(file.path, asConfig))
+    this.openViewByName(file, asConfig.Name)
     this.toggleViewCreator()
   }
 
-  async editCurrentView(changes: ViewConfig): Promise<void> {
+  async editCurrentView(changes: DatabaseRecord): Promise<void> {
     const current = this.current.value
     const dbPath = this.viewsFile.value?.path
     const file = this.currentFile.value?.file
@@ -114,11 +115,12 @@ export class ViewStore {
     const index = this.list.value.indexOf(current.config)
 
     if (index > -1) {
-      await recins(dbPath, this.views.value.type, index, changes as unknown as DatabaseRecord)
+      await recins(dbPath, this.views.value.type, index, changes)
       await this.reloadViews(dbPath)
+      const asConfig = toViewConfig(changes)
       // x-ref: GNY-01
-      history.replaceState(null, '', ROUTES.file(file.path, changes))
-      this.openViewByName(file, changes.Name)
+      history.replaceState(null, '', ROUTES.file(file.path, asConfig))
+      this.openViewByName(file, asConfig.Name)
     }
 
     this.toggleViewEditor()
@@ -166,12 +168,10 @@ export class ViewStore {
 
     if (dbPath) {
       const cmd = new Command('recins', [
-        ...Object.entries(record).flatMap(([field, value]) => {
-          if (!value) {
-            return []
-          }
-
-          return ['-f', field, '-v', value]
+        ...Object.entries(record).flatMap(([field, values]) => {
+          return values?.flatMap(value => {
+            return ['-f', field, '-v', value]
+          }) ?? []
         }),
         dbPath
       ])

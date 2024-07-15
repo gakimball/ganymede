@@ -3,6 +3,7 @@ import { ViewComponentProps } from '../../types/view-component-props';
 import { FieldValue } from '../common/field-value';
 import { useView } from '../../hooks/use-view';
 import { GroupTitle } from '../common/group-title';
+import { FieldValueSet } from '../common/field-value-set';
 
 export const ListView: FunctionComponent<ViewComponentProps> = ({
   database,
@@ -43,7 +44,7 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
                       first:flex-1
                     `}
                   >
-                    <FieldValue
+                    <FieldValueSet
                       value={record[field.name]}
                       field={field}
                       render={renderRules[field.name]}

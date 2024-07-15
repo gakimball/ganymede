@@ -1,5 +1,5 @@
 import { DatabaseField, DatabaseFieldMap, DatabaseFieldType } from '../types/database';
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig } from '../utils/view-config';
 import { chunkArray } from '../utils/chunk-array';
 
 export type RenderRule =

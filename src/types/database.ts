@@ -19,7 +19,7 @@ export type DatabaseField = {
   formula?: Formula;
 };
 
-export type DatabaseRecord = Record<string, string | undefined>
+export type DatabaseRecord = Record<string, string[] | undefined>
 
 export enum DatabaseFieldType {
   INT = 'INT',

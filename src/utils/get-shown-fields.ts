@@ -1,5 +1,5 @@
 import { Database, DatabaseFieldMap } from '../types/database';
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig } from '../utils/view-config';
 
 /**
  * Return a Map of fields to display on each record within a view, based on the view's

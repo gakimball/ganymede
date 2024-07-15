@@ -1,3 +1,5 @@
+import { DatabaseRecord } from '../types/database';
+
 /**
  * Configuration for a view.
  */
@@ -56,4 +58,36 @@ export interface ViewConfig {
   Sum?: string;
   /** Open records in a full page instead of a popover. */
   Full_Page?: string;
+}
+
+export const toDatabaseRecord = (view: ViewConfig): DatabaseRecord => {
+  return {
+    Name: [view.Name],
+    Layout: [view.Layout],
+    File: [view.File],
+    Type: view.Type ? [view.Type] : undefined,
+    Sort: view.Sort ? [view.Sort] : undefined,
+    Filter: view.Filter ? [view.Filter] : undefined,
+    Group: view.Group ? [view.Group] : undefined,
+    Fields: view.Fields ? [view.Fields] : undefined,
+    Render: view.Render ? [view.Render] : undefined,
+    Sum: view.Sum ? [view.Sum] : undefined,
+    Full_Page: view.Full_Page ? [view.Full_Page] : undefined,
+  }
+}
+
+export const toViewConfig = (record: DatabaseRecord): ViewConfig => {
+  return {
+    Name: record.Name![0],
+    Layout: record.Layout![0] as ViewConfig['Layout'],
+    File: record.File![0],
+    Type: record.Type?.[0],
+    Sort: record.Sort?.[0],
+    Filter: record.Filter?.[0],
+    Group: record.Group?.[0],
+    Fields: record.Fields?.[0],
+    Render: record.Render?.[0],
+    Sum: record.Sum?.[0],
+    Full_Page: record.Full_Page?.[0],
+  }
 }

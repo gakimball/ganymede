@@ -8,14 +8,17 @@ import { TextInput } from '../forms/text-input';
 interface RecordViewerFieldProps {
   defaultValue?: string;
   field: DatabaseField;
+  index: number;
 }
 
 export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
   defaultValue,
   field,
+  index,
 }) => {
   let defaultChecked
   let type = 'text'
+  const inputName = `${field.name}.${index}`
 
   switch (field.type) {
     case DatabaseFieldType.ENUM: {
@@ -33,7 +36,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
 
       return (
         <SelectField
-          name={field.name}
+          name={inputName}
           defaultValue={defaultValue}
           options={options}
         />
@@ -42,7 +45,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
     case DatabaseFieldType.BODY:
       return (
         <textarea
-          name={field.name}
+          name={inputName}
           className="form-control"
           rows={5}
           defaultValue={defaultValue}
@@ -66,7 +69,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
 
   return (
     <TextInput
-      name={field.name}
+      name={inputName}
       defaultValue={defaultValue}
       defaultChecked={defaultChecked}
     />

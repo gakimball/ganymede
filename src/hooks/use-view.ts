@@ -1,5 +1,5 @@
 import { Database, DatabaseField } from '../types/database'
-import { ViewConfig } from '../types/view-config'
+import { ViewConfig } from '../utils/view-config'
 import { RenderRuleMap, getRenderRules } from '../utils/get-render-rules'
 import { getShownFields } from '../utils/get-shown-fields'
 import { ViewRecordGroup, groupRecordsBy } from '../utils/group-records-by'

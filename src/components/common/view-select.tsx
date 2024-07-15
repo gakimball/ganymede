@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { ViewConfig } from '../../types/view-config';
+import { ViewConfig } from '../../utils/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
 import classNames from 'classnames';

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { ViewConfig } from '../../types/view-config';
+import { ViewConfig } from '../../utils/view-config';
 import { Dropdown } from './dropdown';
 import { Button } from './button';
 import { Pane } from './pane';
@@ -8,7 +8,7 @@ import { Modal } from './modal';
 import { FormLabel } from '../forms/form-label';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { TextInput } from '../forms/text-input';
-import { DatabaseFieldMap } from '../../types/database';
+import { DatabaseFieldMap, DatabaseRecord } from '../../types/database';
 import { parseFormData } from '../../utils/parse-form-data';
 import { FileEntry } from '@tauri-apps/api/fs';
 
@@ -17,7 +17,7 @@ interface ViewEditorProps {
   view?: ViewConfig;
   viewFields: DatabaseFieldMap;
   recordFields: DatabaseFieldMap;
-  onChange: (view: ViewConfig) => void;
+  onChange: (view: DatabaseRecord) => void;
   onClose: () => void;
   onDelete?: () => void;
 }
@@ -34,8 +34,8 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
   const handleSubmit = useEventHandler((event: SubmitEvent) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget as HTMLFormElement)
-    const config = parseFormData(formData, viewFields) as unknown as ViewConfig
-    config.File = file.name!
+    const config = parseFormData(formData, viewFields)
+    config.File = [file.name!]
     onChange(config)
   })
 

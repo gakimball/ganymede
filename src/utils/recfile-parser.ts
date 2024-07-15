@@ -37,6 +37,13 @@ export class RecfileParser {
     })
   }
 
+  private upsertRecord(
+    key: string,
+    value: string,
+  ) {
+
+  }
+
   toDatabase(): Database {
     return {
       type: this.type,
@@ -54,7 +61,7 @@ export class RecfileParser {
         this.multilineParse.value += line.slice(2) + '\n'
         return
       } else {
-        this.currentRecord[this.multilineParse.name] = this.multilineParse.value.slice(0, -1)
+        this.currentRecord[this.multilineParse.name] = [this.multilineParse.value.slice(0, -1)]
         this.upsertField(this.multilineParse.name)
         this.multilineParse = undefined
       }
@@ -136,6 +143,8 @@ export class RecfileParser {
 
     this.upsertField(name)
     this.records.add(this.currentRecord)
-    this.currentRecord[name] = value
+    const field = this.currentRecord[name]
+    if (field) field.push(value)
+    else this.currentRecord[name] = [value]
   }
 }

@@ -1,5 +1,5 @@
 import { Database, DatabaseRecord, DatabaseFieldType, DatabaseField } from '../types/database';
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig } from '../utils/view-config';
 import { emplaceMap } from './emplace-map';
 
 export const GROUP_NOT_SET = Symbol('GROUP_NOT_SET')
@@ -47,22 +47,24 @@ export const groupRecordsBy = (
   }
 
   records.forEach(record => {
-    const value = record[groupByField.name]
+    const values = record[groupByField.name]
 
-    if (value === undefined) {
+    if (values === undefined) {
       notSetRecords.push(record)
     } else {
-      emplaceMap(recordGroups, value, {
-        insert: () => ({
-          id: value,
-          title: value,
-          records: [record],
-          field: groupByField,
-        }),
-        update: group => {
-          group.records.push(record)
-          return group
-        }
+      values.forEach(value => {
+        emplaceMap(recordGroups, value, {
+          insert: () => ({
+            id: value,
+            title: value,
+            records: [record],
+            field: groupByField,
+          }),
+          update: group => {
+            group.records.push(record)
+            return group
+          }
+        })
       })
     }
   })

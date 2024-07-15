@@ -163,7 +163,7 @@ export class FileStore {
       const favoritesDb = await queryRecfile(favoritesFile.path)
 
       this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
-        const fileName = record.File as string
+        const fileName = record.File![0]
         const matchingFile = files.find(file => file.name === fileName)
 
         return {

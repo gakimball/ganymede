@@ -3,6 +3,7 @@ import { FieldValue } from '../common/field-value';
 import { ViewComponentProps } from '../../types/view-component-props';
 import { getSums } from '../../utils/get-sums';
 import { useView } from '../../hooks/use-view';
+import { FieldValueSet } from '../common/field-value-set';
 
 export const TableView: FunctionComponent<ViewComponentProps> = ({
   database,
@@ -55,7 +56,7 @@ export const TableView: FunctionComponent<ViewComponentProps> = ({
                         first:group-hover:text-primary
                       `}
                     >
-                      <FieldValue
+                      <FieldValueSet
                         value={record[field.name]}
                         field={field}
                         render={renderRules[field.name]}

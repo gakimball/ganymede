@@ -1,4 +1,4 @@
-import { ViewConfig } from '../types/view-config';
+import { ViewConfig } from '../utils/view-config';
 import queryString from 'query-string';
 
 export const ROUTES = {

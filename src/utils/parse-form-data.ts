@@ -1,17 +1,23 @@
 import { DatabaseFieldMap, DatabaseFieldType, DatabaseRecord } from '../types/database';
 
 export const parseFormData = (formData: FormData, fields: DatabaseFieldMap): DatabaseRecord => {
-  return Object.fromEntries(
-    [...fields.values()]
-      .filter(field => field.type !== DatabaseFieldType.FORMULA)
-      .map(field => {
-        const value = formData.get(field.name)
+  const record: DatabaseRecord = {}
 
-        if (field.type === DatabaseFieldType.BOOL) {
-          return [field.name, value === 'on' ? 'true' : 'false']
-        }
+  for (const key of formData.keys()) {
+    let value = formData.get(key)
+    const [fieldName, idx] = key.split('.')
+    const field = fields.get(fieldName)
 
-        return [field.name, value ? String(value) : undefined]
-      })
-  )
+    if (typeof value !== 'string' || !value || !field) continue
+
+    if (field.type === DatabaseFieldType.BOOL) {
+      value = String(value === 'on')
+    }
+
+    const index = Number.parseInt(idx, 10)
+    if (!record[field.name]) record[field.name] = []
+    record[field.name]![index] = value
+  }
+
+  return record
 }

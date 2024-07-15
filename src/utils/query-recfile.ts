@@ -1,5 +1,5 @@
 import { Command } from '@tauri-apps/api/shell'
-import { ViewConfig } from '../types/view-config'
+import { ViewConfig } from '../utils/view-config'
 import { Database } from '../types/database'
 import { RecfileParser } from './recfile-parser'
 import { logger } from './logger'

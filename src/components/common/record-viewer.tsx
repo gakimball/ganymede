@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
-import { ViewConfig } from '../../types/view-config';
+import { ViewConfig } from '../../utils/view-config';
 import { getShownFields } from '../../utils/get-shown-fields';
 import { parseFieldValue } from '../../utils/parse-field-value';
 import { Button } from './button';
@@ -73,17 +73,31 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        {allFields.map((field) => (
-          <div key={field.name} className="mb-3">
-            <FormLabel htmlFor={field.name}>
-              {field.name}
-            </FormLabel>
-            <RecordViewerField
-              defaultValue={record?.[field.name]}
-              field={field}
-            />
-          </div>
-        ))}
+        {allFields.map((field) => {
+          const values = record?.[field.name]
+
+          return (
+            <div key={field.name} className="mb-3">
+              <FormLabel htmlFor={field.name}>
+                {field.name}
+              </FormLabel>
+              {values?.map((value, index) => (
+                <RecordViewerField
+                  key={index}
+                  defaultValue={value}
+                  index={index}
+                  field={field}
+                />
+              ))}
+              {!values && (
+                <RecordViewerField
+                  index={0}
+                  field={field}
+                />
+              )}
+            </div>
+          )
+        })}
         <div className="flex gap-2 mt-7">
           {record && (
             <Button

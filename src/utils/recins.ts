@@ -18,10 +18,10 @@ export const recins = async (
     args.push('-n', String(recordIndex))
   }
 
-  Object.entries(record).forEach(([field, value]) => {
-    if (value) {
+  Object.entries(record).forEach(([field, values]) => {
+    values?.forEach(value => {
       args.push('-f', field, '-v', value)
-    }
+    })
   })
 
   args.push(dbPath)

@@ -15,6 +15,7 @@ import { DatabaseFile } from '../../state/file-store';
 import { ViewEditor } from '../common/view-editor';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { ViewConfig } from '../../types/view-config';
+import { Callout } from '../common/callout';
 
 const viewComponents = {
   Table: TableView,
@@ -60,7 +61,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
 
   return (
-    <div className="pt-3 ps-4">
+    <div className="pt-3 px-4">
       <ViewSelect
         file={file}
         views={fileViews}
@@ -77,6 +78,11 @@ export const DatabaseLayout = memo<DatabaseFile>(({
           onSelectRecord={views.openEditRecord}
           directory={directory}
         />
+      )}
+      {currentView && !View && (
+        <Callout type="error">
+          No layout is specified for this view.
+        </Callout>
       )}
       {currentView && editingView && (
         <ViewEditor

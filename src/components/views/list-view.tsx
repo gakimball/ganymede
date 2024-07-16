@@ -42,6 +42,7 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
                       first:text-content
                       first:group-hover:text-primary
                       first:flex-1
+                      overflow-x-hidden
                     `}
                   >
                     <FieldValueSet

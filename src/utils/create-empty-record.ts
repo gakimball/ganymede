@@ -1,4 +1,4 @@
-import { DatabaseField, DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database';
+import { DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../types/database';
 import { parseFieldValue } from './parse-field-value';
 
 export const createEmptyRecord = (fields: DatabaseFieldMap): DatabaseRecord => {
@@ -26,10 +26,20 @@ export const createEmptyRecord = (fields: DatabaseFieldMap): DatabaseRecord => {
   })
   const formulaProxy = new Proxy({}, {
     get(_, key) {
-      if (typeof key === 'symbol') return 0;
+      if (typeof key === 'symbol') {
+        return 0
+      }
+
       const value = parseFieldValue(proxy[key]?.[0], fields.get(key)!)
-      if (typeof value === 'string') return value ? 1 : 0
-      if (value instanceof Date) return value.valueOf()
+
+      if (typeof value === 'string') {
+        return value ? 1 : 0
+      }
+
+      if (value instanceof Date) {
+        return value.valueOf()
+      }
+
       return Number(value)
     },
   })

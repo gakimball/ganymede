@@ -1,3 +1,6 @@
+import { XIT_TASK_REGEX } from './constants'
+import { countXitTasks } from './count-xit-tasks'
+
 const hl = {
   red: 'text-syntax-red',
   orange: 'text-syntax-orange',
@@ -17,7 +20,6 @@ const MD_STRIKETHRU_REGEX = /~~(.*?)~~/g
 const GMI_HEADING_REGEX = /^#{1,3}/
 const GMI_LINK_REGEX = /^=> (\S+)( .*)?/
 
-const XIT_TASK_REGEX = /^\[(?<status> |x|@|~|\?)\]/
 const XIT_STATUS_COLORS: {
   [k: string]: string;
 } = {
@@ -83,6 +85,14 @@ export const syntaxHighlighters = {
 
   xit: (text: string) => {
     let html = ''
+
+    const tasks = countXitTasks(text)
+
+    html += `<span class="absolute top-3 right-4">`
+    html += `<span class="${XIT_STATUS_COLORS['x']}">[x]</span> ${tasks.complete}/${tasks.total}`
+    if (tasks.pending) html += `<span class="${XIT_STATUS_COLORS['@']}"> [@]</span> ${tasks.pending}`
+    if (tasks.question) html += `<span class="${XIT_STATUS_COLORS['?']}"> [?]</span> ${tasks.question}`
+    html += `</span>`
 
     text.split('\n').forEach((line) => {
       const match = XIT_TASK_REGEX.exec(line)

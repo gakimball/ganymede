@@ -13,15 +13,15 @@ import { DatabaseFieldType } from '../../types/database';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
 import { DatabaseFile } from '../../state/file-store';
 import { ViewEditor } from '../common/view-editor';
-import { useEventHandler } from '../../hooks/use-event-handler';
-import { ViewConfig } from '../../utils/view-config';
 import { Callout } from '../common/callout';
+import { AggregateView } from '../views/aggregate-view';
 
 const viewComponents = {
   Table: TableView,
   Board: BoardView,
   Text: TextView,
   List: ListView,
+  Aggregate: AggregateView,
 }
 
 export const DatabaseLayout = memo<DatabaseFile>(({

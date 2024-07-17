@@ -62,6 +62,7 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
             { label: 'List', value: 'List' },
             { label: 'Table', value: 'Table' },
             { label: 'Board', value: 'Board' },
+            { label: 'Aggregate', value: 'Aggregate' },
           ]}
         />
         <br />

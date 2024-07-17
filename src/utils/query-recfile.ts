@@ -19,6 +19,16 @@ export const queryRecfile = async (path: string, view?: ViewConfig) => {
     args.push('-S', view.Sort.replace(/ desc$/, ''))
   }
 
+  if (view?.Layout === 'Aggregate') {
+    if (view?.Group) {
+      args.push('-G', view.Group)
+    }
+
+    if (view?.Fields) {
+      args.push('-p', view.Fields.replace(/ /g, ','))
+    }
+  }
+
   const cmd = new Command('recsel', args)
   const parser = new RecfileParser()
   let error = ''

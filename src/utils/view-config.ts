@@ -7,7 +7,7 @@ export interface ViewConfig {
   /** Name of the view. */
   Name: string;
   /** Layout type. */
-  Layout: 'Table' | 'Board' | 'List' | 'Text';
+  Layout: 'Table' | 'Board' | 'List' | 'Aggregate' | 'Text';
   /** Type of resource to query. Necessary if a recfile has multiple resource types. */
   Type?: string;
   /** Filename, including extension. */

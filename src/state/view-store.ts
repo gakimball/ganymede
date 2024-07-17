@@ -33,16 +33,21 @@ export class ViewStore {
 
   constructor(
     private readonly currentFile: Signal<CurrentFile | null>,
-    private readonly viewsFile: Signal<FileEntry | null>
+    private readonly configFile: Signal<FileEntry | null>
   ) {
     effect(() => {
-      const file = viewsFile.value
+      const file = configFile.value
       if (file) this.reloadViews(file.path)
     })
   }
 
   async reloadViews(dbPath: string): Promise<void> {
-    this.views.value = await queryRecfile(dbPath)
+    this.views.value = await queryRecfile(dbPath, {
+      Name: 'Views',
+      File: '_ganymede.rec',
+      Layout: 'Text',
+      Type: 'View',
+    })
     this.loadingViews.value = false
   }
 
@@ -89,7 +94,7 @@ export class ViewStore {
   }
 
   async createView(view: DatabaseRecord): Promise<void> {
-    const dbPath = this.viewsFile.value?.path
+    const dbPath = this.configFile.value?.path
     const file = this.currentFile.value?.file
 
     if (!dbPath || !file) return
@@ -107,7 +112,7 @@ export class ViewStore {
 
   async editCurrentView(changes: DatabaseRecord): Promise<void> {
     const current = this.current.value
-    const dbPath = this.viewsFile.value?.path
+    const dbPath = this.configFile.value?.path
     const file = this.currentFile.value?.file
 
     if (!current || !dbPath || !file) return
@@ -135,7 +140,7 @@ export class ViewStore {
     if (!confirmed) return
 
     const current = this.current.value
-    const dbPath = this.viewsFile.value?.path
+    const dbPath = this.configFile.value?.path
     const file = this.currentFile.value?.file
 
     if (!current || !dbPath || !file) return

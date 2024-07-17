@@ -34,7 +34,7 @@ export class FileStore {
   readonly files = signal<FileEntry[]>([]);
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly current = signal<CurrentFile | null>(null);
-  readonly viewsFile = signal<FileEntry | null>(null)
+  readonly configFile = signal<FileEntry | null>(null)
 
   readonly sortedFiles = computed((): FileEntry[] => {
     return [...this.files.value].sort((a, b) => a.name!.localeCompare(b.name!))
@@ -148,19 +148,23 @@ export class FileStore {
     const files = await readDir(path, {
       recursive: true,
     })
-    const configFile = files.find(file => file.name === '_views.rec')
-    const favoritesFile = files.find(file => file.name === '_favorites.rec')
+    const configFile = files.find(file => file.name === '_ganymede.rec')
 
     this.setFiles(
-      files.filter(file => file !== configFile && file !== favoritesFile && !file.name?.startsWith('.'))
+      files.filter(file => file !== configFile && file !== configFile && !file.name?.startsWith('.'))
     )
 
     if (configFile) {
-      this.viewsFile.value = configFile
+      this.configFile.value = configFile
     }
 
-    if (favoritesFile) {
-      const favoritesDb = await queryRecfile(favoritesFile.path)
+    if (configFile) {
+      const favoritesDb = await queryRecfile(configFile.path, {
+        Name: 'Favorites',
+        File: '_ganymede.rec',
+        Layout: 'Text',
+        Type: 'Favorite',
+      })
 
       this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
         const fileName = record.File![0]

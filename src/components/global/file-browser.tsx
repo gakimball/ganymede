@@ -10,8 +10,7 @@ import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { join, normalize, sep } from '@tauri-apps/api/path';
 
-export const FileBrowser = memo(({
-}) => {
+export const FileBrowser = memo(() => {
   const { files, prompt, toggleQuickFind } = useStore()
   const directoryBase = files.directoryBase.value
   const fileList = files.files.value

@@ -1,6 +1,5 @@
 import { signal } from '@preact/signals'
 import autoBind from 'auto-bind';
-import { FavoritesEntry } from '../types/favorites-entry';
 import { PromptStore } from './prompt-store';
 import { FileStore } from './file-store';
 import { ViewStore } from './view-store';
@@ -11,7 +10,7 @@ export class AppStore {
   readonly files = new FileStore()
   readonly views = new ViewStore(
     this.files.current,
-    this.files.viewsFile
+    this.files.configFile
   )
   readonly prompt = new PromptStore()
 

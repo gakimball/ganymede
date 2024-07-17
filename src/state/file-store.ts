@@ -5,6 +5,7 @@ import { FavoritesEntry } from '../types/favorites-entry';
 import { confirm, open } from '@tauri-apps/api/dialog';
 import { queryRecfile } from '../utils/query-recfile';
 import { normalize } from '@tauri-apps/api/path';
+import { getOrCreateConfigFile } from '../utils/get-or-create-config-file';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -148,7 +149,7 @@ export class FileStore {
     const files = await readDir(path, {
       recursive: true,
     })
-    const configFile = files.find(file => file.name === '_ganymede.rec')
+    const configFile = await getOrCreateConfigFile(files, path)
 
     this.setFiles(
       files.filter(file => file !== configFile && file !== configFile && !file.name?.startsWith('.'))

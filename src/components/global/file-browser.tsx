@@ -10,6 +10,8 @@ import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { join, normalize, sep } from '@tauri-apps/api/path';
 
+const sortFile = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
+
 export const FileBrowser = memo(() => {
   const { files, prompt, toggleQuickFind } = useStore()
   const directoryBase = files.directoryBase.value
@@ -75,7 +77,7 @@ export const FileBrowser = memo(() => {
           isExpandable={isDir}
           isExpanded={isExpanded}
         />
-        {isDir && isExpanded && file.children?.map(file => {
+        {isDir && isExpanded && file.children?.slice().sort(sortFile).map(file => {
           return renderFile(file, false, indent + 1)
         })}
       </Fragment>
@@ -119,7 +121,7 @@ export const FileBrowser = memo(() => {
         </button>
       </div>
       <div className="mb-3 border-t-1 border-border">
-        {fileList.map(file => renderFile(file))}
+        {[...fileList].sort(sortFile).map(file => renderFile(file))}
       </div>
       <div className="flex gap-2 ms-3 mt-auto">
         <Button size="small" onClick={files.openDirectoryPicker}>

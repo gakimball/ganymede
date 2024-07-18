@@ -21,13 +21,13 @@ module.exports = {
 
       'transparent': 'transparent',
 
-      'syntax-red': 'coral',
-      'syntax-orange': 'orange',
-      'syntax-yellow': 'yellow',
-      'syntax-green': 'green',
-      'syntax-blue': 'aqua',
-      'syntax-purple': '#945EBB',
-      'syntax-pink': 'violet',
+      'syntax-red': '#e06c75',
+      'syntax-orange': '#d19a66',
+      'syntax-yellow': '#e6c07b',
+      'syntax-green': '#98c379',
+      'syntax-blue': '#61aeee',
+      'syntax-purple': '#c678dd',
+      'syntax-pink': '#c678dd',
       'syntax-gray': '#666',
     },
     fontFamily: {

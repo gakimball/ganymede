@@ -7,6 +7,7 @@ import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
 import queryString from 'query-string';
 import { ROUTES } from '../../utils/routes';
+import { FeatherIconNames } from 'feather-icons';
 
 export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new'
 
@@ -21,6 +22,7 @@ interface FileBrowserItemProps {
     file: FileEntry,
     entry: FileBrowserAction
   ) => void;
+  fileIconMap: Record<string, FeatherIconNames | undefined>;
 }
 
 export const FileBrowserItem = memo<FileBrowserItemProps>(({
@@ -31,6 +33,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   isExpanded = false,
   indent = 0,
   onAction,
+  fileIconMap,
 }) => {
   const name = file?.name ?? file.path
   const isDir = !!file.children
@@ -88,7 +91,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         onContextMenu={handleContextMenu}
       >
         <div className="h-icon me-3">
-          <Icon name={getFileIcon(file)} />
+          <Icon name={getFileIcon(file, fileIconMap)} />
         </div>
 
         {isDisabled && '[Broken] '}{displayName}

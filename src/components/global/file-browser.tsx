@@ -18,6 +18,7 @@ export const FileBrowser = memo(() => {
   const fileList = files.files.value
   const currentFile = files.current.value
   const favorites = files.favorites.value
+  const fileIcons = files.fileIcons.value
 
   const [expandedDirs, setExpandedDirs] = useState<string[]>([])
 
@@ -76,6 +77,7 @@ export const FileBrowser = memo(() => {
           onAction={handleClickItem}
           isExpandable={isDir}
           isExpanded={isExpanded}
+          fileIconMap={fileIcons}
         />
         {isDir && isExpanded && file.children?.slice().sort(sortFile).map(file => {
           return renderFile(file, false, indent + 1)

@@ -1,7 +1,15 @@
 import { FileEntry } from '@tauri-apps/api/fs'
 import { FeatherIconNames } from 'feather-icons'
 
-export const getFileIcon = (file: FileEntry): FeatherIconNames => {
+export const getFileIcon = (
+  file: FileEntry,
+  iconMap: Record<string, FeatherIconNames | undefined>,
+): FeatherIconNames => {
+  if (file.name) {
+    const icon = iconMap[file.name]
+    if (icon) return icon
+  }
+
   if (file.children) {
     return 'folder'
   }

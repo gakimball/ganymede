@@ -6,6 +6,7 @@ import { confirm, open } from '@tauri-apps/api/dialog';
 import { queryRecfile } from '../utils/query-recfile';
 import { normalize } from '@tauri-apps/api/path';
 import { getOrCreateConfigFile } from '../utils/get-or-create-config-file';
+import { FeatherIconNames } from 'feather-icons';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -36,6 +37,7 @@ export class FileStore {
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly current = signal<CurrentFile | null>(null);
   readonly configFile = signal<FileEntry | null>(null)
+  readonly fileIcons = signal<Record<string, FeatherIconNames | undefined>>({});
 
   readonly sortedFiles = computed((): FileEntry[] => {
     return [...this.files.value].sort((a, b) => a.name!.localeCompare(b.name!))
@@ -160,25 +162,8 @@ export class FileStore {
     }
 
     if (configFile) {
-      const favoritesDb = await queryRecfile(configFile.path, {
-        Name: 'Favorites',
-        File: '_ganymede.rec',
-        Layout: 'Text',
-        Type: 'Favorite',
-      })
-
-      this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
-        const fileName = record.File![0]
-        const matchingFile = files.find(file => file.name === fileName)
-
-        return {
-          file: matchingFile ?? {
-            path: fileName,
-            name: fileName,
-          },
-          isBroken: !matchingFile,
-        }
-      })
+      this.loadFavorites(configFile)
+      this.loadFileIcons(configFile)
     }
   }
 
@@ -186,5 +171,45 @@ export class FileStore {
     if (this.directory.value) {
       await this.loadDirectory(this.directory.value)
     }
+  }
+
+  private async loadFavorites(configFile: FileEntry): Promise<void> {
+    const favoritesDb = await queryRecfile(configFile.path, {
+      Name: 'Favorites',
+      File: '_ganymede.rec',
+      Layout: 'Text',
+      Type: 'Favorite',
+    })
+
+    this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
+      const fileName = record.File![0]
+      const matchingFile = this.files.value.find(file => file.name === fileName)
+
+      return {
+        file: matchingFile ?? {
+          path: fileName,
+          name: fileName,
+        },
+        isBroken: !matchingFile,
+      }
+    })
+  }
+
+  private async loadFileIcons(configFile: FileEntry): Promise<void> {
+    const iconsDb = await queryRecfile(configFile.path, {
+      Name: 'Icons',
+      File: '_ganymede.rec',
+      Layout: 'Text',
+      Type: 'File_Icon',
+    })
+
+    const map: Record<string, FeatherIconNames> = {}
+    iconsDb.records.forEach(record => {
+      if (record.File && record.Icon) {
+        map[record.File[0]] = record.Icon[0] as FeatherIconNames
+      }
+    })
+    console.log({ map })
+    this.fileIcons.value = map
   }
 }

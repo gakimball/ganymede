@@ -9,6 +9,7 @@ import { getOrCreateConfigFile } from '../utils/get-or-create-config-file';
 import { FeatherIconNames } from 'feather-icons';
 import { recdel } from '../utils/recdel';
 import { recins } from '../utils/recins';
+import { RecutilsSelector } from '../types/recutils';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -150,15 +151,19 @@ export class FileStore {
     const configFile = this.configFile.value
     if (!configFile) return
 
-    if (icon === null) {
-      await recdel(configFile.path, 'File_Icon', undefined, `File = "${file.name}"`)
-    } else {
-      const iconSet = file.name! in this.fileIcons.value
+    const iconIsSet = file.name! in this.fileIcons.value
+    const selector: RecutilsSelector = {
+      type: 'File_icon',
+      selector: iconIsSet ? `File = "${file.name}"` : undefined
+    }
 
-      await recins(configFile.path, 'File_Icon', undefined, {
+    if (icon === null) {
+      await recdel(configFile.path, selector)
+    } else {
+      await recins(configFile.path, selector, {
         File: [file.name!],
         Icon: [icon],
-      }, iconSet ? `File = "${file.name}"` : undefined)
+      })
     }
 
     this.reloadDirectory()

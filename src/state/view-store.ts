@@ -99,9 +99,9 @@ export class ViewStore {
 
     if (!dbPath || !file) return
 
-    const views = this.views.value
-
-    await recins(dbPath, views.type, undefined, view)
+    await recins(dbPath, {
+      type: this.views.value.type,
+    }, view)
     await this.reloadViews(dbPath)
     const asConfig = toViewConfig(view)
     // x-ref: GNY-01
@@ -120,7 +120,10 @@ export class ViewStore {
     const index = this.list.value.indexOf(current.config)
 
     if (index > -1) {
-      await recins(dbPath, this.views.value.type, index, changes)
+      await recins(dbPath, {
+        type: this.views.value.type,
+        index,
+      }, changes)
       await this.reloadViews(dbPath)
       const asConfig = toViewConfig(changes)
       // x-ref: GNY-01
@@ -148,7 +151,10 @@ export class ViewStore {
     const index = this.list.value.indexOf(current.config)
 
     if (index > -1) {
-      await recdel(dbPath, this.views.value.type, index)
+      await recdel(dbPath, {
+        type: this.views.value.type,
+        index,
+      })
       await this.reloadViews(dbPath)
       // x-ref: GNY-01
       history.replaceState(null, '', ROUTES.file(file.path))
@@ -193,7 +199,10 @@ export class ViewStore {
     const index = database?.records.indexOf(original) ?? -1
 
     if (index > -1 && dbPath) {
-      await recins(dbPath, database?.type, index, update)
+      await recins(dbPath, {
+        type: database?.type,
+        index,
+      }, update)
       this.reloadCurrentView()
     }
 
@@ -218,7 +227,10 @@ export class ViewStore {
     const index = database.records.indexOf(record)
 
     if (index > -1) {
-      await recdel(dbPath, database?.type, index)
+      await recdel(dbPath, {
+        type: database?.type,
+        index,
+      })
       this.reloadCurrentView()
     }
 

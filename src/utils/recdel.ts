@@ -1,25 +1,13 @@
 import { Command } from '@tauri-apps/api/shell'
 import { logger } from './logger'
+import { RecutilsSelector } from '../types/recutils'
+import { getRecinsArgs } from './get-recins-args'
 
 export const recdel = async (
   dbPath: string,
-  recordType: string | undefined,
-  recordIndex?: number,
-  selector?: string
+  selector: RecutilsSelector,
 ) => {
-  const args: string[] = []
-
-  if (recordType) {
-    args.push('-t', recordType)
-  }
-
-  if (recordIndex) {
-    args.push('-n', String(recordIndex))
-  }
-
-  if (selector !== undefined) {
-    args.push('-e', selector)
-  }
+  const args: string[] = getRecinsArgs(selector)
 
   args.push(dbPath)
 

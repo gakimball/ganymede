@@ -30,7 +30,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   children,
 }) => {
   const className = classNames(
-    'border-1 rounded-md',
+    'border-1 rounded-md whitespace-nowrap',
     themeClasses[theme],
     sizeClasses[size],
     {

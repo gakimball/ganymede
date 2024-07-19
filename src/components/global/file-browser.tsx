@@ -13,7 +13,7 @@ import { join, normalize, sep } from '@tauri-apps/api/path';
 const sortFile = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
 
 export const FileBrowser = memo(() => {
-  const { files, prompt, toggleQuickFind } = useStore()
+  const { files, prompt, openModal } = useStore()
   const directoryBase = files.directoryBase.value
   const fileList = files.files.value
   const currentFile = files.current.value
@@ -54,6 +54,13 @@ export const FileBrowser = memo(() => {
           const path = await normalize(await join(file.path, '..', name))
           await files.createFile(path)
         }
+        break
+      }
+      case 'icon': {
+        openModal({
+          type: 'icon-picker',
+          file,
+        })
         break
       }
     }
@@ -117,7 +124,7 @@ export const FileBrowser = memo(() => {
         <button
           className="h-4"
           type="button"
-          onClick={toggleQuickFind}
+          onClick={() => openModal({ type: 'quick-find' })}
         >
           <Icon name="search" />
         </button>

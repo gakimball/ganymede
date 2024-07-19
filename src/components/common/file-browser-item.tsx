@@ -5,11 +5,10 @@ import { getFileIcon } from '../../utils/get-file-icon';
 import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
-import queryString from 'query-string';
 import { ROUTES } from '../../utils/routes';
 import { FeatherIconNames } from 'feather-icons';
 
-export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new'
+export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new' | 'icon'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -52,6 +51,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         {
           label: 'Add to favorites',
           event: () => onAction(file, 'favorite'),
+        },
+        {
+          label: 'Change icon',
+          event: () => onAction(file, 'icon'),
         },
         {
           label: 'Rename file',
@@ -112,7 +115,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           `}
           onClick={() => onAction(file, 'toggle')}
         >
-          <div className="relative top-0.5">
+          <div className="relative top-[3px]">
             <Icon name={isExpanded ? 'chevron-down' : 'chevron-left'} />
           </div>
         </button>

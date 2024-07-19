@@ -4,12 +4,21 @@ import { logger } from './logger'
 export const recdel = async (
   dbPath: string,
   recordType: string | undefined,
-  recordIndex: number,
+  recordIndex?: number,
+  selector?: string
 ) => {
-  const args = ['-n', String(recordIndex)]
+  const args: string[] = []
 
   if (recordType) {
     args.push('-t', recordType)
+  }
+
+  if (recordIndex) {
+    args.push('-n', String(recordIndex))
+  }
+
+  if (selector !== undefined) {
+    args.push('-e', selector)
   }
 
   args.push(dbPath)

@@ -7,6 +7,7 @@ export const recins = async (
   recordType: string | undefined,
   recordIndex: number | undefined,
   record: DatabaseRecord,
+  selector?: string
 ) => {
   const args: string[] = []
 
@@ -23,6 +24,10 @@ export const recins = async (
       args.push('-f', field, '-v', value)
     })
   })
+
+  if (selector !== undefined) {
+    args.push('-e', selector)
+  }
 
   args.push(dbPath)
 

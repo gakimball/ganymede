@@ -3,8 +3,13 @@ import autoBind from 'auto-bind';
 import { PromptStore } from './prompt-store';
 import { FileStore } from './file-store';
 import { ViewStore } from './view-store';
+import { FileEntry } from '@tauri-apps/api/fs';
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
+
+export type AppStoreModal =
+  | { type: 'quick-find' }
+  | { type: 'icon-picker'; file: FileEntry }
 
 export class AppStore {
   readonly files = new FileStore()
@@ -14,7 +19,7 @@ export class AppStore {
   )
   readonly prompt = new PromptStore()
 
-  readonly quickFindOpen = signal(false);
+  readonly currentModal = signal<AppStoreModal | null>(null);
 
   constructor() {
     autoBind(this)
@@ -27,7 +32,11 @@ export class AppStore {
     this.files.reloadDirectory()
   }
 
-  toggleQuickFind(): void {
-    this.quickFindOpen.value = !this.quickFindOpen.value
+  openModal(modal: AppStoreModal): void {
+    this.currentModal.value = modal
+  }
+
+  closeModal(): void {
+    this.currentModal.value = null
   }
 }

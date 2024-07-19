@@ -7,6 +7,8 @@ import { queryRecfile } from '../utils/query-recfile';
 import { normalize } from '@tauri-apps/api/path';
 import { getOrCreateConfigFile } from '../utils/get-or-create-config-file';
 import { FeatherIconNames } from 'feather-icons';
+import { recdel } from '../utils/recdel';
+import { recins } from '../utils/recins';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -142,6 +144,24 @@ export class FileStore {
     if (typeof selected === 'string') {
       await this.loadDirectory(selected)
     }
+  }
+
+  async changeFileIcon(file: FileEntry, icon: string | null): Promise<void> {
+    const configFile = this.configFile.value
+    if (!configFile) return
+
+    if (icon === null) {
+      await recdel(configFile.path, 'File_Icon', undefined, `File = "${file.name}"`)
+    } else {
+      const iconSet = file.name! in this.fileIcons.value
+
+      await recins(configFile.path, 'File_Icon', undefined, {
+        File: [file.name!],
+        Icon: [icon],
+      }, iconSet ? `File = "${file.name}"` : undefined)
+    }
+
+    this.reloadDirectory()
   }
 
   private async loadDirectory(path: string): Promise<void> {

@@ -9,6 +9,7 @@ export const FolderLayout = memo<Folder>(({
   file,
 }) => {
   const { files } = useStore()
+  const fileIcons = files.fileIcons.value
 
   const handleAction = useEventHandler((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open') {
@@ -23,6 +24,7 @@ export const FolderLayout = memo<Folder>(({
           key={file.path}
           file={file}
           onAction={handleAction}
+          fileIconMap={fileIcons}
         />
       ))}
     </div>

@@ -9,6 +9,7 @@ import { Prompt } from './global/prompt'
 import { LocationProvider, Route, Router } from 'preact-iso'
 import { FileRoute } from './routes/file-route'
 import { ShortcutManager } from './managers/shortcut-manager'
+import { IconPicker } from './global/icon-picker'
 
 const initialState = new AppStore()
 
@@ -27,6 +28,7 @@ export const App = () => {
         <FileBrowser />
         <QuickFind />
         <Prompt />
+        <IconPicker />
         <div className="ms-sidebar">
           <Router>
             <Route path="/" component={EmptyLayout} />

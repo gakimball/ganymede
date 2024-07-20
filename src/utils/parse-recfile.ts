@@ -1,7 +1,7 @@
 import sexp from 'sexp'
 import { Database, DatabaseField, DatabaseFieldMap, DatabaseFieldType, DatabaseRecord } from '../types/database'
 import { emplaceMap } from './emplace-map'
-import { createEmptyRecord } from './create-empty-record'
+import { createDatabaseRecord } from './create-database-record'
 import { parseTypeDef } from './parse-typedef'
 import { parseFormulaDef } from './parse-formula-def'
 
@@ -29,7 +29,7 @@ export const parseRecfile = (input: string): Database => {
 
     const fields = expr[2] as string[][]
     const isRecordDescriptor = index === 0
-    const record = createEmptyRecord(fieldMap)
+    const record = createDatabaseRecord(fieldMap)
 
     fields.forEach(field => {
       const name = field[2]

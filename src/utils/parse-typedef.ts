@@ -1,39 +1,39 @@
-import { DatabaseFieldType } from '../types/database'
+import { DatabaseField, DatabaseFieldType } from '../types/database'
 
 /**
  * Parse a `%type` type from a recfile. Some related types (e.g. `int` and `real`) are currently
  * consolidated into one type.
  */
-export const parseTypeDef = (value: string) => {
-  const [field, type, ...params] = value.split(' ')
+export const parseTypeDef = (value: string): DatabaseField => {
+  const [name, type, ...params] = value.split(/\s/)
 
   switch (type) {
     case 'int':
     case 'range':
     case 'real':
       return {
-        field,
+        name,
         type: DatabaseFieldType.INT,
       }
     case 'enum':
       return {
-        field,
+        name,
         type: DatabaseFieldType.ENUM,
         params,
       }
     case 'bool':
       return {
-        field,
+        name,
         type: DatabaseFieldType.BOOL,
       }
     case 'Formula':
       return {
-        field,
+        name,
         type: DatabaseFieldType.FORMULA,
       }
     case 'date': {
       return {
-        field,
+        name,
         type: DatabaseFieldType.DATE,
       }
     }
@@ -44,7 +44,7 @@ export const parseTypeDef = (value: string) => {
     case 'uuid':
     default:
       return {
-        field,
+        name,
         type: DatabaseFieldType.STRING
       }
   }

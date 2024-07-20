@@ -23,3 +23,13 @@ declare module 'get-ext' {
 
   export default getExt
 }
+
+declare module 'sexp' {
+  const sexp: (source: string, options?: {
+    translateNumber?: (value: string) => unknown;
+    translateString?: (value: string) => unknown;
+    translateSymbol?: (value: string) => unknown;
+  }) => unknown[]
+
+  export default sexp
+}

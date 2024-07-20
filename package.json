@@ -37,6 +37,7 @@
     "preact": "^10.22.0",
     "preact-iso": "^2.6.3",
     "query-string": "^9.0.0",
+    "sexp": "^0.1.5",
     "tauri-plugin-context-menu": "^0.7.0",
     "ts-jest": "^29.1.5"
   },

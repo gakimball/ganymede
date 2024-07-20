@@ -234,7 +234,6 @@ export class FileStore {
         map[record.File[0]] = record.Icon[0] as FeatherIconNames
       }
     })
-    console.log({ map })
     this.fileIcons.value = map
   }
 }

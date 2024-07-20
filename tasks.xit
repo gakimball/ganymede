@@ -19,7 +19,7 @@ Issues
 [x] Finish view editing
 [ ] GNY-1: preact-iso does not re-render routes after replaceState is called
 [ ] Text layouts do not need to query the whole DB; recinf is sufficient
-[ ] %type <field> enum with multiple lines not supported
+[x] %type <field> enum with multiple lines not supported
 
 Views
 [x] CRUD records

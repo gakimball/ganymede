@@ -17,6 +17,7 @@ export type DatabaseField = {
   auto?: true;
   params?: string[];
   formula?: Formula;
+  error?: string;
 };
 
 export type DatabaseRecord = Record<string, string[] | undefined>

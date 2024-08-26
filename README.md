@@ -26,8 +26,10 @@ Commands:
 
 - `npm start`: build for development
 - `npm run build`: build for production
+- `npm test`: run unit tests
+- `npm run typecheck`: run TypeScript compiler (no emit)
 
-To use the database features of the app, you also need GNU Recutils installed. Specifically, the commands `recins` and `recdel` must be in your PATH.
+To use the database features of the app, you also need [GNU Recutils](https://www.gnu.org/software/recutils/) installed. Specifically, the commands `recsel`, `recins` and `recdel` must be in your PATH.
 
 ## Databases
 
@@ -52,31 +54,20 @@ The `%formula` field defines a field that computes a result based on other field
 %type: Cost int
 %type: Is_Annual bool
 
-%formula: Monthly_Cost if(_.Is_Annual, _.Cost / 12, _.Cost)
+%formula: Monthly_Cost if([Is_Annual], [Cost] / 12, [Cost])
 ```
 
 Formulae are parsed with the [fparser](https://www.npmjs.com/package/fparser) library, with these additions:
 
-- `_`: holds the record being evaluated
 - `if(cond, ifTrue, ifFalse)`: a conditional function
+- `year(date)`: return the year of a date
 
 Formulae only operate on numbers, so some field values are converted when accessed:
 
 - A non-empty string is `1`
 - True is `1`
 - False is `0`
-
-### Multi-select fields
-
-Recfiles support the `enum` type, which restricts a field to a set of possible values. The `%multi` field defines a multi-select field, allowing for any number of comma-separated values within a set list.
-
-```txt
-%allowed: Name Tags
-%multi: Tags One Two Option_Three
-
-Name: Name
-Tags: Option_Three,Two
-```
+- A Date is its Unix timestamp
 
 ## License
 

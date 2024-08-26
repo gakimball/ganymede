@@ -1,8 +1,9 @@
 import { Database, DatabaseField } from '../types/database'
-import { ViewConfig } from '../utils/view-config'
-import { RenderRuleMap, getRenderRules } from '../utils/get-render-rules'
+import { RenderRule, ViewConfig } from '../utils/view-config'
 import { getShownFields } from '../utils/get-shown-fields'
 import { ViewRecordGroup, groupRecordsBy } from '../utils/group-records-by'
+
+export type RenderRuleMap = Record<string, RenderRule | undefined>
 
 interface UseView {
   groups: ViewRecordGroup[];
@@ -14,10 +15,9 @@ export const useView = (
   database: Database,
   view: ViewConfig,
 ): UseView => {
-  const { fields } = database
   let records = database.records
 
-  if (view.Sort?.endsWith(' desc')) {
+  if (view.sort?.descending) {
     records = [...records].reverse()
   }
 
@@ -27,6 +27,6 @@ export const useView = (
       records,
     }, view),
     shownFields: getShownFields(database.fields, view),
-    renderRules: getRenderRules(view, database.fields),
+    renderRules: Object.fromEntries(view.render.map(rule => [rule.field, rule.rule])),
   }
 }

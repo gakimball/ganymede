@@ -45,19 +45,19 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Name</FormLabel>
         <TextInput
           name="Name"
-          defaultValue={view?.Name}
+          defaultValue={view?.name}
         />
         <br />
         <FormLabel>Record Type</FormLabel>
         <TextInput
           name="Type"
-          defaultValue={view?.Type}
+          defaultValue={view?.type ?? ''}
         />
         <br />
         <FormLabel>Layout</FormLabel>
         <SelectField
           name="Layout"
-          defaultValue={view?.Layout}
+          defaultValue={view?.layout}
           options={[
             { label: 'List', value: 'List' },
             { label: 'Table', value: 'Table' },
@@ -69,19 +69,19 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Filter</FormLabel>
         <TextInput
           name="Filter"
-          defaultValue={view?.Filter}
+          defaultValue={view?.filter ?? ''}
         />
         <br />
         <FormLabel>Sort</FormLabel>
         <TextInput
           name="Sort"
-          defaultValue={view?.Sort}
+          defaultValue={view?.sort?.fields.join(' ') ?? ''}
         />
         <br />
         <FormLabel>Group</FormLabel>
         <SelectField
           name="Group"
-          defaultValue={view?.Group ?? ''}
+          defaultValue={view?.group ?? ''}
           options={[
             {
               value: '',
@@ -97,18 +97,18 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Fields</FormLabel>
         <TextInput
           name="Fields"
-          defaultValue={view?.Fields}
+          defaultValue={view?.fields?.join(' ') ?? ''}
         />
         <br />
         <FormLabel>Render</FormLabel>
-        {view?.Render?.map((value, index) => (
+        {view?.render.map((value, index) => (
           <TextInput
             key={value}
             name={`Render.${index}`}
-            defaultValue={value}
+            defaultValue={value.field + ' ' + value.rule.type}
           />
         ))}
-        {!view?.Render && (
+        {view?.render.length === 0 && (
           <TextInput
             name="Render.0"
           />
@@ -117,14 +117,14 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         <FormLabel>Sum</FormLabel>
         <TextInput
           name="Sum"
-          defaultValue={view?.Sum}
+          defaultValue={view?.sum.join(' ')}
         />
         <br />
         <FormLabel>Full Page</FormLabel>
         <TextInput
           name="Full_Page"
           type="checkbox"
-          defaultValue={view?.Full_Page}
+          defaultChecked={view?.fullPage === true}
         />
         <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
           {onDelete && (

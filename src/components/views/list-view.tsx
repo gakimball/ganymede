@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'preact';
 import { ViewComponentProps } from '../../types/view-component-props';
-import { FieldValue } from '../common/field-value';
 import { useView } from '../../hooks/use-view';
 import { GroupTitle } from '../common/group-title';
 import { FieldValueSet } from '../common/field-value-set';

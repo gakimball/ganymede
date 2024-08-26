@@ -1,5 +1,5 @@
 import { memo } from 'preact/compat';
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useEffect, useMemo } from 'preact/hooks'
 import { useRoute } from 'preact-iso';
 import { useStore } from '../../state/use-store';
 import { ViewSelect } from '../common/view-select';
@@ -8,8 +8,6 @@ import { BoardView } from '../views/board-view';
 import { TextView } from '../views/text-view';
 import { RecordViewer } from '../common/record-viewer';
 import { ListView } from '../views/list-view';
-import { parseFieldValue } from '../../utils/parse-field-value';
-import { DatabaseFieldType } from '../../types/database';
 import { CREATE_NEW_RECORD } from '../../state/app-store';
 import { DatabaseFile } from '../../state/file-store';
 import { ViewEditor } from '../common/view-editor';
@@ -39,7 +37,7 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const creatingView = views.creatingView.value
 
   const fileViews = useMemo(() => {
-    return viewsList.filter(view => view.File === file.name)
+    return viewsList.filter(view => view.file === file.name)
   }, [file, viewsList])
 
   // Load a view based on the route
@@ -53,11 +51,8 @@ export const DatabaseLayout = memo<DatabaseFile>(({
     }
   }, [file, viewName, loadingViews])
 
-  const View = currentView && viewComponents[currentView.config.Layout]
-  const recordViewerIsFullScreen = parseFieldValue(currentView?.config.Full_Page, {
-    name: 'Full_Page',
-    type: DatabaseFieldType.BOOL,
-  })
+  const View = currentView && viewComponents[currentView.config.layout]
+  const recordViewerIsFullScreen = currentView?.config.fullPage === true
   const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
 
   return (

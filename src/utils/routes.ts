@@ -7,7 +7,7 @@ export const ROUTES = {
       url: '/file',
       query: {
         path: filePath,
-        view: view?.Name,
+        view: view?.name,
       }
     })
   }

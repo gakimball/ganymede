@@ -1,5 +1,5 @@
 import { lightFormatters } from 'date-fns';
-import { RenderRule } from './get-render-rules';
+import { RenderRule } from './view-config';
 
 const FORMAT_DATE_REGEX = /(\w)\1*|''|'(''|[^'])+('|$)|./g
 type LightFormatters = typeof lightFormatters

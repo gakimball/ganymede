@@ -1,12 +1,11 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseField, DatabaseFieldType } from '../../types/database';
 import { parseFieldValue } from '../../utils/parse-field-value';
-import { RenderRule } from '../../utils/get-render-rules';
 import { applyRenderRule } from '../../utils/apply-render-rule';
 import { formatDate } from '../../utils/format-date';
-import { getEnumColor } from '../../utils/get-enum-color';
 import { EnumTag } from './enum-tag';
 import { logger } from '../../utils/logger';
+import { RenderRule } from '../../utils/view-config';
 
 interface FieldValueProps {
   value: string | undefined;

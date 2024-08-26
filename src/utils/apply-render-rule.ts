@@ -1,4 +1,4 @@
-import { RenderRule } from './get-render-rules';
+import { RenderRule } from './view-config'
 
 export const applyRenderRule = (value: number, rule: RenderRule) => {
   switch (rule.type) {

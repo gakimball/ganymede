@@ -1,6 +1,6 @@
 import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
-import { ViewConfig, toDatabaseRecord, toViewConfig } from '../utils/view-config';
+import { ViewConfig, toViewConfig } from '../utils/view-config';
 import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
 import { Command } from '@tauri-apps/api/shell';
@@ -11,6 +11,7 @@ import { queryRecfile } from '../utils/query-recfile';
 import { recins } from '../utils/recins';
 import { recdel } from '../utils/recdel';
 import { ROUTES } from '../utils/routes';
+import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
 
 interface CurrentView {
   config: ViewConfig;
@@ -43,10 +44,11 @@ export class ViewStore {
 
   async reloadViews(dbPath: string): Promise<void> {
     this.views.value = await queryRecfile(dbPath, {
-      Name: 'Views',
-      File: '_ganymede.rec',
-      Layout: 'Text',
-      Type: 'View',
+      ...createPlaceholderViewConfig(),
+      name: 'Views',
+      file: '_ganymede.rec',
+      layout: 'Text',
+      type: 'View',
     })
     this.loadingViews.value = false
   }
@@ -69,13 +71,14 @@ export class ViewStore {
   openViewByName(file: FileEntry, viewName: string): void {
     if (viewName === 'Text') {
       this.openView({
-        Name: 'Text',
-        Layout: 'Text',
-        File: file?.name ?? '',
+        ...createPlaceholderViewConfig(),
+        name: 'Text',
+        layout: 'Text',
+        file: file?.name ?? '',
       })
     } else {
       const view = this.list.value
-        .find(view => view.File === file.name && view.Name === viewName)
+        .find(view => view.file === file.name && view.name === viewName)
 
       if (view) this.openView(view)
     }
@@ -83,11 +86,12 @@ export class ViewStore {
 
   openDefaultViewForFile(file: FileEntry) {
     const view = this.list.value
-      .find(view => view.File === file.name)
+      .find(view => view.file === file.name)
       ?? {
-        Name: 'Text',
-        Layout: 'Text',
-        File: file.name ?? '',
+        ...createPlaceholderViewConfig(),
+        name: 'Text',
+        layout: 'Text',
+        file: file.name ?? '',
       }
 
     this.openView(view)
@@ -106,7 +110,7 @@ export class ViewStore {
     const asConfig = toViewConfig(view)
     // x-ref: GNY-01
     history.replaceState(null, '', ROUTES.file(file.path, asConfig))
-    this.openViewByName(file, asConfig.Name)
+    this.openViewByName(file, asConfig.name)
     this.toggleViewCreator()
   }
 
@@ -128,7 +132,7 @@ export class ViewStore {
       const asConfig = toViewConfig(changes)
       // x-ref: GNY-01
       history.replaceState(null, '', ROUTES.file(file.path, asConfig))
-      this.openViewByName(file, asConfig.Name)
+      this.openViewByName(file, asConfig.name)
     }
 
     this.toggleViewEditor()

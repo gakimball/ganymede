@@ -7,12 +7,7 @@ import { ViewConfig } from '../utils/view-config';
  */
 export const getShownFields = (fields: DatabaseFieldMap, config: ViewConfig | null | undefined) => {
   const fieldList = [...fields.values()]
-
-  if (!config?.Fields) {
-    return fieldList
-  }
-
-  const shownFields = config.Fields.split(' ')
+  const shownFields = config?.fields ?? [...fields.keys()]
 
   return fieldList
     .filter(field => shownFields.includes(field.name))

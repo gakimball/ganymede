@@ -35,10 +35,7 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
     ...shownFields,
     ...restFields,
   ]
-  const isFullPage = parseFieldValue(viewConfig?.Full_Page, {
-    name: 'Full_Page',
-    type: DatabaseFieldType.BOOL,
-  })
+  const isFullPage = viewConfig?.fullPage === true
 
   const handleSubmit = useEventHandler((event: SubmitEvent) => {
     event.preventDefault()

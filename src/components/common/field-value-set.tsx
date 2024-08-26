@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { DatabaseField } from '../../types/database';
-import { RenderRule } from '../../utils/get-render-rules';
 import { FieldValue } from './field-value';
+import { RenderRule } from '../../utils/view-config';
 
 interface FieldValueSetProps {
   value: string[] | undefined;

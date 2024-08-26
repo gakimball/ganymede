@@ -19,7 +19,7 @@ export const groupRecordsBy = (
   view: ViewConfig,
 ): ViewRecordGroup[] => {
   const { records, fields } = database
-  const groupBy = view.Group
+  const groupBy = view.group
   const groupByField = groupBy ? fields.get(groupBy) : undefined
 
   if (!groupByField) {

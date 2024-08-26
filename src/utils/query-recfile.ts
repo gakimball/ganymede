@@ -6,25 +6,25 @@ import { parseRecfile } from './parse-recfile'
 export const queryRecfile = async (path: string, view?: ViewConfig) => {
   const args = [path, '-d', '--print-sexps']
 
-  if (view?.Type) {
-    args.push('-t', view.Type)
+  if (view?.type) {
+    args.push('-t', view.type)
   }
 
-  if (view?.Filter) {
-    args.push('-e', view.Filter)
+  if (view?.filter) {
+    args.push('-e', view.filter)
   }
 
-  if (view?.Sort) {
-    args.push('-S', view.Sort.replace(/ desc$/, ''))
+  if (view?.sort) {
+    args.push('-S', view?.sort.fields.join(' '))
   }
 
-  if (view?.Layout === 'Aggregate') {
-    if (view?.Group) {
-      args.push('-G', view.Group)
+  if (view?.layout === 'Aggregate') {
+    if (view?.group) {
+      args.push('-G', view.group)
     }
 
-    if (view?.Fields) {
-      args.push('-p', view.Fields.replace(/ /g, ','))
+    if (view?.fields) {
+      args.push('-p', view.fields.join(','))
     }
   }
 

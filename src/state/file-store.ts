@@ -4,12 +4,12 @@ import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { confirm, open } from '@tauri-apps/api/dialog';
 import { queryRecfile } from '../utils/query-recfile';
-import { normalize } from '@tauri-apps/api/path';
 import { getOrCreateConfigFile } from '../utils/get-or-create-config-file';
 import { FeatherIconNames } from 'feather-icons';
 import { recdel } from '../utils/recdel';
 import { recins } from '../utils/recins';
 import { RecutilsSelector } from '../types/recutils';
+import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -200,10 +200,11 @@ export class FileStore {
 
   private async loadFavorites(configFile: FileEntry): Promise<void> {
     const favoritesDb = await queryRecfile(configFile.path, {
-      Name: 'Favorites',
-      File: '_ganymede.rec',
-      Layout: 'Text',
-      Type: 'Favorite',
+      ...createPlaceholderViewConfig(),
+      name: 'Favorites',
+      file: '_ganymede.rec',
+      layout: 'Text',
+      type: 'Favorite',
     })
 
     this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
@@ -222,10 +223,11 @@ export class FileStore {
 
   private async loadFileIcons(configFile: FileEntry): Promise<void> {
     const iconsDb = await queryRecfile(configFile.path, {
-      Name: 'Icons',
-      File: '_ganymede.rec',
-      Layout: 'Text',
-      Type: 'File_Icon',
+      ...createPlaceholderViewConfig(),
+      name: 'Icons',
+      file: '_ganymede.rec',
+      layout: 'Text',
+      type: 'File_Icon',
     })
 
     const map: Record<string, FeatherIconNames> = {}

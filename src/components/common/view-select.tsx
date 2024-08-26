@@ -3,8 +3,8 @@ import { ViewConfig } from '../../utils/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
 import classNames from 'classnames';
-import queryString from 'query-string';
 import { ROUTES } from '../../utils/routes';
+import { createTextView } from '../../utils/create-text-view';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -33,24 +33,20 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   onCreateView,
   onEditView,
 }) => {
-  const textView: ViewConfig = {
-    File: file.name ?? '',
-    Layout: 'Text',
-    Name: 'Text',
-  }
+  const textView = createTextView(file)
 
   return (
     <ul className="flex items-center mb-3">
       {[...views, textView].map(view => {
-        const isActive = view.Name === current?.Name
+        const isActive = view.name === current?.name
 
         return (
           <a
-            key={view.Name}
+            key={view.name}
             href={ROUTES.file(file.path, view)}
             className={tabClasses(isActive)}
           >
-            {view.Name}
+            {view.name}
           </a>
         )
       })}
@@ -61,7 +57,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
         <Button theme="primary" onClick={onCreateRecord} size="small">
           New record
         </Button>
-        {current?.Layout !== 'Text' && (
+        {current?.layout !== 'Text' && (
           <Button theme="secondary" onClick={onEditView} size="small">
             Edit view
           </Button>

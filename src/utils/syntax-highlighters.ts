@@ -71,8 +71,8 @@ export const syntaxHighlighters = {
       } else if (line.startsWith('-')) {
         html += `<span class="${hl.blue}">-</span>${line.slice(1)}`
       } else if ((match = line.match(GMI_LINK_REGEX)) !== null) {
-        html += `<span class="${hl.pink}">=> <a href="${match[1]}" class="underline">${match[1]}</a></span>`
-        html += `<span class="${hl.purple}">${match[2] ?? ''}</span>`
+        html += `<span class="${hl.blue}">=> <a href="${match[1]}" class="underline">${match[1]}</a></span>`
+        html += match[2] ?? ''
       } else {
         html += line
       }

@@ -4,6 +4,7 @@ import { useMemoAsync } from '../../utils/use-memo-async';
 import { join } from '@tauri-apps/api/path';
 import queryString from 'query-string';
 import { ROUTES } from '../../utils/routes';
+import { Link } from './link';
 
 interface FileBreadcrumbsProps {
   directory: string;
@@ -46,12 +47,16 @@ export const FileBreadcrumbs: FunctionComponent<FileBreadcrumbsProps> = ({
       )}
       {pathSegments?.map(({ href, label }, index, arr) => (
         <Fragment key={href}>
-          <a
+          <Link
             className="hover:underline truncate"
-            href={ROUTES.file(href)}
+            route={{
+              name: 'file',
+              path: href,
+              view: null,
+            }}
           >
             {label}
-          </a>
+          </Link>
           {(index < arr.length - 1 || fileIsDirectory) && (
             <span>/</span>
           )}

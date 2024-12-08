@@ -3,8 +3,8 @@ import { ViewConfig } from '../../utils/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
 import classNames from 'classnames';
-import { ROUTES } from '../../utils/routes';
 import { createTextView } from '../../utils/create-text-view';
+import { Link } from './link';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -41,13 +41,17 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
         const isActive = view.name === current?.name
 
         return (
-          <a
+          <Link
             key={view.name}
-            href={ROUTES.file(file.path, view)}
+            route={{
+              name: 'file',
+              path: file.path,
+              view: view.name,
+            }}
             className={tabClasses(isActive)}
           >
             {view.name}
-          </a>
+          </Link>
         )
       })}
       <button className={tabClasses(false)} type="button" onClick={onCreateView}>

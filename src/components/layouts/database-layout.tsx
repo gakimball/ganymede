@@ -1,6 +1,5 @@
 import { memo } from 'preact/compat';
 import { useEffect, useMemo } from 'preact/hooks'
-import { useRoute } from 'preact-iso';
 import { useStore } from '../../state/use-store';
 import { ViewSelect } from '../common/view-select';
 import { TableView } from '../views/table-view';
@@ -22,11 +21,14 @@ const viewComponents = {
   Aggregate: AggregateView,
 }
 
-export const DatabaseLayout = memo<DatabaseFile>(({
-  file,
-}) => {
-  const { view: viewName } = useRoute().query
+interface DatabaseLayoutProps extends DatabaseFile {
+  viewName: string | null;
+}
 
+export const DatabaseLayout = memo<DatabaseLayoutProps>(({
+  file,
+  viewName,
+}) => {
   const { files, views } = useStore()
   const directory = files.directory.value
   const viewsList = views.list.value
@@ -54,8 +56,6 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const View = currentView && viewComponents[currentView.config.layout]
   const recordViewerIsFullScreen = currentView?.config.fullPage === true
   const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
-
-  console.log({ currentView })
 
   return (
     <div className="pt-3 px-4">

@@ -9,16 +9,16 @@ Routing
 [x] / empty
 [x] view?path=
 [x] view?path=&view=
-[ ] DIY router
+[x] DIY router
 
 Issues
 [ ] Cannot turn off autocomplete
 [ ] Esc should close quick find
 [ ] Views should reference paths, not filenames
 [x] Include field name in DatabaseField interface
-[ ] First route change doesn't fire
+[x] First route change doesn't fire
 [x] Finish view editing
-[ ] GNY-1: preact-iso does not re-render routes after replaceState is called
+[x] GNY-1: preact-iso does not re-render routes after replaceState is called
 [ ] Text layouts do not need to query the whole DB; recinf is sufficient
 [x] %type <field> enum with multiple lines not supported
 [ ] Syntax highlighter treats gt/lt signs as literal HTML

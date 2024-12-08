@@ -35,7 +35,6 @@
     "get-ext": "^1.0.2",
     "jest": "^29.7.0",
     "preact": "^10.22.0",
-    "preact-iso": "^2.6.3",
     "query-string": "^9.0.0",
     "sexp": "^0.1.5",
     "tauri-plugin-context-menu": "^0.7.0",

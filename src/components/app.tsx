@@ -6,10 +6,10 @@ import { QuickFind } from './global/quick-find'
 import { ThemeManager } from './managers/theme-manager'
 import { EmptyLayout } from './layouts/empty-layout'
 import { Prompt } from './global/prompt'
-import { LocationProvider, Route, Router } from 'preact-iso'
 import { FileRoute } from './routes/file-route'
 import { ShortcutManager } from './managers/shortcut-manager'
 import { IconPicker } from './global/icon-picker'
+import { RouteHandler } from './global/route-handler'
 
 const initialState = new AppStore()
 
@@ -22,20 +22,27 @@ export const App = () => {
 
   return (
     <StoreContext.Provider value={store}>
-      <LocationProvider>
-        <ThemeManager />
-        <ShortcutManager />
-        <FileBrowser />
-        <QuickFind />
-        <Prompt />
-        <IconPicker />
-        <div className="ms-sidebar">
-          <Router>
-            <Route path="/" component={EmptyLayout} />
-            <Route path="/file" component={FileRoute} />
-          </Router>
-        </div>
-      </LocationProvider>
+      <ThemeManager />
+      <ShortcutManager />
+      <FileBrowser />
+      <QuickFind />
+      <Prompt />
+      <IconPicker />
+      <div className="ms-sidebar">
+        <RouteHandler>
+          {(route) => (
+            <>
+              {route.name === 'default' && <EmptyLayout />}
+              {route.name === 'file' && (
+                <FileRoute
+                  path={route.path}
+                  view={route.view}
+                />
+              )}
+            </>
+          )}
+        </RouteHandler>
+      </div>
     </StoreContext.Provider>
   )
 }

@@ -12,6 +12,7 @@ import { recins } from '../utils/recins';
 import { recdel } from '../utils/recdel';
 import { ROUTES } from '../utils/routes';
 import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
+import { RouterStore } from './router-store';
 
 interface CurrentView {
   config: ViewConfig;
@@ -34,7 +35,8 @@ export class ViewStore {
 
   constructor(
     private readonly currentFile: Signal<CurrentFile | null>,
-    private readonly configFile: Signal<FileEntry | null>
+    private readonly configFile: Signal<FileEntry | null>,
+    private readonly router: RouterStore
   ) {
     effect(() => {
       const file = configFile.value
@@ -107,8 +109,11 @@ export class ViewStore {
       type: this.views.value.type,
     }, toDatabaseRecord(view))
     await this.reloadViews(dbPath)
-    // x-ref: GNY-01
-    history.replaceState(null, '', ROUTES.file(file.path, view))
+    this.router.navigate({
+      name: 'file',
+      path: file.path,
+      view: view.name,
+    })
     this.openViewByName(file, view.name)
     this.toggleViewCreator()
   }
@@ -128,8 +133,11 @@ export class ViewStore {
         index,
       }, toDatabaseRecord(changes))
       await this.reloadViews(dbPath)
-      // x-ref: GNY-01
-      history.replaceState(null, '', ROUTES.file(file.path, changes))
+      this.router.navigate({
+        name: 'file',
+        path: file.path,
+        view: changes.name,
+      })
       this.openViewByName(file, changes.name)
     }
 
@@ -158,8 +166,11 @@ export class ViewStore {
         index,
       })
       await this.reloadViews(dbPath)
-      // x-ref: GNY-01
-      history.replaceState(null, '', ROUTES.file(file.path))
+      this.router.navigate({
+        name: 'file',
+        path: file.path,
+        view: null,
+      })
       this.openDefaultViewForFile(file)
     }
   }

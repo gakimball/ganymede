@@ -4,6 +4,7 @@ import { PromptStore } from './prompt-store';
 import { FileStore } from './file-store';
 import { ViewStore } from './view-store';
 import { FileEntry } from '@tauri-apps/api/fs';
+import { RouterStore } from './router-store';
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 
@@ -12,10 +13,15 @@ export type AppStoreModal =
   | { type: 'icon-picker'; file: FileEntry }
 
 export class AppStore {
+  readonly router = new RouterStore({
+    name: 'default',
+  })
+
   readonly files = new FileStore()
   readonly views = new ViewStore(
     this.files.current,
-    this.files.configFile
+    this.files.configFile,
+    this.router
   )
   readonly prompt = new PromptStore()
 

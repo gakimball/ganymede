@@ -1,4 +1,3 @@
-import { useRoute } from 'preact-iso'
 import { useStore } from '../../state/use-store'
 import { useEffect } from 'preact/hooks'
 import { ErrorLayout } from '../layouts/error-layout'
@@ -7,15 +6,23 @@ import { DatabaseLayout } from '../layouts/database-layout'
 import { TextLayout } from '../layouts/text-layout'
 import { FolderLayout } from '../layouts/folder-layout'
 import { FileBreadcrumbs } from '../common/file-breadcrumbs'
+import { FunctionComponent } from 'preact'
 
-export const FileRoute = () => {
+interface FileRouteProps {
+  path: string;
+  view: string | null;
+}
+
+export const FileRoute: FunctionComponent<FileRouteProps> = ({
+  path,
+  view,
+}) => {
   const { files } = useStore()
-  const { path } = useRoute().query
   const currentFile = files.current.value
   const directory = files.directory.value
 
   useEffect(() => {
-    if (path) {
+    if (typeof path === 'string') {
       files.openFileByPath(path)
     }
   }, [files, path])
@@ -37,7 +44,7 @@ export const FileRoute = () => {
         }
 
         if (currentFile.type === 'database') {
-          return <DatabaseLayout {...currentFile} />
+          return <DatabaseLayout {...currentFile} viewName={view} />
         }
 
         if (currentFile.type === 'folder') {

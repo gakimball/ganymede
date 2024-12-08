@@ -1,6 +1,6 @@
 import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
-import { ViewConfig, toViewConfig } from '../utils/view-config';
+import { ViewConfig, toDatabaseRecord, toViewConfig } from '../utils/view-config';
 import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
 import { Command } from '@tauri-apps/api/shell';
@@ -97,7 +97,7 @@ export class ViewStore {
     this.openView(view)
   }
 
-  async createView(view: DatabaseRecord): Promise<void> {
+  async createView(view: ViewConfig): Promise<void> {
     const dbPath = this.configFile.value?.path
     const file = this.currentFile.value?.file
 
@@ -105,16 +105,15 @@ export class ViewStore {
 
     await recins(dbPath, {
       type: this.views.value.type,
-    }, view)
+    }, toDatabaseRecord(view))
     await this.reloadViews(dbPath)
-    const asConfig = toViewConfig(view)
     // x-ref: GNY-01
-    history.replaceState(null, '', ROUTES.file(file.path, asConfig))
-    this.openViewByName(file, asConfig.name)
+    history.replaceState(null, '', ROUTES.file(file.path, view))
+    this.openViewByName(file, view.name)
     this.toggleViewCreator()
   }
 
-  async editCurrentView(changes: DatabaseRecord): Promise<void> {
+  async editCurrentView(changes: ViewConfig): Promise<void> {
     const current = this.current.value
     const dbPath = this.configFile.value?.path
     const file = this.currentFile.value?.file
@@ -127,12 +126,11 @@ export class ViewStore {
       await recins(dbPath, {
         type: this.views.value.type,
         index,
-      }, changes)
+      }, toDatabaseRecord(changes))
       await this.reloadViews(dbPath)
-      const asConfig = toViewConfig(changes)
       // x-ref: GNY-01
-      history.replaceState(null, '', ROUTES.file(file.path, asConfig))
-      this.openViewByName(file, asConfig.name)
+      history.replaceState(null, '', ROUTES.file(file.path, changes))
+      this.openViewByName(file, changes.name)
     }
 
     this.toggleViewEditor()

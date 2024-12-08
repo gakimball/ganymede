@@ -31,6 +31,8 @@ export const queryRecfile = async (path: string, view?: ViewConfig) => {
   const cmd = new Command('recsel', args)
   const { stdout, stderr } = await cmd.execute()
 
+  console.log({ cmd, view })
+
   if (stderr) {
     logger.error('Error running recsel', {
       error: stderr,
@@ -38,5 +40,15 @@ export const queryRecfile = async (path: string, view?: ViewConfig) => {
     })
   }
 
-  return parseRecfile(stdout)
+  console.log(stdout)
+
+  const db = parseRecfile(stdout)
+
+  if (stderr) {
+    db.errors.push(stderr)
+  }
+
+  console.log({ db })
+
+  return db
 }

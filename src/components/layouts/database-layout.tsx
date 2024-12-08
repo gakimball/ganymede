@@ -55,6 +55,8 @@ export const DatabaseLayout = memo<DatabaseFile>(({
   const recordViewerIsFullScreen = currentView?.config.fullPage === true
   const hideRecordBrowser = editing !== null && recordViewerIsFullScreen
 
+  console.log({ currentView })
+
   return (
     <div className="pt-3 px-4">
       <ViewSelect
@@ -66,6 +68,11 @@ export const DatabaseLayout = memo<DatabaseFile>(({
         onCreateView={views.toggleViewCreator}
         onEditView={views.toggleViewEditor}
       />
+      {currentView && currentView.database.errors.length > 0 && (
+        <Callout type="error">
+          {currentView?.database.errors[0]}
+        </Callout>
+      )}
       {View && !hideRecordBrowser && (
         <View
           {...currentView}

@@ -9,6 +9,7 @@ Routing
 [x] / empty
 [x] view?path=
 [x] view?path=&view=
+[ ] DIY router
 
 Issues
 [ ] Cannot turn off autocomplete
@@ -20,6 +21,11 @@ Issues
 [ ] GNY-1: preact-iso does not re-render routes after replaceState is called
 [ ] Text layouts do not need to query the whole DB; recinf is sufficient
 [x] %type <field> enum with multiple lines not supported
+[ ] Syntax highlighter treats gt/lt signs as literal HTML
+[ ] Filtered/sorted views cannot use indexes to insert updated records;
+    Need to use a unique ID instead
+[ ] Editing an aggregate item should not be possible
+[ ] Prevent auto curly quotes
 
 Views
 [x] CRUD records

@@ -11,13 +11,17 @@ import { TextInput } from '../forms/text-input';
 import { DatabaseFieldMap, DatabaseRecord } from '../../types/database';
 import { parseFormData } from '../../utils/parse-form-data';
 import { FileEntry } from '@tauri-apps/api/fs';
+import { useCallback, useState } from 'preact/hooks';
+import { createPlaceholderViewConfig } from '../../utils/create-placeholder-view-config';
+import { ListEditor } from './list-editor';
+import { RenderRuleEditor } from '../forms/render-rule-editor';
 
 interface ViewEditorProps {
   file: FileEntry;
   view?: ViewConfig;
   viewFields: DatabaseFieldMap;
   recordFields: DatabaseFieldMap;
-  onChange: (view: DatabaseRecord) => void;
+  onChange: (view: ViewConfig) => void;
   onClose: () => void;
   onDelete?: () => void;
 }
@@ -31,115 +35,131 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
   onClose,
   onDelete,
 }) => {
-  const handleSubmit = useEventHandler((event: SubmitEvent) => {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget as HTMLFormElement)
-    const config = parseFormData(formData, viewFields)
-    config.File = [file.name!]
-    onChange(config)
+  const [value, setValue] = useState<ViewConfig>(view ?? {
+    ...createPlaceholderViewConfig(),
+    file: file.name!,
   })
+  const patchValue = useCallback((patch: Partial<ViewConfig>) => {
+    setValue(prev => ({
+      ...prev,
+      ...patch,
+    }))
+  }, [])
 
   return (
     <Modal width="500px">
-      <form onSubmit={handleSubmit}>
-        <FormLabel>Name</FormLabel>
-        <TextInput
-          name="Name"
-          defaultValue={view?.name}
-        />
-        <br />
-        <FormLabel>Record Type</FormLabel>
-        <TextInput
-          name="Type"
-          defaultValue={view?.type ?? ''}
-        />
-        <br />
-        <FormLabel>Layout</FormLabel>
-        <SelectField
-          name="Layout"
-          defaultValue={view?.layout}
-          options={[
-            { label: 'List', value: 'List' },
-            { label: 'Table', value: 'Table' },
-            { label: 'Board', value: 'Board' },
-            { label: 'Aggregate', value: 'Aggregate' },
-          ]}
-        />
-        <br />
-        <FormLabel>Filter</FormLabel>
-        <TextInput
-          name="Filter"
-          defaultValue={view?.filter ?? ''}
-        />
-        <br />
-        <FormLabel>Sort</FormLabel>
-        <TextInput
-          name="Sort"
-          defaultValue={view?.sort?.fields.join(' ') ?? ''}
-        />
-        <br />
-        <FormLabel>Group</FormLabel>
-        <SelectField
-          name="Group"
-          defaultValue={view?.group ?? ''}
-          options={[
-            {
-              value: '',
-              label: '(none)'
-            },
-            ...[...recordFields].map(([, field]) => ({
-              value: field.name,
-              label: field.name.replace(/_/g, ' '),
-            }))
-          ]}
-        />
-        <br />
-        <FormLabel>Fields</FormLabel>
-        <TextInput
-          name="Fields"
-          defaultValue={view?.fields?.join(' ') ?? ''}
-        />
-        <br />
-        <FormLabel>Render</FormLabel>
-        {view?.render.map((value, index) => (
-          <TextInput
-            key={value}
-            name={`Render.${index}`}
-            defaultValue={value.field + ' ' + value.rule.type}
-          />
-        ))}
-        {view?.render.length === 0 && (
-          <TextInput
-            name="Render.0"
+      <FormLabel>Name</FormLabel>
+      <TextInput
+        value={value.name}
+        onChange={e => patchValue({ name: e.currentTarget.value })}
+      />
+      <br />
+      <FormLabel>Record Type</FormLabel>
+      <TextInput
+        value={value.type ?? ''}
+        onChange={e => patchValue({ type: e.currentTarget.value || null })}
+      />
+      <br />
+      <FormLabel>Layout</FormLabel>
+      <SelectField
+        value={value.layout}
+        onChange={e => patchValue({ layout: e.currentTarget.value as ViewConfig['layout'] })}
+        options={[
+          { label: 'List', value: 'List' },
+          { label: 'Table', value: 'Table' },
+          { label: 'Board', value: 'Board' },
+          { label: 'Aggregate', value: 'Aggregate' },
+        ]}
+      />
+      <br />
+      <FormLabel>Filter</FormLabel>
+      <TextInput
+        value={value.filter ?? ''}
+        onChange={e => patchValue({ filter: e.currentTarget.value || null })}
+      />
+      <br />
+      <FormLabel>Sort</FormLabel>
+      <TextInput
+        value={value.sort?.fields.join(' ') ?? ''}
+        onChange={e => {
+          const fields = e.currentTarget.value.split(/\s+/)
+          patchValue({
+            sort: fields.length ? {
+              fields,
+              descending: value.sort?.descending ?? false,
+            } : null,
+          })
+        }}
+      />
+      <br />
+      <FormLabel>Group</FormLabel>
+      <SelectField
+        value={value.group ?? ''}
+        onChange={e => patchValue({ group: e.currentTarget.value || null })}
+        options={[
+          {
+            value: '',
+            label: '(none)'
+          },
+          ...[...recordFields].map(([, field]) => ({
+            value: field.name,
+            label: field.name.replace(/_/g, ' '),
+          }))
+        ]}
+      />
+      <br />
+      <FormLabel>Fields</FormLabel>
+      <TextInput
+        value={value.fields?.join(' ') ?? ''}
+        onChange={e => {
+          const fields = e.currentTarget.value.split(/\s+/)
+          patchValue({ fields: fields.length ? fields : null })
+        }}
+      />
+      <br />
+      <FormLabel>Render</FormLabel>
+      <ListEditor
+        value={value.render ?? []}
+        onChange={render => patchValue({ render })}
+        defaultValue={{
+          field: '',
+          rule: {
+            type: 'unknown',
+            text: '',
+          },
+        }}
+        render={(value, changeValue) => (
+          <RenderRuleEditor
+            value={value}
+            onChange={changeValue}
           />
         )}
-        <br />
-        <FormLabel>Sum</FormLabel>
-        <TextInput
-          name="Sum"
-          defaultValue={view?.sum.join(' ')}
-        />
-        <br />
-        <FormLabel>Full Page</FormLabel>
-        <TextInput
-          name="Full_Page"
-          type="checkbox"
-          defaultChecked={view?.fullPage === true}
-        />
-        <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
-          {onDelete && (
-            <Button theme="danger" onClick={onDelete}>
-              Delete
-            </Button>
-          )}
-          <Button onClick={onClose}>
-            Cancel
+      />
+      <br />
+      <FormLabel>Sum</FormLabel>
+      <TextInput
+        value={value.sum.join(' ')}
+      />
+      <br />
+      <FormLabel>Full Page</FormLabel>
+      <TextInput
+        type="checkbox"
+        checked={value.fullPage === true}
+        onChange={e => patchValue({ fullPage: e.currentTarget.checked })}
+      />
+      <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
+        {onDelete && (
+          <Button theme="danger" onClick={onDelete}>
+            Delete
           </Button>
-          <Button type="submit" theme="primary" isExpanded>
-            {view ? 'Save' : 'Create'}
-          </Button>
-        </div>
-      </form>
+        )}
+        <Button onClick={onClose}>
+          Cancel
+        </Button>
+        <Button onClick={() => onChange(value)} theme="primary" isExpanded>
+          {view ? 'Save' : 'Create'}
+        </Button>
+      </div>
     </Modal>
   )
 }

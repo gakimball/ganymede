@@ -43,8 +43,15 @@ export const TableView: FunctionComponent<ViewComponentProps> = ({
             <tbody>
               {table.records.map(record => (
                 <tr
-                  className="border-b-1 border-border cursor-pointer group"
-                  onClick={() => onSelectRecord(record)}
+                  className={`
+                    border-b-1 border-border group
+                    ${config.aggregate ? '' : 'cursor-pointer'}
+                  `}
+                  onClick={() => {
+                    if (!config.aggregate) {
+                      onSelectRecord(record)
+                    }
+                  }}
                 >
                   {shownFields.map(field => (
                     <td

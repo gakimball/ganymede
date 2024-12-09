@@ -19,6 +19,8 @@ export const recins = async (
 
   args.push(dbPath)
 
+  args.push('--verbose')
+
   logger.debug('Running recins', args)
 
   const cmd = new Command('recins', args)

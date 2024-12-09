@@ -1,4 +1,4 @@
-import { Database, DatabaseFieldMap } from '../types/database';
+import { DatabaseFieldMap } from '../types/database';
 import { ViewConfig } from '../utils/view-config';
 
 /**
@@ -7,7 +7,13 @@ import { ViewConfig } from '../utils/view-config';
  */
 export const getShownFields = (fields: DatabaseFieldMap, config: ViewConfig | null | undefined) => {
   const fieldList = [...fields.values()]
-  const shownFields = config?.fields ?? [...fields.keys()]
+  let shownFields = config?.fields ?? [...fields.keys()]
+  // Convert an aggregate field defn like:
+  // `Sum(Amount):Amount` => `Amount`
+  shownFields = shownFields.map(field => {
+    const segments = field.split(':')
+    return segments[segments.length - 1]
+  })
 
   return fieldList
     .filter(field => shownFields.includes(field.name))

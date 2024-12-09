@@ -24,7 +24,7 @@ Issues
 [ ] Syntax highlighter treats gt/lt signs as literal HTML
 [ ] Filtered/sorted views cannot use indexes to insert updated records;
     Need to use a unique ID instead
-[ ] Editing an aggregate item should not be possible
+[x] Editing an aggregate item should not be possible
 [ ] Prevent auto curly quotes
 
 Views
@@ -32,6 +32,7 @@ Views
 [x] CRUD views
 [x] Enum label colors
 [?] Extends field
+[x] Merge aggregate feature into other views
 
 Text editing
 [x] Switch to contenteditable

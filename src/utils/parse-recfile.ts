@@ -21,7 +21,9 @@ export const parseRecfile = (input: string): Database => {
 
   // sexp structure:
   // (record id fields[])
+  // fields have one of two signatures:
   // (field id name value)
+  // (field name value)
   sexp(`(${input})`, {
     translateNumber: value => value,
   }).forEach((expr, index) => {
@@ -32,8 +34,8 @@ export const parseRecfile = (input: string): Database => {
     const record = createDatabaseRecord(fieldMap)
 
     fields.forEach(field => {
-      const name = field[2]
-      const value = field[3]
+      const name = field[field.length - 2]
+      const value = field[field.length - 1]
 
       if (isRecordDescriptor) {
         switch (name) {

@@ -10,7 +10,7 @@ export type RenderRule = (
 
 export interface ViewConfig {
   name: string;
-  layout: 'Table' | 'Board' | 'List' | 'Aggregate' | 'Text';
+  layout: 'Table' | 'Board' | 'List' | 'Text';
   file: string;
   type: string | null;
   sort: {
@@ -19,6 +19,7 @@ export interface ViewConfig {
   } | null;
   filter: string | null;
   group: string | null;
+  aggregate: string | null;
   fields: string[] | null;
   render: Array<{
     field: string;
@@ -40,6 +41,7 @@ export const toViewConfig = (record: DatabaseRecord): ViewConfig => {
     } : null,
     filter: record.Filter?.[0] ?? null,
     group: record.Group?.[0] ?? null,
+    aggregate: record.Aggregate?.[0] ?? null,
     fields: record.Fields?.[0].split(' ') ?? null,
     render: record.Render?.map((value) => {
       const [field, rule] = value.split(' ')
@@ -90,6 +92,7 @@ export const toDatabaseRecord = (view: ViewConfig): DatabaseRecord => {
     ] : undefined,
     Filter: view.filter ? [view.filter] : undefined,
     Group: view.group ? [view.group] : undefined,
+    Aggregate: view.aggregate ? [view.aggregate] : undefined,
     Fields: view.fields ? [view.fields.join(' ')] : undefined,
     Render: view.render.map(({ field, rule }) => {
       let defn: string = rule.type

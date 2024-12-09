@@ -68,7 +68,6 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
           { label: 'List', value: 'List' },
           { label: 'Table', value: 'Table' },
           { label: 'Board', value: 'Board' },
-          { label: 'Aggregate', value: 'Aggregate' },
         ]}
       />
       <br />
@@ -106,6 +105,14 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
             label: field.name.replace(/_/g, ' '),
           }))
         ]}
+      />
+      <br />
+      <FormLabel>Aggregate</FormLabel>
+      <TextInput
+        value={value.aggregate ?? ''}
+        onChange={e => {
+          patchValue({ aggregate: e.currentTarget.value || null })
+        }}
       />
       <br />
       <FormLabel>Fields</FormLabel>

@@ -29,8 +29,15 @@ export const ListView: FunctionComponent<ViewComponentProps> = ({
           )}
           {list.records.map(record => (
             <div
-              className="flex gap-3 mt-3 group cursor-pointer h-[29px]"
-              onClick={() => onSelectRecord(record)}
+              className={`
+                flex gap-3 mt-3 group h-[29px]
+                ${config.aggregate ? '' : 'cursor-pointer'}
+              `}
+              onClick={() => {
+                if (!config.aggregate) {
+                  onSelectRecord(record)
+                }
+              }}
             >
               {shownFields.map((field) => (
                 record[field.name] && (

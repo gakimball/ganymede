@@ -18,10 +18,8 @@ export const queryRecfile = async (path: string, view?: ViewConfig) => {
     args.push('-S', view?.sort.fields.join(' '))
   }
 
-  if (view?.layout === 'Aggregate') {
-    if (view?.group) {
-      args.push('-G', view.group)
-    }
+  if (view?.aggregate) {
+    args.push('-G', view.aggregate)
 
     if (view?.fields) {
       args.push('-p', view.fields.join(','))

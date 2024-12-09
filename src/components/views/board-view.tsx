@@ -28,11 +28,15 @@ export const BoardView: FunctionComponent<ViewComponentProps> = ({
                 p-2 mt-4
                 border-1 border-border rounded-lg
                 bg-background-secondary
-                cursor-pointer
+                ${config.aggregate ? '' : 'cursor-pointer'}
                 hover:border-content-secondary
                 group
               `}
-              onClick={() => onSelectRecord(record)}
+              onClick={() => {
+                if (!config.aggregate) {
+                  onSelectRecord(record)
+                }
+              }}
             >
               {shownFields.map((field) => (
                 <div

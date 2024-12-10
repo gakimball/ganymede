@@ -46,6 +46,10 @@ export const QuickFind = memo(() => {
         event.preventDefault()
         break
       }
+      case 'Escape': {
+        closeModal()
+        break
+      }
     }
   })
 

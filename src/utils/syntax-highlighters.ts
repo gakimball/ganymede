@@ -32,9 +32,10 @@ const XIT_STATUS_COLORS: {
 
 const REC_FIELD_REGEX = /^([a-zA-Z%][a-zA-Z0-9_]*:)(.*)/
 
+const escape = (text: string) => text.replace(/</g, '&lt;').replace(/>/, '&gt;')
 const replaceStrikethru = (substr: string) => `<span class="${hl.gray}">${substr}</span>`
 const parseInlineStyle = (line: string) => {
-  return line.replace(MD_STRIKETHRU_REGEX, replaceStrikethru)
+  return escape(line).replace(MD_STRIKETHRU_REGEX, replaceStrikethru)
 }
 
 export const syntaxHighlighters = {
@@ -46,12 +47,12 @@ export const syntaxHighlighters = {
 
       if ((match = line.match(MD_TASK_REGEX)) !== null) {
         const isComplete = line.startsWith('- [x]')
-        html += `<span class="${isComplete ? hl.gray : hl.blue}">${match[1]}</span>`
-        html += `<span class="${isComplete ? hl.gray : ''}">${match[3]}</span><br>`
+        html += `<span class="${isComplete ? hl.gray : hl.blue}">${escape(match[1])}</span>`
+        html += `<span class="${isComplete ? hl.gray : ''}">${escape(match[3])}</span><br>`
       } else if ((match = line.match(MD_LINE_REGEX)) !== null) {
         html += `<span class="${hl.blue}">${match[1]}</span> ${parseInlineStyle(match[2])}<br>`
       } else if (MD_HEADING_REGEX.test(line)) {
-        html += `<span class="${hl.red}">${line}</span><br>`
+        html += `<span class="${hl.red}">${escape(line)}</span><br>`
       } else {
         html += `${parseInlineStyle(line)}<br>`
       }
@@ -67,14 +68,14 @@ export const syntaxHighlighters = {
       let match
 
       if ((match = line.match(GMI_HEADING_REGEX)) !== null) {
-        html += `<span class="${hl.red}">${line}</span>`
+        html += `<span class="${hl.red}">${escape(line)}</span>`
       } else if (line.startsWith('-')) {
-        html += `<span class="${hl.blue}">-</span>${line.slice(1)}`
+        html += `<span class="${hl.blue}">-</span>${escape(line.slice(1))}`
       } else if ((match = line.match(GMI_LINK_REGEX)) !== null) {
-        html += `<span class="${hl.blue}">=> <a href="${match[1]}" class="underline">${match[1]}</a></span>`
-        html += match[2] ?? ''
+        html += `<span class="${hl.blue}">=> <a href="${match[1]}" class="underline">${escape(match[1])}</a></span>`
+        html += escape(match[2] ?? '')
       } else {
-        html += line
+        html += escape(line)
       }
 
       html += '<br>'
@@ -103,11 +104,11 @@ export const syntaxHighlighters = {
         const isResolved = ['x', '~'].includes(status)
 
         html += `<span class="${statusColor}">${line.slice(0, 3)}</span>`
-        html += `<span class="${isResolved ? hl.gray : 'text-content-secondary'}">${line.slice(3)}</span><br>`
+        html += `<span class="${isResolved ? hl.gray : 'text-content-secondary'}">${escape(line.slice(3))}</span><br>`
       } else if (line.trim() !== '') {
-        html += `<span class="underline">${line}</span><br>`
+        html += `<span class="underline">${escape(line)}</span><br>`
       } else {
-        html += `${line}<br />`
+        html += `${escape(line)}<br />`
       }
     })
 
@@ -121,13 +122,13 @@ export const syntaxHighlighters = {
       let match
 
       if (line.startsWith('#')) {
-        html += `<span class="${hl.gray}">${line}</span>`
+        html += `<span class="${hl.gray}">${escape(line)}</span>`
       } else if (line.startsWith('+')) {
-        html += `<span class="${hl.orange}">+</span>${line.slice(1)}`
+        html += `<span class="${hl.orange}">+</span>${escape(line.slice(1))}`
       } else if ((match = line.match(REC_FIELD_REGEX)) !== null) {
-        html += `<span class="${line.startsWith('%') ? hl.blue : hl.red}">${match[1]}</span>${match[2]}`
+        html += `<span class="${line.startsWith('%') ? hl.blue : hl.red}">${escape(match[1])}</span>${escape(match[2])}`
       } else {
-        html += line
+        html += escape(line)
       }
 
       html += '<br>'

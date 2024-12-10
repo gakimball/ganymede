@@ -11,6 +11,7 @@ export const createTextView = (file: FileEntry): ViewConfig => ({
   fields: null,
   filter: null,
   group: null,
+  aggregate: null,
   sort: null,
   type: null,
 })

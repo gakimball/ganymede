@@ -5,6 +5,9 @@ Use recsel features
       Operators: + - * / % && || = > < >= <= != >> << ==
 [ ] Search
 
+Databases
+[ ] Inline recfile creator
+
 Routing
 [x] / empty
 [x] view?path=
@@ -26,6 +29,8 @@ Issues
     Need to use a unique ID instead
 [x] Editing an aggregate item should not be possible
 [ ] Prevent auto curly quotes
+[ ] Make sure files save if you close them before the auto-save timeout
+[ ] sexp library doesn't handle escaped double quotes
 
 Views
 [x] CRUD records
@@ -33,6 +38,7 @@ Views
 [x] Enum label colors
 [?] Extends field
 [x] Merge aggregate feature into other views
+[ ] In record viewer, add open-in-browser button for Url fields
 
 Text editing
 [x] Switch to contenteditable

@@ -9,6 +9,7 @@ export const createPlaceholderViewConfig = (): ViewConfig => ({
   filter: null,
   fullPage: false,
   group: null,
+  aggregate: null,
   render: [],
   sort: null,
   sum: [],

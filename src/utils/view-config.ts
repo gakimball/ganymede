@@ -10,7 +10,7 @@ export type RenderRule = (
 
 export interface ViewConfig {
   name: string;
-  layout: 'Table' | 'Board' | 'List' | 'Text';
+  layout: 'Table' | 'Board' | 'List' | 'Text' | 'Record';
   file: string;
   type: string | null;
   sort: {

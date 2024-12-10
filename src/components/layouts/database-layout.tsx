@@ -11,14 +11,14 @@ import { CREATE_NEW_RECORD } from '../../state/app-store';
 import { DatabaseFile } from '../../state/file-store';
 import { ViewEditor } from '../common/view-editor';
 import { Callout } from '../common/callout';
-import { AggregateView } from '../views/aggregate-view';
+import { RecordView } from '../views/record-view';
 
 const viewComponents = {
   Table: TableView,
   Board: BoardView,
   Text: TextView,
   List: ListView,
-  Aggregate: AggregateView,
+  Record: RecordView,
 }
 
 interface DatabaseLayoutProps extends DatabaseFile {

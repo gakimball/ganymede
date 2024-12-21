@@ -29,6 +29,7 @@
     "@types/jest": "^29.5.12",
     "auto-bind": "^5.0.1",
     "classnames": "^2.5.1",
+    "copy-text-to-clipboard": "^3.2.0",
     "date-fns": "^3.6.0",
     "feather-icons": "^4.29.2",
     "fparser": "^3.0.1",

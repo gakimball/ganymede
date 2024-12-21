@@ -1,6 +1,7 @@
 import { Fragment } from 'preact';
 import type { FileEntry } from '@tauri-apps/api/fs';
 import { useCallback, useEffect, useState } from 'preact/hooks';
+import copyTextToClipboard from 'copy-text-to-clipboard';
 import { swapArrayValue } from '../../utils/swap-array-value';
 import { useStore } from '../../state/use-store';
 import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item';
@@ -45,7 +46,7 @@ export const FileBrowser = memo(() => {
         files.deleteFile(file)
         break
       }
-      case 'new': {
+      case 'new-file': {
         const name = await prompt.create({
           text: 'Enter a file name',
           submitText: 'Create',
@@ -56,11 +57,22 @@ export const FileBrowser = memo(() => {
         }
         break
       }
+      case 'new-database': {
+        openModal({
+          type: 'new-database',
+          file,
+        })
+        break
+      }
       case 'icon': {
         openModal({
           type: 'icon-picker',
           file,
         })
+        break
+      }
+      case 'copy-path': {
+        copyTextToClipboard(file.path)
         break
       }
     }

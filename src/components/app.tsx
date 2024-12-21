@@ -10,6 +10,7 @@ import { FileRoute } from './routes/file-route'
 import { ShortcutManager } from './managers/shortcut-manager'
 import { IconPicker } from './global/icon-picker'
 import { RouteHandler } from './global/route-handler'
+import { NewDatabaseForm } from './global/new-database-form'
 
 const initialState = new AppStore()
 
@@ -28,6 +29,7 @@ export const App = () => {
       <QuickFind />
       <Prompt />
       <IconPicker />
+      <NewDatabaseForm />
       <div className="ms-sidebar">
         <RouteHandler>
           {(route) => (

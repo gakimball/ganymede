@@ -9,7 +9,7 @@ import { ROUTES } from '../../utils/routes';
 import { FeatherIconNames } from 'feather-icons';
 import { Link } from './link';
 
-export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new' | 'icon'
+export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new-file' | 'new-database' | 'icon' | 'copy-path'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -47,7 +47,14 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
       items: [
         {
           label: 'New file here',
-          event: () => onAction(file, 'new'),
+          event: () => onAction(file, 'new-file'),
+        },
+        {
+          label: 'New database here',
+          event: () => onAction(file, 'new-database'),
+        },
+        {
+          is_separator: true,
         },
         {
           label: 'Add to favorites',
@@ -56,6 +63,13 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         {
           label: 'Change icon',
           event: () => onAction(file, 'icon'),
+        },
+        {
+          is_separator: true,
+        },
+        {
+          label: 'Copy file path',
+          event: () => onAction(file, 'copy-path'),
         },
         {
           label: 'Rename file',

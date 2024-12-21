@@ -11,6 +11,7 @@ export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 export type AppStoreModal =
   | { type: 'quick-find' }
   | { type: 'icon-picker'; file: FileEntry }
+  | { type: 'new-database'; file: FileEntry }
 
 export class AppStore {
   readonly router = new RouterStore({

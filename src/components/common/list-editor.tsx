@@ -8,6 +8,7 @@ interface ListEditorProps<T> {
   render: (value: T, onChange: (value: T) => void) => VNode<any>;
   value: T[];
   onChange: (value: T[]) => void;
+  hasReorder?: boolean;
 }
 
 export const ListEditor = <T,>({
@@ -15,6 +16,7 @@ export const ListEditor = <T,>({
   render,
   value,
   onChange,
+  hasReorder,
 }: ListEditorProps<T>) => {
   const addItem = useEventHandler(() => {
     onChange([
@@ -59,20 +61,24 @@ export const ListEditor = <T,>({
             item,
             change => editItem(index, change)
           )}
-          <Button
-            theme="secondary"
-            isDisabled={index === 0}
-            onClick={() => moveItemUp(index)}
-          >
-            Up
-          </Button>
-          <Button
-            theme="secondary"
-            isDisabled={index === arr.length - 1}
-            onClick={() => moveItemDown(index)}
-          >
-            Dn
-          </Button>
+          {hasReorder && (
+            <>
+              <Button
+                theme="secondary"
+                isDisabled={index === 0}
+                onClick={() => moveItemUp(index)}
+              >
+                Up
+              </Button>
+              <Button
+                theme="secondary"
+                isDisabled={index === arr.length - 1}
+                onClick={() => moveItemDown(index)}
+              >
+                Dn
+              </Button>
+            </>
+          )}
           <Button
             theme="danger"
             onClick={() => removeItem(index)}

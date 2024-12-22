@@ -1,5 +1,5 @@
 import { computed, signal } from '@preact/signals';
-import { FileEntry, readDir, readTextFile, removeDir, removeFile, renameFile, writeFile } from '@tauri-apps/api/fs';
+import { FileEntry, readDir, createDir, readTextFile, removeDir, removeFile, renameFile, writeFile } from '@tauri-apps/api/fs';
 import { DIRECTORY_LOCALSTORAGE_KEY } from '../utils/constants';
 import { FavoritesEntry } from '../types/favorites-entry';
 import { confirm, open } from '@tauri-apps/api/dialog';
@@ -71,6 +71,11 @@ export class FileStore {
     await writeFile(path, '')
     await this.reloadDirectory()
     await this.openFileByPath(path)
+  }
+
+  async createFolder(path: string): Promise<void> {
+    await createDir(path)
+    await this.reloadDirectory()
   }
 
   async openFileByPath(path: string): Promise<void> {

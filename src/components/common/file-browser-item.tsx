@@ -9,7 +9,17 @@ import { ROUTES } from '../../utils/routes';
 import { FeatherIconNames } from 'feather-icons';
 import { Link } from './link';
 
-export type FileBrowserAction = 'open' | 'favorite' | 'rename' | 'delete' | 'toggle' | 'new-file' | 'new-database' | 'icon' | 'copy-path'
+export type FileBrowserAction =
+  | 'open'
+  | 'favorite'
+  | 'rename'
+  | 'delete'
+  | 'toggle'
+  | 'new-file'
+  | 'new-database'
+  | 'new-folder'
+  | 'icon'
+  | 'copy-path'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -38,7 +48,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   const name = file?.name ?? file.path
   const isDir = !!file.children
   const ext = isDir ? '' : getExt(name)
-  const displayName = isDir ? file.name : file.name?.slice(0, -ext.length)
+  const displayName = (isDir || ext.length === 0) ? file.name : file.name?.slice(0, -ext.length)
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
     event.preventDefault()
@@ -52,6 +62,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         {
           label: 'New database here',
           event: () => onAction(file, 'new-database'),
+        },
+        {
+          label: 'New folder here',
+          event: () => onAction(file, 'new-folder'),
         },
         {
           is_separator: true,

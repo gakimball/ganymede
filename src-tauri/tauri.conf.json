@@ -19,7 +19,8 @@
         "renameFile": true,
         "readDir": true,
         "removeFile": true,
-        "removeDir": true
+        "removeDir": true,
+        "createDir": true
       },
       "dialog": {
         "open": true,

@@ -57,6 +57,17 @@ export const FileBrowser = memo(() => {
         }
         break
       }
+      case 'new-folder': {
+        const name = await prompt.create({
+          text: 'Enter a folder name',
+          submitText: 'Create',
+        })
+        if (name) {
+          const path = await normalize(await join(file.path, '..', name))
+          await files.createFolder(path)
+        }
+        break
+      }
       case 'new-database': {
         openModal({
           type: 'new-database',

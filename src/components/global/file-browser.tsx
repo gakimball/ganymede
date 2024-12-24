@@ -30,7 +30,7 @@ export const FileBrowser = memo(() => {
       case 'rename': {
         const newName = await prompt.create({
           text: 'Enter a new file name',
-          defaultValue: file.path,
+          defaultValue: file.name,
           submitText: 'Rename',
         })
         if (newName) files.renameFile(file, newName)

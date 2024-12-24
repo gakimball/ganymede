@@ -11,7 +11,7 @@ import { recins } from '../utils/recins';
 import { RecutilsSelector } from '../types/recutils';
 import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
 import { FileIconMap } from '../types/icon-map';
-import { basename, join } from '@tauri-apps/api/path';
+import { basename, dirname, join } from '@tauri-apps/api/path';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -121,7 +121,12 @@ export class FileStore {
   }
 
   async renameFile(file: FileEntry, newName: string): Promise<void> {
-    await renameFile(file.path, newName)
+    const newPath = await join(
+      await dirname(file.path),
+      newName,
+    )
+
+    await renameFile(file.path, newPath)
     this.reloadDirectory()
   }
 
@@ -131,7 +136,8 @@ export class FileStore {
       await basename(file.path),
     )
 
-    this.renameFile(file, newName)
+    await renameFile(file.path, newName)
+    this.reloadDirectory()
   }
 
   async deleteFile(file: FileEntry): Promise<void> {

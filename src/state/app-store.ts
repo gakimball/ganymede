@@ -12,6 +12,7 @@ export type AppStoreModal =
   | { type: 'quick-find' }
   | { type: 'icon-picker'; file: FileEntry }
   | { type: 'new-database'; file: FileEntry }
+  | { type: 'move'; file: FileEntry }
 
 export class AppStore {
   readonly router = new RouterStore({

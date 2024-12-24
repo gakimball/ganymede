@@ -11,6 +11,7 @@ import { ShortcutManager } from './managers/shortcut-manager'
 import { IconPicker } from './global/icon-picker'
 import { RouteHandler } from './global/route-handler'
 import { NewDatabaseForm } from './global/new-database-form'
+import { MoveFileModal } from './global/move-file-modal'
 
 const initialState = new AppStore()
 
@@ -30,6 +31,7 @@ export const App = () => {
       <Prompt />
       <IconPicker />
       <NewDatabaseForm />
+      <MoveFileModal />
       <div className="ms-sidebar">
         <RouteHandler>
           {(route) => (

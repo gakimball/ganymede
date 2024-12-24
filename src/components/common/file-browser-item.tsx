@@ -5,9 +5,7 @@ import { getFileIcon } from '../../utils/get-file-icon';
 import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
-import { ROUTES } from '../../utils/routes';
 import { FeatherIconNames } from 'feather-icons';
-import { Link } from './link';
 
 export type FileBrowserAction =
   | 'open'
@@ -20,6 +18,7 @@ export type FileBrowserAction =
   | 'new-folder'
   | 'icon'
   | 'copy-path'
+  | 'move'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -90,6 +89,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           event: () => onAction(file, 'rename'),
         },
         {
+          label: 'Move file',
+          event: () => onAction(file, 'move'),
+        },
+        {
           label: 'Delete file',
           event: () => onAction(file, 'delete'),
         }
@@ -106,7 +109,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
 
   return (
     <div className="relative">
-      <Link
+      <div
         className={`
           flex items-center
           w-full
@@ -115,14 +118,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           select-none
           hover:bg-background-highlight
           truncate
+          cursor-pointer
           ${isActive ? 'bg-background-highlight' : ''}
+          ${isDisabled ? 'pointer-events-none' : ''}
         `}
-        route={{
-          name: 'file',
-          path: file.path,
-          view: null,
-        }}
-        disabled={isDisabled}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}
       >
@@ -135,7 +134,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         <span className="text-content-secondary">
           {ext}
         </span>
-      </Link>
+      </div>
 
       {isExpandable && (
         <button

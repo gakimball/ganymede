@@ -1,36 +1,30 @@
-import { Fragment } from 'preact';
 import type { FileEntry } from '@tauri-apps/api/fs';
-import { useCallback, useEffect, useState } from 'preact/hooks';
 import copyTextToClipboard from 'copy-text-to-clipboard';
-import { swapArrayValue } from '../../utils/swap-array-value';
 import { useStore } from '../../state/use-store';
-import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item';
+import { FileBrowserAction } from '../common/file-browser-item';
 import { memo } from 'preact/compat';
 import { Icon } from '../common/icon';
 import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { join, normalize, sep } from '@tauri-apps/api/path';
-
-const sortFile = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
+import { FileTree } from '../common/file-tree';
 
 export const FileBrowser = memo(() => {
-  const { files, prompt, openModal } = useStore()
+  const { files, prompt, openModal, router } = useStore()
   const directoryBase = files.directoryBase.value
   const fileList = files.files.value
   const currentFile = files.current.value
   const favorites = files.favorites.value
   const fileIcons = files.fileIcons.value
 
-  const [expandedDirs, setExpandedDirs] = useState<string[]>([])
-
-  useEffect(() => {
-    setExpandedDirs([])
-  }, [fileList])
-
-  const handleClickItem = useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
+  const handleFileAction = useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
-      case 'toggle': {
-        setExpandedDirs(prev => swapArrayValue(prev, file.path))
+      case 'open': {
+        router.navigate({
+          name: 'file',
+          path: file.path,
+          view: null,
+        })
         break
       }
       case 'rename': {
@@ -86,35 +80,15 @@ export const FileBrowser = memo(() => {
         copyTextToClipboard(file.path)
         break
       }
+      case 'move': {
+        openModal({
+          type: 'move',
+          file,
+        })
+        break
+      }
     }
   })
-
-  const renderFile = (
-    file: FileEntry,
-    disabled = false,
-    indent = 0,
-  ) => {
-    const isDir = file.children !== undefined
-    const isExpanded = expandedDirs.includes(file.path)
-
-    return (
-      <Fragment key={file.path}>
-        <FileBrowserItem
-          file={file}
-          isActive={file === currentFile?.file}
-          isDisabled={disabled}
-          indent={indent}
-          onAction={handleClickItem}
-          isExpandable={isDir}
-          isExpanded={isExpanded}
-          fileIconMap={fileIcons}
-        />
-        {isDir && isExpanded && file.children?.slice().sort(sortFile).map(file => {
-          return renderFile(file, false, indent + 1)
-        })}
-      </Fragment>
-    )
-  }
 
   return (
     <div
@@ -134,9 +108,13 @@ export const FileBrowser = memo(() => {
             Favorites
           </h6>
           <div className="mb-3 border-t-1 border-border">
-            {favorites.map(favorite => {
-              return renderFile(favorite.file, favorite.isBroken)
-            })}
+            <FileTree
+              files={favorites.map(favorite => favorite.file)}
+              highlightedFiles={currentFile ? [currentFile.file] : []}
+              disabledFiles={favorites.filter(favorite => favorite.isBroken).map(favorite => favorite.file)}
+              fileIcons={fileIcons}
+              onAction={handleFileAction}
+            />
           </div>
         </>
       )}
@@ -153,7 +131,12 @@ export const FileBrowser = memo(() => {
         </button>
       </div>
       <div className="mb-3 border-t-1 border-border">
-        {[...fileList].sort(sortFile).map(file => renderFile(file))}
+        <FileTree
+          files={fileList}
+          highlightedFiles={currentFile ? [currentFile.file] : []}
+          fileIcons={fileIcons}
+          onAction={handleFileAction}
+        />
       </div>
       <div className="flex gap-2 ms-3 mt-auto">
         <Button size="small" onClick={files.openDirectoryPicker}>

@@ -10,6 +10,8 @@ import { recdel } from '../utils/recdel';
 import { recins } from '../utils/recins';
 import { RecutilsSelector } from '../types/recutils';
 import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
+import { FileIconMap } from '../types/icon-map';
+import { basename, join } from '@tauri-apps/api/path';
 
 export type CurrentFile = DatabaseFile | TextFile | Folder
 
@@ -40,7 +42,7 @@ export class FileStore {
   readonly favorites = signal<FavoritesEntry[]>([])
   readonly current = signal<CurrentFile | null>(null);
   readonly configFile = signal<FileEntry | null>(null)
-  readonly fileIcons = signal<Record<string, FeatherIconNames | undefined>>({});
+  readonly fileIcons = signal<FileIconMap>({});
 
   readonly sortedFiles = computed((): FileEntry[] => {
     return [...this.files.value].sort((a, b) => a.name!.localeCompare(b.name!))
@@ -121,6 +123,15 @@ export class FileStore {
   async renameFile(file: FileEntry, newName: string): Promise<void> {
     await renameFile(file.path, newName)
     this.reloadDirectory()
+  }
+
+  async moveFile(file: FileEntry, folder: FileEntry): Promise<void> {
+    const newName = await join(
+      folder.path,
+      await basename(file.path),
+    )
+
+    this.renameFile(file, newName)
   }
 
   async deleteFile(file: FileEntry): Promise<void> {

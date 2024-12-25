@@ -12,18 +12,29 @@ interface FileTreeProps {
   fileIcons: FileIconMap;
   highlightedFiles?: FileEntry[];
   indent?: number;
+  sortFiles?: (a: FileEntry, b: FileEntry) => number;
   onAction: (file: FileEntry, action: FileBrowserAction) => void;
 }
 
 export const FileTree: FunctionalComponent<FileTreeProps> = ({
-  disabledFiles = [],
   files,
-  fileIcons,
-  highlightedFiles = [],
   indent = 0,
   onAction,
+  ...props
 }) => {
-  const sortedFiles = useMemo(() => [...files].sort((a, b) => a.name!.localeCompare(b.name!)), [files])
+  const {
+    fileIcons,
+    disabledFiles = [],
+    highlightedFiles = [],
+    sortFiles,
+  } = props
+  const sortedFiles = useMemo(() => {
+    if (!sortFiles) {
+      return files
+    }
+
+    return [...files].sort(sortFiles)
+  }, [files, sortFiles])
   const [expandedDirs, setExpandedDirs] = useState<string[]>([])
 
   const handleAction = useEventHandler((file: FileEntry, action: FileBrowserAction) => {
@@ -59,10 +70,8 @@ export const FileTree: FunctionalComponent<FileTreeProps> = ({
             />
             {isDir && isExpanded && (
               <FileTree
+                {...props}
                 files={file.children ?? []}
-                disabledFiles={disabledFiles}
-                highlightedFiles={highlightedFiles}
-                fileIcons={fileIcons}
                 indent={indent + 1}
                 onAction={handleAction}
               />

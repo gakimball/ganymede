@@ -9,6 +9,8 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { join, normalize, sep } from '@tauri-apps/api/path';
 import { FileTree } from '../common/file-tree';
 
+const sortFiles = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
+
 export const FileBrowser = memo(() => {
   const { files, prompt, openModal, router } = useStore()
   const directoryBase = files.directoryBase.value
@@ -135,6 +137,7 @@ export const FileBrowser = memo(() => {
           files={fileList}
           highlightedFiles={currentFile ? [currentFile.file] : []}
           fileIcons={fileIcons}
+          sortFiles={sortFiles}
           onAction={handleFileAction}
         />
       </div>

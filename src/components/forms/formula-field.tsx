@@ -17,8 +17,8 @@ export const FormulaField: FunctionComponent<FormulaFieldProps> = ({
 
   return (
     <div className="flex items-stretch">
-      <span className="input-group-text">=</span>
-      <div className="font-mono">
+      <span className="flex flex-col justify-center px-2 border-1 border-border">=</span>
+      <div className="font-mono opacity-50">
         <TextInput
           type="text"
           readOnly

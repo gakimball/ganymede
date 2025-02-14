@@ -12,12 +12,12 @@ export const Callout: FunctionComponent<CalloutProps> = ({
     <div
       className={`
         flex items-start gap-2
-        p-2
+        px-3 py-2
         rounded-md
         border-border border-1
       `}
     >
-      <div>
+      <div className="relative top-1">
         <Icon name="alert-circle" />
       </div>
       <div>

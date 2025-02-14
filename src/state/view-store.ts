@@ -190,18 +190,15 @@ export class ViewStore {
   async createRecord(record: DatabaseRecord): Promise<void> {
     const dbPath = this.currentFile.value?.file.path
 
-    if (dbPath) {
-      const cmd = new Command('recins', [
-        ...Object.entries(record).flatMap(([field, values]) => {
-          return values?.flatMap(value => {
-            return ['-f', field, '-v', value]
-          }) ?? []
-        }),
-        dbPath
-      ])
+    if (!dbPath) return
 
-      await cmd.execute()
-    }
+    await recins(
+      dbPath,
+      {
+        type: this.current.value?.database.type,
+      },
+      record,
+    )
 
     this.closeEditor()
   }

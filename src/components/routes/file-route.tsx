@@ -11,11 +11,13 @@ import { FunctionComponent } from 'preact'
 interface FileRouteProps {
   path: string;
   view: string | null;
+  asText: boolean | undefined;
 }
 
 export const FileRoute: FunctionComponent<FileRouteProps> = ({
   path,
   view,
+  asText
 }) => {
   const { files } = useStore()
   const currentFile = files.current.value
@@ -23,9 +25,9 @@ export const FileRoute: FunctionComponent<FileRouteProps> = ({
 
   useEffect(() => {
     if (typeof path === 'string') {
-      files.openFileByPath(path)
+      files.openFileByPath(path, asText)
     }
-  }, [files, path])
+  }, [asText, files, path])
 
   if (!currentFile) {
     return <EmptyLayout />

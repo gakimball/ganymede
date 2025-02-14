@@ -41,6 +41,7 @@ export const App = () => {
                 <FileRoute
                   path={route.path}
                   view={route.view}
+                  asText={route.asText}
                 />
               )}
             </>

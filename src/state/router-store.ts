@@ -2,7 +2,7 @@ import { batch, computed, signal } from '@preact/signals'
 
 export type Route =
   | { name: 'default' }
-  | { name: 'file'; path: string; view: string | null }
+  | { name: 'file'; path: string; view: string | null; asText?: boolean }
 
 export class RouterStore {
   private readonly history = signal<Route[]>([])

@@ -56,7 +56,7 @@ export class FileStore {
       return [file]
     }
 
-    return this.files.value.flatMap(mapFile)
+    return this.files.value.flatMap(mapFile).concat([this.configFile.value!])
   })
 
   readonly directoryBase = computed((): string => {
@@ -80,12 +80,12 @@ export class FileStore {
     await this.reloadDirectory()
   }
 
-  async openFileByPath(path: string): Promise<void> {
+  async openFileByPath(path: string, asText = false): Promise<void> {
     const file = this.flatFiles.value.find(file => file.path === path)
-    if (file) await this.openFile(file)
+    if (file) await this.openFile(file, asText)
   }
 
-  async openFile(file: FileEntry): Promise<void> {
+  async openFile(file: FileEntry, asText = false): Promise<void> {
     if (file.children) {
       this.current.value = {
         type: 'folder',
@@ -103,7 +103,7 @@ export class FileStore {
         hasError = true
       }
 
-      if (file.path.endsWith('.rec')) {
+      if (file.path.endsWith('.rec') && !asText) {
         this.current.value = {
           type: 'database',
           file,

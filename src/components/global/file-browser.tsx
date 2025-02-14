@@ -10,6 +10,7 @@ import { join, normalize, sep } from '@tauri-apps/api/path';
 import { FileTree } from '../common/file-tree';
 import { platform } from '@tauri-apps/api/os';
 import { Command } from '@tauri-apps/api/shell';
+import { FileBrowserMenu } from './file-browser-menu';
 
 const sortFiles = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
 
@@ -154,13 +155,8 @@ export const FileBrowser = memo(() => {
           onAction={handleFileAction}
         />
       </div>
-      <div className="flex gap-2 ms-3 mt-auto">
-        <Button size="small" onClick={files.openDirectoryPicker}>
-          Change...
-        </Button>
-        <Button size="small" onClick={files.reloadDirectory}>
-          Reload
-        </Button>
+      <div className="ms-3 mt-auto">
+        <FileBrowserMenu />
       </div>
     </div>
   )

@@ -209,10 +209,17 @@ export class ViewStore {
     const index = database?.records.indexOf(original) ?? -1
 
     if (index > -1 && dbPath) {
-      await recins(dbPath, {
-        type: database?.type,
-        index,
-      }, update)
+      if (database?.key) {
+        await recins(dbPath, {
+          type: database.type,
+          selector: `${database.key} = "${original[database.key]?.[0]}"`
+        }, update)
+      } else {
+        await recins(dbPath, {
+          type: database?.type,
+          index,
+        }, update)
+      }
       this.reloadCurrentView()
     }
 

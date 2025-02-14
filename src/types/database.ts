@@ -2,6 +2,7 @@ import type Formula from 'fparser'
 
 export interface Database {
   type: string | undefined;
+  key: string | undefined;
   fields: DatabaseFieldMap;
   records: DatabaseRecord[];
   errors: string[];

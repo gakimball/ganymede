@@ -9,6 +9,7 @@ export const parseRecfile = (input: string): Database => {
   const records: DatabaseRecord[] = []
   const errors: string[] = []
   let type: string | undefined
+  let key: string | undefined
 
   const fieldMap: DatabaseFieldMap = new Map()
   const upsertField = (props: DatabaseField) => emplaceMap(fieldMap, props.name, {
@@ -41,6 +42,8 @@ export const parseRecfile = (input: string): Database => {
         switch (name) {
           case '%rec':
             type = value; break;
+          case '%key':
+            key = value; break;
           case '%type':
             upsertField(parseTypeDef(value)); break;
           case '%formula':
@@ -66,6 +69,7 @@ export const parseRecfile = (input: string): Database => {
 
   return {
     type,
+    key,
     fields: fieldMap,
     records,
     errors,

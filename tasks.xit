@@ -25,7 +25,7 @@ Issues
 [ ] Text layouts do not need to query the whole DB; recinf is sufficient
 [x] %type <field> enum with multiple lines not supported
 [x] Syntax highlighter treats gt/lt signs as literal HTML
-[ ] Filtered/sorted views cannot use indexes to insert updated records;
+[x] Filtered/sorted views cannot use indexes to insert updated records;
     Need to use a unique ID instead
 [x] Editing an aggregate item should not be possible
 [ ] Prevent auto curly quotes

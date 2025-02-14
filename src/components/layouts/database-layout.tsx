@@ -108,7 +108,7 @@ export const DatabaseLayout = memo<DatabaseLayoutProps>(({
       )}
       {currentView && editing && (
         <RecordViewer
-          fields={currentView.database.fields}
+          database={currentView.database}
           record={editing === CREATE_NEW_RECORD ? undefined : editing}
           viewConfig={currentView.config}
           onCreate={views.createRecord}

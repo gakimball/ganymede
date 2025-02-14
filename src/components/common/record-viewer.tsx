@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { DatabaseRecord, DatabaseFieldType, DatabaseFieldMap } from '../../types/database';
+import { DatabaseRecord, DatabaseFieldType, DatabaseFieldMap, Database } from '../../types/database';
 import { ViewConfig } from '../../utils/view-config';
 import { getShownFields } from '../../utils/get-shown-fields';
 import { parseFieldValue } from '../../utils/parse-field-value';
@@ -9,10 +9,11 @@ import { RecordViewerField } from './record-viewer-field';
 import { FormLabel } from '../forms/form-label';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { parseFormData } from '../../utils/parse-form-data';
+import { Callout } from './callout';
 
 interface RecordViewerProps {
   record?: DatabaseRecord;
-  fields: DatabaseFieldMap;
+  database: Database;
   viewConfig: ViewConfig | undefined;
   onCreate: (record: DatabaseRecord) => void;
   onUpdate: (original: DatabaseRecord, record: DatabaseRecord) => void;
@@ -22,20 +23,26 @@ interface RecordViewerProps {
 
 export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
   record,
-  fields,
+  database,
   viewConfig,
   onCreate,
   onUpdate,
   onDelete,
   onClose,
 }) => {
+  const { fields } = database
   const shownFields = getShownFields(fields, viewConfig)
   const restFields = [...fields.values()].filter(field => !shownFields.includes(field))
   const allFields = [
     ...shownFields,
     ...restFields,
   ]
+
+  const isNewRecord = record === undefined
   const isFullPage = viewConfig?.fullPage === true
+  const isAlteredRecordList = viewConfig?.sort !== null || viewConfig?.filter !== null
+  const isKeyedDatabase = database.key !== undefined
+  const canEditRecord = isNewRecord || !isAlteredRecordList || isKeyedDatabase
 
   const handleSubmit = useEventHandler((event: SubmitEvent) => {
     event.preventDefault()
@@ -95,6 +102,11 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
             </div>
           )
         })}
+        {!canEditRecord && (
+          <Callout type="error">
+            Cannot edit records in a filtered/sorted view because the database is missing a %key property.
+          </Callout>
+        )}
         <div className="flex gap-2 mt-7">
           {record && (
             <Button
@@ -112,8 +124,13 @@ export const RecordViewer: FunctionComponent<RecordViewerProps> = ({
               Cancel
             </Button>
           )}
-          <Button theme="primary" type="submit" isExpanded>
-            {record ? 'Save' : 'Create'}
+          <Button
+            theme="primary"
+            type="submit"
+            isExpanded
+            isDisabled={!canEditRecord}
+          >
+            {isNewRecord ? 'Create' : 'Save'}
           </Button>
         </div>
       </form>

@@ -31,11 +31,12 @@ export const Button: FunctionComponent<ButtonProps> = ({
 }) => {
   const className = classNames(
     'border-1 rounded-md whitespace-nowrap',
-    themeClasses[theme],
+    themeClasses[isDisabled ? 'secondary' : theme],
     sizeClasses[size],
     {
       'block flex-1': isExpanded,
       'text-content-secondary border-content-secondary': isDisabled,
+      'opacity-50': isDisabled,
     },
   )
 

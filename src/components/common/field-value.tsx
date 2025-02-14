@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import { open } from '@tauri-apps/api/shell';
 import { DatabaseField, DatabaseFieldType } from '../../types/database';
 import { parseFieldValue } from '../../utils/parse-field-value';
 import { applyRenderRule } from '../../utils/apply-render-rule';
@@ -56,9 +57,16 @@ export const FieldValue: FunctionComponent<FieldValueProps> = ({
   if (field.type === DatabaseFieldType.STRING && value.match(/^https?:\/\//)) {
     return (
       <span>
-        <a href={value} className="link">
+        <button
+          href={value}
+          className="link"
+          onClick={(event) => {
+            void open(value);
+            event.stopPropagation();
+          }}
+        >
           {(new URL(value)).hostname}
-        </a>
+        </button>
       </span>
     )
   }

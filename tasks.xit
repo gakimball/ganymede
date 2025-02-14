@@ -24,7 +24,7 @@ Issues
 [x] GNY-1: preact-iso does not re-render routes after replaceState is called
 [ ] Text layouts do not need to query the whole DB; recinf is sufficient
 [x] %type <field> enum with multiple lines not supported
-[ ] Syntax highlighter treats gt/lt signs as literal HTML
+[x] Syntax highlighter treats gt/lt signs as literal HTML
 [ ] Filtered/sorted views cannot use indexes to insert updated records;
     Need to use a unique ID instead
 [x] Editing an aggregate item should not be possible
@@ -38,7 +38,7 @@ Views
 [x] Enum label colors
 [?] Extends field
 [x] Merge aggregate feature into other views
-[ ] In record viewer, add open-in-browser button for Url fields
+[x] In record viewer, add open-in-browser button for Url fields
 
 Text editing
 [x] Switch to contenteditable

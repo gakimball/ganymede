@@ -165,11 +165,16 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
         value={value.sum.join(' ')}
       />
       <br />
-      <FormLabel>Full Page</FormLabel>
-      <TextInput
-        type="checkbox"
-        checked={value.fullPage === true}
-        onChange={e => patchValue({ fullPage: e.currentTarget.checked })}
+      <FormLabel>Open records as</FormLabel>
+      <SelectField
+        value={String(value.fullPage)}
+        onChange={e => patchValue({
+          fullPage: e.currentTarget.value === 'true',
+        })}
+        options={[
+          { label: 'Page', value: 'true' },
+          { label: 'Sidebar', value: 'false' },
+        ]}
       />
       <div className="sticky bottom-0 z-10 bg-background flex gap-2 mt-7">
         {onDelete && (

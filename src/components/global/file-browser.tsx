@@ -8,6 +8,8 @@ import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { join, normalize, sep } from '@tauri-apps/api/path';
 import { FileTree } from '../common/file-tree';
+import { platform } from '@tauri-apps/api/os';
+import { Command } from '@tauri-apps/api/shell';
 
 const sortFiles = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
 
@@ -88,6 +90,17 @@ export const FileBrowser = memo(() => {
           file,
         })
         break
+      }
+      case 'open-in-file-viewer': {
+        if ((await platform()) === 'darwin') {
+          const cmd = new Command('open-in-finder', ['-R', file.path])
+
+          console.log(cmd)
+
+          const out = await cmd.execute()
+
+          console.log(out)
+        }
       }
     }
   })

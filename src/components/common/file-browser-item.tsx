@@ -19,6 +19,7 @@ export type FileBrowserAction =
   | 'icon'
   | 'copy-path'
   | 'move'
+  | 'open-in-file-viewer'
 
 interface FileBrowserItemProps {
   file: FileEntry;
@@ -79,6 +80,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         },
         {
           is_separator: true,
+        },
+        {
+          label: 'Reveal in Finder',
+          event: () => onAction(file, 'open-in-file-viewer'),
         },
         {
           label: 'Copy file path',

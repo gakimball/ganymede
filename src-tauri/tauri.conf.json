@@ -52,6 +52,11 @@
             "name": "read-macos-theme",
             "cmd": "defaults",
             "args": ["read", "-g", "AppleAccentColor"]
+          },
+          {
+            "name": "open-in-finder",
+            "cmd": "open",
+            "args": true
           }
         ]
       },

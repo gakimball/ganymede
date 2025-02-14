@@ -91,6 +91,22 @@ export const ViewEditor: FunctionComponent<ViewEditorProps> = ({
           })
         }}
       />
+      <div className="h-3" />
+      <SelectField
+        value={value.sort?.descending ? 'descending' : 'ascending'}
+        onChange={e => {
+          patchValue({
+            sort: value.sort ? {
+              fields: value.sort.fields,
+              descending: e.currentTarget.value === 'descending',
+            } : null,
+          })
+        }}
+        options={[
+          { label: 'Ascending', value: 'ascending' },
+          { label: 'Descending', value: 'descending' },
+        ]}
+      />
       <br />
       <FormLabel>Group</FormLabel>
       <SelectField

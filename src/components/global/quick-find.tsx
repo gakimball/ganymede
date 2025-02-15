@@ -8,8 +8,8 @@ import { TextInput } from '../forms/text-input';
 import { Modal } from '../common/modal';
 
 export const QuickFind = memo(() => {
-  const { files, currentModal, openModal, closeModal } = useStore()
-  const fileList = files.files.value
+  const { files, currentModal, openModal, closeModal, router } = useStore()
+  const fileList = files.flatFiles.value
   const fileIcons = files.fileIcons.value
   const fileCount = fileList.length
   const isOpen = currentModal.value?.type === 'quick-find'
@@ -25,7 +25,11 @@ export const QuickFind = memo(() => {
 
   const handleFileAction = useCallback((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open') {
-      files.openFile(file)
+      router.navigate({
+        name: 'file',
+        path: file.path,
+        view: null,
+      })
       closeModal()
     }
   }, [])

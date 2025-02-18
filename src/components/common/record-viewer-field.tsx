@@ -70,6 +70,7 @@ export const RecordViewerField: FunctionComponent<RecordViewerFieldProps> = ({
   return (
     <TextInput
       name={inputName}
+      type={type}
       defaultValue={defaultValue}
       defaultChecked={defaultChecked}
     />

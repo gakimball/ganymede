@@ -58,7 +58,7 @@ export const QuickFind = memo(() => {
   })
 
   const handleWindowKey = useEventHandler((event: KeyboardEvent) => {
-    if (event.key === 'k' && (event.metaKey || event.ctrlKey)) {
+    if ((event.key === 'k' || event.key === 'p') && (event.metaKey || event.ctrlKey)) {
       if (isOpen) closeModal(); else openModal({ type: 'quick-find' })
     }
   })
@@ -67,6 +67,10 @@ export const QuickFind = memo(() => {
     window.addEventListener('keypress', handleWindowKey)
     return () => window.removeEventListener('keypress', handleWindowKey)
   }, [])
+
+  useEffect(() => {
+    setSearch('')
+  }, [isOpen])
 
   if (!isOpen) {
     return null

@@ -59,7 +59,7 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
       </button>
       <div className="flex gap-2 ms-auto">
         <Button theme="primary" onClick={onCreateRecord} size="small">
-          New record
+          New {current?.type?.replace(/_/g, ' ').toLowerCase() ?? 'record'}
         </Button>
         {current?.layout !== 'Text' && (
           <Button theme="secondary" onClick={onEditView} size="small">

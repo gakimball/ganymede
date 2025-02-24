@@ -19,7 +19,7 @@ export const FolderLayout = memo<Folder>(({
 
   return (
     <div>
-      {file.children?.map(file => (
+      {file.children?.slice().sort((a, b) => a.name!.localeCompare(b.name!)).map(file => (
         <FileBrowserItem
           key={file.path}
           file={file}

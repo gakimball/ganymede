@@ -231,7 +231,7 @@ export class FileStore {
 
     this.favorites.value = favoritesDb.records.map((record): FavoritesEntry => {
       const fileName = record.File![0]
-      const matchingFile = this.files.value.find(file => file.name === fileName)
+      const matchingFile = this.flatFiles.value.find(file => file.name === fileName)
 
       return {
         file: matchingFile ?? {

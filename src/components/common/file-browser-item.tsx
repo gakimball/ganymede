@@ -28,6 +28,7 @@ interface FileBrowserItemProps {
   isDisabled?: boolean;
   isExpandable?: boolean;
   isExpanded?: boolean;
+  isLast?: boolean;
   indent?: number;
   onAction: (
     file: FileEntry,
@@ -42,6 +43,7 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   isDisabled = false,
   isExpandable = false,
   isExpanded = false,
+  isLast = false,
   indent = 0,
   onAction,
   fileIconMap,
@@ -120,6 +122,9 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   return (
     <div className="relative">
       <div
+        data-active={isActive}
+        data-disabled={isDisabled}
+        data-last={isLast}
         className={`
           flex items-center
           w-full
@@ -129,8 +134,9 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           hover:bg-background-highlight
           truncate
           cursor-pointer
-          ${isActive ? 'bg-background-highlight' : ''}
-          ${isDisabled ? 'pointer-events-none' : ''}
+          data-[active=true]:bg-background-highlight
+          data-[disabled=true]:pointer-events-none
+          data-[last=true]:border-0
         `}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}

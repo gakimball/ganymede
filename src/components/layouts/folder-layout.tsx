@@ -14,13 +14,14 @@ export const FolderLayout = memo<Folder>(({
   const handleFileAction = useFileActions()
 
   return (
-    <div>
-      {file.children?.slice().sort((a, b) => a.name!.localeCompare(b.name!)).map(file => (
+    <div className="border-1 border-border rounded-md m-4">
+      {file.children?.slice().sort((a, b) => a.name!.localeCompare(b.name!)).map((file, index, array) => (
         <FileBrowserItem
           key={file.path}
           file={file}
           onAction={handleFileAction}
           fileIconMap={fileIcons}
+          isLast={index === array.length - 1}
         />
       ))}
     </div>

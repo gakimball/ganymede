@@ -41,7 +41,7 @@ export const FileBrowser = memo(() => {
     >
       {favorites.length > 0 && (
         <>
-          <h6 className="ps-3">
+          <h6 className="ps-3 mt-2">
             Favorites
           </h6>
           <div className="mb-3 border-t-1 border-border">

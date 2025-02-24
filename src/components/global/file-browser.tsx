@@ -1,123 +1,24 @@
 import type { FileEntry } from '@tauri-apps/api/fs';
-import copyTextToClipboard from 'copy-text-to-clipboard';
 import { useStore } from '../../state/use-store';
 import { FileBrowserAction } from '../common/file-browser-item';
 import { memo } from 'preact/compat';
 import { Icon } from '../common/icon';
-import { Button } from '../common/button';
 import { useEventHandler } from '../../hooks/use-event-handler';
-import { join, normalize, sep } from '@tauri-apps/api/path';
 import { FileTree } from '../common/file-tree';
-import { platform } from '@tauri-apps/api/os';
-import { Command } from '@tauri-apps/api/shell';
 import { FileBrowserMenu } from './file-browser-menu';
+import { useFileActions } from '../../hooks/use-file-actions';
 
 const sortFiles = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
 
 export const FileBrowser = memo(() => {
-  const { files, prompt, openModal, router } = useStore()
+  const { files, openModal } = useStore()
   const directoryBase = files.directoryBase.value
   const fileList = files.files.value
   const currentFile = files.current.value
   const favorites = files.favorites.value
   const fileIcons = files.fileIcons.value
 
-  const handleFileAction = useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
-    switch (action) {
-      case 'open': {
-        router.navigate({
-          name: 'file',
-          path: file.path,
-          view: null,
-        })
-        break
-      }
-      case 'rename': {
-        const newName = await prompt.create({
-          text: 'Enter a new file name',
-          defaultValue: file.name,
-          submitText: 'Rename',
-        })
-        if (newName) files.renameFile(file, newName)
-        break
-      }
-      case 'delete': {
-        files.deleteFile(file)
-        router.navigate({
-          name: 'default',
-        })
-        break
-      }
-      case 'new-file': {
-        const name = await prompt.create({
-          text: 'Enter a file name',
-          submitText: 'Create',
-        })
-        if (name) {
-          const path = await normalize(await join(file.path, name))
-          await files.createFile(path)
-          router.navigate({
-            name: 'file',
-            path,
-            view: null,
-          })
-        }
-        break
-      }
-      case 'new-folder': {
-        const name = await prompt.create({
-          text: 'Enter a folder name',
-          submitText: 'Create',
-        })
-        if (name) {
-          const path = await normalize(await join(file.path, name))
-          await files.createFolder(path)
-          router.navigate({
-            name: 'file',
-            path,
-            view: null,
-          })
-        }
-        break
-      }
-      case 'new-database': {
-        openModal({
-          type: 'new-database',
-          file,
-        })
-        break
-      }
-      case 'icon': {
-        openModal({
-          type: 'icon-picker',
-          file,
-        })
-        break
-      }
-      case 'copy-path': {
-        copyTextToClipboard(file.path)
-        break
-      }
-      case 'move': {
-        openModal({
-          type: 'move',
-          file,
-        })
-        break
-      }
-      case 'open-in-file-viewer': {
-        if ((await platform()) === 'darwin') {
-          const cmd = new Command('open-in-finder', ['-R', file.path])
-
-          console.log(cmd)
-
-          const out = await cmd.execute()
-
-          console.log(out)
-        }
-      }
-    }
-  })
+  const handleFileAction = useFileActions()
 
   const handleFileMenuAction = useEventHandler(async (action: FileBrowserAction) => {
     await handleFileAction({

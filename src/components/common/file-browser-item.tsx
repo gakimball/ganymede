@@ -6,6 +6,7 @@ import { Icon } from './icon';
 import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
 import { FeatherIconNames } from 'feather-icons';
+import { compact } from '../../utils/compact';
 
 export type FileBrowserAction =
   | 'open'
@@ -52,22 +53,23 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
     event.preventDefault()
+    const label = isDir ? 'folder' : 'file'
 
     showMenu({
-      items: [
-        {
-          label: 'New file here',
+      items: compact([
+        isDir && {
+          label: 'New file',
           event: () => onAction(file, 'new-file'),
         },
-        {
-          label: 'New database here',
+        isDir && {
+          label: 'New database',
           event: () => onAction(file, 'new-database'),
         },
-        {
-          label: 'New folder here',
+        isDir && {
+          label: 'New folder',
           event: () => onAction(file, 'new-folder'),
         },
-        {
+        isDir && {
           is_separator: true,
         },
         {
@@ -86,22 +88,25 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           event: () => onAction(file, 'open-in-file-viewer'),
         },
         {
-          label: 'Copy file path',
+          label: `Copy ${label} path`,
           event: () => onAction(file, 'copy-path'),
         },
         {
-          label: 'Rename file',
+          is_separator: true,
+        },
+        {
+          label: `Rename ${label}`,
           event: () => onAction(file, 'rename'),
         },
         {
-          label: 'Move file',
+          label: `Move ${label}`,
           event: () => onAction(file, 'move'),
         },
         {
-          label: 'Delete file',
+          label: `Delete ${label}`,
           event: () => onAction(file, 'delete'),
         }
-      ]
+      ])
     })
   }, [])
 

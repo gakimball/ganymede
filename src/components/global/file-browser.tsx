@@ -43,6 +43,9 @@ export const FileBrowser = memo(() => {
       }
       case 'delete': {
         files.deleteFile(file)
+        router.navigate({
+          name: 'default',
+        })
         break
       }
       case 'new-file': {
@@ -51,8 +54,13 @@ export const FileBrowser = memo(() => {
           submitText: 'Create',
         })
         if (name) {
-          const path = await normalize(await join(file.path, '..', name))
+          const path = await normalize(await join(file.path, name))
           await files.createFile(path)
+          router.navigate({
+            name: 'file',
+            path,
+            view: null,
+          })
         }
         break
       }
@@ -62,8 +70,13 @@ export const FileBrowser = memo(() => {
           submitText: 'Create',
         })
         if (name) {
-          const path = await normalize(await join(file.path, '..', name))
+          const path = await normalize(await join(file.path, name))
           await files.createFolder(path)
+          router.navigate({
+            name: 'file',
+            path,
+            view: null,
+          })
         }
         break
       }
@@ -104,6 +117,13 @@ export const FileBrowser = memo(() => {
         }
       }
     }
+  })
+
+  const handleFileMenuAction = useEventHandler(async (action: FileBrowserAction) => {
+    await handleFileAction({
+      path: files.directory.value,
+      name: files.directory.value,
+    }, action)
   })
 
   return (
@@ -156,7 +176,7 @@ export const FileBrowser = memo(() => {
         />
       </div>
       <div className="ms-3 mt-auto">
-        <FileBrowserMenu />
+        <FileBrowserMenu onAction={handleFileMenuAction} />
       </div>
     </div>
   )

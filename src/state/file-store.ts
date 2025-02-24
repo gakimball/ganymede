@@ -72,12 +72,10 @@ export class FileStore {
   async createFile(path: string): Promise<void> {
     await writeFile(path, '')
     await this.reloadDirectory()
-    await this.openFileByPath(path)
   }
 
   async createFolder(path: string): Promise<void> {
     await createDir(path)
-    await this.reloadDirectory()
   }
 
   async openFileByPath(path: string, asText = false): Promise<void> {

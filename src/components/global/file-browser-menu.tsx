@@ -4,11 +4,37 @@ import { Icon } from '../common/icon';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { showMenu } from 'tauri-plugin-context-menu';
 import { useStore } from '../../state/use-store';
+import { FileBrowserAction } from '../common/file-browser-item';
 
-export const FileBrowserMenu: FunctionComponent = () => {
+interface FileBrowserProps {
+  onAction: (action: FileBrowserAction) => void;
+}
+
+export const FileBrowserMenu: FunctionComponent<FileBrowserProps> = ({
+  onAction,
+}) => {
   const { files, router } = useStore()
 
-  const handleClick = useEventHandler(() => {
+  const showFileMenu = useEventHandler(() => {
+    showMenu({
+      items: [
+        {
+          label: 'New file',
+          event: () => onAction('new-file'),
+        },
+        {
+          label: 'New database',
+          event: () => onAction('new-database'),
+        },
+        {
+          label: 'New folder',
+          event: () => onAction('new-folder'),
+        },
+      ]
+    })
+  })
+
+  const showSettingsMenu = useEventHandler(() => {
     showMenu({
       items: [
         {
@@ -39,10 +65,17 @@ export const FileBrowserMenu: FunctionComponent = () => {
   })
 
   return (
-    <Button onClick={handleClick}>
-      <div className="relative top-1">
-        <Icon name="settings" />
-      </div>
-    </Button>
+    <div className="flex gap-2">
+      <Button onClick={showFileMenu}>
+        <div className="relative top-1">
+          <Icon name="plus" />
+        </div>
+      </Button>
+      <Button onClick={showSettingsMenu}>
+        <div className="relative top-1">
+          <Icon name="settings" />
+        </div>
+      </Button>
+    </div>
   )
 }

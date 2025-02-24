@@ -27,6 +27,7 @@ export const TextEditor: FunctionComponent<TextEditorProps> = ({
 
   useEffect(() => {
     updateSyntaxHighlight()
+    editorRef.current?.focus()
   }, [])
 
   return (

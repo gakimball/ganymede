@@ -17,7 +17,7 @@ Routing
 Issues
 [ ] Cannot turn off autocomplete
 [x] Esc should close quick find
-[ ] Views should reference paths, not filenames
+[?] Views should reference paths, not filenames
 [x] Include field name in DatabaseField interface
 [x] First route change doesn't fire
 [x] Finish view editing
@@ -31,6 +31,7 @@ Issues
 [ ] Prevent auto curly quotes
 [ ] Make sure files save if you close them before the auto-save timeout
 [ ] sexp library doesn't handle escaped double quotes
+[ ] Right click actions on files don't work in the folder layout
 
 Views
 [x] CRUD records

@@ -113,10 +113,10 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   }, [])
 
   const indentClasses = [
-    'ps-3',
+    'ps-2',
+    'ps-4',
     'ps-6',
-    'ps-9',
-    'ps-12',
+    'ps-8',
   ]
 
   return (
@@ -128,15 +128,15 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         className={`
           flex items-center
           w-full
-          py-2 ${indentClasses[indent] ?? 'ps-6'}
-          border-b-1 border-border
+          py-1 ${indentClasses[indent] ?? 'ps-2'}
+          mb-1
+          rounded-md
           select-none
           hover:bg-background-highlight
           truncate
           cursor-pointer
           data-[active=true]:bg-background-highlight
           data-[disabled=true]:pointer-events-none
-          data-[last=true]:border-0
         `}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}
@@ -156,14 +156,15 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
         <button
           type="button"
           className={`
-            absolute top-0 right-0
-            h-full w-10
+            absolute top-0 right-1
+            h-full w-8
             hover:bg-background-highlight
             cursor-pointer
+            rounded-full
           `}
           onClick={() => onAction(file, 'toggle')}
         >
-          <div className="relative top-[3px]">
+          <div className="relative top-1">
             <Icon name={isExpanded ? 'chevron-down' : 'chevron-left'} />
           </div>
         </button>

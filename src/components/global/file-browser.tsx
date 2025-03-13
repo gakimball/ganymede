@@ -33,29 +33,12 @@ export const FileBrowser = memo(() => {
         flex flex-col gap-2
         w-sidebar h-screen
         pt-3 pb-3
-        border-r-1 border-border
         fixed top-0 left-0
         overflow-y-auto
         bg-background-secondary
       `}
     >
-      {favorites.length > 0 && (
-        <>
-          <h6 className="ps-3 mt-2">
-            Favorites
-          </h6>
-          <div className="mb-3 border-t-1 border-border">
-            <FileTree
-              files={favorites.map(favorite => favorite.file)}
-              highlightedFiles={currentFile ? [currentFile.file] : []}
-              disabledFiles={favorites.filter(favorite => favorite.isBroken).map(favorite => favorite.file)}
-              fileIcons={fileIcons}
-              onAction={handleFileAction}
-            />
-          </div>
-        </>
-      )}
-      <div className="ps-3 pe-3 mb-2 flex items-center justify-between">
+      <div className="ps-3 pe-3 pb-4 mb-2 flex items-center justify-between border-b-1 border-border">
         <h6 className="mb-0">
           {directoryBase}&nbsp;/
         </h6>
@@ -67,7 +50,18 @@ export const FileBrowser = memo(() => {
           <Icon name="search" />
         </button>
       </div>
-      <div className="mb-3 border-t-1 border-border">
+      {favorites.length > 0 && (
+        <div className="mb-3 px-1">
+          <FileTree
+            files={favorites.map(favorite => favorite.file)}
+            highlightedFiles={currentFile ? [currentFile.file] : []}
+            disabledFiles={favorites.filter(favorite => favorite.isBroken).map(favorite => favorite.file)}
+            fileIcons={fileIcons}
+            onAction={handleFileAction}
+          />
+        </div>
+      )}
+      <div className="mb-3 px-1">
         <FileTree
           files={fileList}
           highlightedFiles={currentFile ? [currentFile.file] : []}

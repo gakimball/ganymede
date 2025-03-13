@@ -7,6 +7,7 @@ import getExt from 'get-ext';
 import { showMenu } from 'tauri-plugin-context-menu';
 import { FeatherIconNames } from 'feather-icons';
 import { compact } from '../../utils/compact';
+import { parseFileName } from '../../utils/parse-file-name';
 
 export type FileBrowserAction =
   | 'open'
@@ -48,10 +49,8 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
   onAction,
   fileIconMap,
 }) => {
-  const name = file?.name ?? file.path
   const isDir = !!file.children
-  const ext = isDir ? '' : getExt(name)
-  const displayName = (isDir || ext.length === 0) ? file.name : file.name?.slice(0, -ext.length)
+  const { name, jdNumber, ext } = parseFileName(file)
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
     event.preventDefault()
@@ -145,7 +144,11 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           <Icon name={getFileIcon(file, fileIconMap)} />
         </div>
 
-        {isDisabled && '[Broken] '}{displayName}
+        <span className="text-content-secondary pe-1 empty:pe-0">
+          {jdNumber}
+        </span>
+
+        {isDisabled && '[Broken] '}{name}
 
         <span className="text-content-secondary">
           {ext}

@@ -19,7 +19,7 @@ export const FileRoute: FunctionComponent<FileRouteProps> = ({
   view,
   asText
 }) => {
-  const { files } = useStore()
+  const { files, views } = useStore()
   const currentFile = files.current.value
   const directory = files.directory.value
 
@@ -39,6 +39,8 @@ export const FileRoute: FunctionComponent<FileRouteProps> = ({
         key={currentFile.file.path}
         file={currentFile.file}
         directory={directory}
+        database={views.current.value?.database}
+        record={views.editing.value}
       />
       {(() => {
         if (currentFile.hasError) {

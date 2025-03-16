@@ -5,7 +5,7 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { HTMLAttributes } from 'preact/compat';
 
 interface LinkProps extends HTMLAttributes<HTMLButtonElement> {
-  route: Route;
+  route: Route | null;
 }
 
 export const Link: FunctionComponent<LinkProps> = ({
@@ -16,7 +16,7 @@ export const Link: FunctionComponent<LinkProps> = ({
   const { router } = useStore()
 
   const handleClick = useEventHandler(() => {
-    router.navigate(route)
+    if (route) router.navigate(route)
   })
 
   return (

@@ -41,11 +41,22 @@ const parseInlineStyle = (line: string) => {
 export const syntaxHighlighters = {
   markdown: (text: string) => {
     let html = ''
+    let codeblock = false
 
     text.split('\n').forEach(line => {
       let match
 
-      if ((match = line.match(MD_TASK_REGEX)) !== null) {
+      if (line.startsWith('```')) {
+        if (codeblock) {
+          codeblock = false
+          html += '```' + '</span><br>'
+        } else {
+          codeblock = true
+          html += `<span class="${hl.green}">` + '```<br>'
+        }
+      } else if (codeblock) {
+        html += `${escape(line)}<br>`
+      } else if ((match = line.match(MD_TASK_REGEX)) !== null) {
         const isComplete = line.startsWith('- [x]')
         html += `<span class="${isComplete ? hl.gray : hl.blue}">${escape(match[1])}</span>`
         html += `<span class="${isComplete ? hl.gray : ''}">${escape(match[3])}</span><br>`

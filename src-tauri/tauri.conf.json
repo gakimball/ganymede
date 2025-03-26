@@ -3,7 +3,7 @@
   "build": {
     "beforeBuildCommand": "npm run build:parcel",
     "beforeDevCommand": "npm run dev:parcel",
-    "devPath": "http://localhost:3000",
+    "devPath": "http://localhost:2999",
     "distDir": "../dist"
   },
   "package": {

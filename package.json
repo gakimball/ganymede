@@ -6,7 +6,7 @@
   "scripts": {
     "start": "tauri dev",
     "test": "jest",
-    "dev:parcel": "parcel -p 3000",
+    "dev:parcel": "parcel -p 2999",
     "predev:parcel": "npm run reset:parcel",
     "build": "tauri build",
     "build:parcel": "parcel build --detailed-report",

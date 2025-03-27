@@ -14,7 +14,7 @@ const hl = {
 
 const MD_HEADING_REGEX = /^#{1,6}/
 const MD_LINE_REGEX = /^(-|\*|\d+?\.) (.*)/
-const MD_TASK_REGEX = /^(- \[( |x)\])(.*)/
+const MD_TASK_REGEX = /^(- \[(?<status> |x|@|~|\?)\])(.*)/
 const MD_STRIKETHRU_REGEX = /~~(.*?)~~/g
 
 const GMI_HEADING_REGEX = /^#{1,3}/
@@ -57,9 +57,16 @@ export const syntaxHighlighters = {
       } else if (codeblock) {
         html += `${escape(line)}<br>`
       } else if ((match = line.match(MD_TASK_REGEX)) !== null) {
-        const isComplete = line.startsWith('- [x]')
-        html += `<span class="${isComplete ? hl.gray : hl.blue}">${escape(match[1])}</span>`
-        html += `<span class="${isComplete ? hl.gray : ''}">${escape(match[3])}</span><br>`
+        let statusColor = 'text-content-secondary'
+        let isResolved = false
+
+        if (match.groups?.status) {
+          statusColor = XIT_STATUS_COLORS[match.groups.status]
+          isResolved = ['x', '~'].includes(match.groups.status)
+        }
+
+        html += `<span class="${statusColor}">${escape(match[1])}</span>`
+        html += `<span class="${isResolved ? hl.gray : ''}">${escape(match[3])}</span><br>`
       } else if ((match = line.match(MD_LINE_REGEX)) !== null) {
         html += `<span class="${hl.blue}">${match[1]}</span> ${parseInlineStyle(match[2])}<br>`
       } else if (MD_HEADING_REGEX.test(line)) {

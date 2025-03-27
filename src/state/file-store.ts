@@ -13,7 +13,7 @@ import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-co
 import { FileIconMap } from '../types/icon-map';
 import { basename, dirname, join } from '@tauri-apps/api/path';
 
-export type CurrentFile = DatabaseFile | TextFile | Folder
+export type CurrentFile = DatabaseFile | TextFile | CalendarFile | Folder
 
 export interface DatabaseFile {
   type: 'database';
@@ -23,6 +23,13 @@ export interface DatabaseFile {
 
 export interface TextFile {
   type: 'text';
+  file: FileEntry;
+  contents: string;
+  hasError: boolean;
+}
+
+export interface CalendarFile {
+  type: 'calendar';
   file: FileEntry;
   contents: string;
   hasError: boolean;
@@ -107,6 +114,13 @@ export class FileStore {
           file,
           hasError,
         }
+      } else if (file.path.endsWith('.cal.md') && !asText) {
+        this.current.value = {
+          type: 'calendar',
+          file,
+          contents: fileContents,
+          hasError,
+        }
       } else {
         this.current.value = {
           type: 'text',
@@ -173,7 +187,7 @@ export class FileStore {
 
     const iconIsSet = file.name! in this.fileIcons.value
     const selector: RecutilsSelector = {
-      type: 'File_icon',
+      type: 'File_Icon',
       selector: iconIsSet ? `File = "${file.name}"` : undefined
     }
 

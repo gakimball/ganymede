@@ -15,8 +15,12 @@ export const Link: FunctionComponent<LinkProps> = ({
 }) => {
   const { router } = useStore()
 
-  const handleClick = useEventHandler(() => {
-    if (route) router.navigate(route)
+  const handleClick = useEventHandler((event: any) => {
+    if (route) {
+      router.navigate(route)
+    } else {
+      props.onClick?.(event)
+    }
   })
 
   return (

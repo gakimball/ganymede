@@ -2,9 +2,9 @@ import { FunctionComponent } from 'preact';
 import { ViewConfig } from '../../utils/view-config';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { Button } from './button';
-import classNames from 'classnames';
 import { createTextView } from '../../utils/create-text-view';
-import { Link } from './link';
+import { Tab } from './tab';
+import { TabGroup } from './tab-group';
 
 interface ViewSelectProps {
   file: FileEntry;
@@ -15,15 +15,6 @@ interface ViewSelectProps {
   onCreateRecord: () => void;
   onEditView: () => void;
 }
-
-const tabClasses = (isActive: boolean) => classNames([
-  'pb-1 me-4',
-  'font-bold',
-  'border-b-2',
-  'hover:text-content',
-  isActive && 'text-content border-content',
-  !isActive && 'text-content-secondary border-transparent',
-])
 
 export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   file,
@@ -36,27 +27,23 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
   const textView = createTextView(file)
 
   return (
-    <ul className="flex items-center mb-3">
-      {[...views, textView].map(view => {
-        const isActive = view.name === current?.name
-
-        return (
-          <Link
-            key={view.name}
-            route={{
-              name: 'file',
-              path: file.path,
-              view: view.name,
-            }}
-            className={tabClasses(isActive)}
-          >
-            {view.name}
-          </Link>
-        )
-      })}
-      <button className={tabClasses(false)} type="button" onClick={onCreateView}>
+    <TabGroup>
+      {[...views, textView].map(view => (
+        <Tab
+          key={view.name}
+          route={{
+            name: 'file',
+            path: file.path,
+            view: view.name,
+          }}
+          isActive={view.name === current?.name}
+        >
+          {view.name}
+        </Tab>
+      ))}
+      <Tab onClick={onCreateView}>
         + Add
-      </button>
+      </Tab>
       <div className="flex gap-2 ms-auto">
         <Button theme="primary" onClick={onCreateRecord} size="small">
           New {current?.type?.replace(/_/g, ' ').toLowerCase() ?? 'record'}
@@ -67,6 +54,6 @@ export const ViewSelect: FunctionComponent<ViewSelectProps> = ({
           </Button>
         )}
       </div>
-    </ul>
+    </TabGroup>
   )
 }

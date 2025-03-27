@@ -7,6 +7,7 @@ import { TextLayout } from '../layouts/text-layout'
 import { FolderLayout } from '../layouts/folder-layout'
 import { FileBreadcrumbs } from '../common/file-breadcrumbs'
 import { FunctionComponent } from 'preact'
+import { CalendarLayout } from '../layouts/calendar-layout'
 
 interface FileRouteProps {
   path: string;
@@ -49,6 +50,10 @@ export const FileRoute: FunctionComponent<FileRouteProps> = ({
 
         if (currentFile.type === 'database') {
           return <DatabaseLayout {...currentFile} viewName={view} />
+        }
+
+        if (currentFile.type === 'calendar') {
+          return <CalendarLayout {...currentFile} />
         }
 
         if (currentFile.type === 'folder') {

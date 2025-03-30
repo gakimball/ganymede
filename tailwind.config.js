@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 const SIDEBAR_WIDTH = 'var(--App-sidebar-width)';
 const ICON_SIZE = '16px'
 
@@ -83,5 +85,9 @@ module.exports = {
       },
     }
   },
-  plugins: [],
+  plugins: [
+    plugin(({ matchVariant }) => {
+      matchVariant('var', value => `&[data-${value}=true]`)
+    }),
+  ],
 }

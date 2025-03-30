@@ -134,8 +134,8 @@ export const FileBrowserItem = memo<FileBrowserItemProps>(({
           hover:bg-background-highlight
           truncate
           cursor-pointer
-          data-[active=true]:bg-background-highlight
-          data-[disabled=true]:pointer-events-none
+          var-[active]:bg-background-highlight
+          var-[disabled]:pointer-events-none
         `}
         onClick={() => onAction(file, 'open')}
         onContextMenu={handleContextMenu}

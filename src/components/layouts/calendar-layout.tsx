@@ -17,7 +17,7 @@ export const CalendarLayout = memo<CalendarFile>(({
 }) => {
   const { files } = useStore()
 
-  const [mode, setMode] = useState<'calendar' | 'text'>('text')
+  const [mode, setMode] = useState<'calendar' | 'text'>('calendar')
   const [period, setPeriod] = useState<CalendarPeriod>(() => {
     const now = new Date()
 
@@ -28,8 +28,8 @@ export const CalendarLayout = memo<CalendarFile>(({
   })
 
   const events = useMemo(() => {
-    return parseCalendar(contents)
-  }, [contents])
+    return parseCalendar(contents, file.name)
+  }, [contents, file.name])
   const periodText = useMemo(() => {
     return format(
       new Date(period.year, period.month, 1),
@@ -81,7 +81,7 @@ export const CalendarLayout = memo<CalendarFile>(({
           </Tab>
           <div
             data-hide={mode !== 'calendar'}
-            className="flex gap-2 ms-auto data-[hide=true]:opacity-0"
+            className="flex gap-2 ms-auto var-[hide]:opacity-0"
           >
             <Button onClick={prevPeriod} size="small">
               <div className="relative top-1">

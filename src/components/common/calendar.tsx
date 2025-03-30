@@ -11,6 +11,7 @@ import { useMemo, useState } from 'preact/hooks'
 import { CalendarEvent } from '../../types/calendar-event';
 import { eachDayOfInterval } from 'date-fns/eachDayOfInterval';
 import { format } from 'date-fns/format';
+import { isToday } from 'date-fns/isToday';
 
 export interface CalendarPeriod {
   month: number;
@@ -85,7 +86,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             p-2
             text-sm text-content-secondary
             border-r-1 border-b-1 border-border
-            data-[is-last-column=true]:border-r-0
+            var-[is-last-column]:border-r-0
           "
         >
           {day.slice(0, 3)}
@@ -100,15 +101,17 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             w-[14.285%] h-20
             p-2
             border-r-1 border-b-1 border-border
-            data-[is-last-column=true]:border-r-0
-            data-[is-last-row=true]:border-b-0
+            var-[is-last-column]:border-r-0
+            var-[is-last-row]:border-b-0
           "
         >
           <p
             data-is-outside-month={day.getMonth() !== period.month}
+            data-is-today={isToday(day)}
             className="
               text-sm
-              data-[is-outside-month=true]:text-content-secondary
+              var-[is-outside-month]:text-content-secondary
+              var-[is-today]:text-primary
             "
           >
             {day.getDate()}

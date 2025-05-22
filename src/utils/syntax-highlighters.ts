@@ -81,13 +81,26 @@ export const syntaxHighlighters = {
 
   gemtext: (text: string) => {
     let html = ''
+    let codeblock = false
 
     text.split('\n').forEach(line => {
       let match
 
-      if ((match = line.match(GMI_HEADING_REGEX)) !== null) {
+      if (line.startsWith('```')) {
+        if (codeblock) {
+          codeblock = false
+          html += '```' + '</span><br>'
+        } else {
+          codeblock = true
+          html += `<span class="${hl.green}">` + '```<br>'
+        }
+        return
+      } else if (codeblock) {
+        html += `${escape(line)}<br>`
+        return
+      } else if ((match = line.match(GMI_HEADING_REGEX)) !== null) {
         html += `<span class="${hl.red}">${escape(line)}</span>`
-      } else if (line.startsWith('-')) {
+      } else if (line.startsWith('-') || line.startsWith('*')) {
         html += `<span class="${hl.blue}">-</span>${escape(line.slice(1))}`
       } else if ((match = line.match(GMI_LINK_REGEX)) !== null) {
         html += `<span class="${hl.blue}">=> <a href="${match[1]}" class="underline">${escape(match[1])}</a></span>`

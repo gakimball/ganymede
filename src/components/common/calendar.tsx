@@ -28,10 +28,12 @@ const DAYS = [
   'Saturday'
 ]
 
-type CalendarEventMap = Record<string, {
+interface CalendarEventMapItem {
   title: string;
   position: 'start' | 'middle' | 'end';
-}>
+}
+
+type CalendarEventMap = Record<string, CalendarEventMapItem[]>
 
 interface CalendarProps {
   events: CalendarEvent[];
@@ -57,7 +59,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
         start: event.start,
         end: event.end ?? event.start,
       }).forEach((date, index, array) => {
-        acc[format(date, 'yyyy-MM-dd')] = {
+        const entry: CalendarEventMapItem = {
           title: event.title,
           position: array.length === 1
             ? 'middle'
@@ -66,6 +68,14 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             : index === array.length - 1
             ? 'end'
             : 'middle',
+        }
+
+        const key = format(date, 'yyyy-MM-dd')
+
+        if (key in acc) {
+          acc[key].push(entry)
+        } else {
+          acc[key] = [entry]
         }
       })
 
@@ -92,35 +102,48 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
           {day.slice(0, 3)}
         </div>
       ))}
-      {days.map((day, index) => (
-        <div
-          key={day.toString()}
-          data-is-last-column={(index + 1) % 7 === 0}
-          data-is-last-row={Math.ceil((index + 1) / 7) === weeks}
-          className="
+      {days.map((day, index) => {
+        let events: CalendarEventMapItem[] = eventMap[format(day, 'yyyy-MM-dd')] ?? []
+
+        if (events.length > 2) {
+          events = [
+            events[0],
+            { title: `+${events.length - 1} more`, position: 'middle' },
+          ]
+        }
+
+        return (
+          <div
+            key={day.toString()}
+            data-is-last-column={(index + 1) % 7 === 0}
+            data-is-last-row={Math.ceil((index + 1) / 7) === weeks}
+            className="
             w-[14.285%] h-20
             p-2
             border-r-1 border-b-1 border-border
             var-[is-last-column]:border-r-0
             var-[is-last-row]:border-b-0
           "
-        >
-          <p
-            data-is-outside-month={day.getMonth() !== period.month}
-            data-is-today={isToday(day)}
-            className="
-              text-sm
-              var-[is-outside-month]:text-content-secondary
-              var-[is-today]:text-primary
-            "
           >
-            {day.getDate()}
-          </p>
-          <p className="text-sm truncate">
-            {eventMap[format(day, 'yyyy-MM-dd')]?.title}
-          </p>
-        </div>
-      ))}
+            <p
+              data-is-outside-month={day.getMonth() !== period.month}
+              data-is-today={isToday(day)}
+              className="
+                text-sm
+                var-[is-outside-month]:text-content-secondary
+                var-[is-today]:text-primary
+              "
+            >
+              {day.getDate()}
+            </p>
+            {events.map(entry => (
+              <p key={entry.title} className="text-sm truncate">
+                {entry.title}
+              </p>
+            ))}
+          </div>
+        )
+      })}
     </div>
   )
 }

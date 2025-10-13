@@ -7,7 +7,7 @@ import { BoardView } from '../views/board-view';
 import { TextView } from '../views/text-view';
 import { RecordViewer } from '../common/record-viewer';
 import { ListView } from '../views/list-view';
-import { CREATE_NEW_RECORD } from '../../state/app-store';
+import { CREATE_NEW_RECORD } from '../../state/app-state';
 import { DatabaseFile } from '../../state/file-store';
 import { ViewEditor } from '../common/view-editor';
 import { Callout } from '../common/callout';

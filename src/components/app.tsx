@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks'
 import { FileBrowser } from './global/file-browser'
-import { AppStore } from '../state/app-store'
+import { createAppState } from '../state/app-state'
 import { StoreContext } from '../state/store-context'
 import { QuickFind } from './global/quick-find'
 import { ThemeManager } from './managers/theme-manager'
@@ -13,14 +13,14 @@ import { RouteHandler } from './global/route-handler'
 import { NewDatabaseForm } from './global/new-database-form'
 import { MoveFileModal } from './global/move-file-modal'
 
-const initialState = new AppStore()
+const appState = createAppState()
 
 export const App = () => {
-  const { current: store } = useRef(initialState)
+  const { current: store } = useRef(appState)
 
   useEffect(() => {
-    store.initialize()
-  }, [store])
+    appState.files.reloadDirectory()
+  }, [])
 
   return (
     <StoreContext.Provider value={store}>

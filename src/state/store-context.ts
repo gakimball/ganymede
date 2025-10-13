@@ -1,4 +1,4 @@
 import { createContext } from 'preact';
-import { AppStore } from './app-store';
+import { AppState } from './app-state';
 
-export const StoreContext = createContext<AppStore | null>(null)
+export const StoreContext = createContext<AppState | null>(null)

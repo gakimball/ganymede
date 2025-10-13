@@ -6,7 +6,7 @@ Use recsel features
 [ ] Search
 
 File browser
-[ ] Tabbed browsing
+[@] Tabbed browsing
 [ ] Sorting: last edited
 [ ] Menu item size?
 [ ] macOS tags?
@@ -24,7 +24,8 @@ Routing
 Issues
 [x] Cannot turn off autocomplete
 [x] Esc should close quick find
-[?] Views should reference paths, not filenames
+[ ] Views should reference paths, not filenames
+[ ] Embed view settings in recfiles themselves
 [x] Include field name in DatabaseField interface
 [x] First route change doesn't fire
 [x] Finish view editing
@@ -37,7 +38,7 @@ Issues
 [x] Editing an aggregate item should not be possible
 [ ] Prevent auto curly quotes
 [ ] Make sure files save if you close them before the auto-save timeout
-[ ] sexp library doesn't handle escaped double quotes
+[x] sexp library doesn't handle escaped double quotes
 [x] Right click actions on files don't work in the folder layout
 
 Views

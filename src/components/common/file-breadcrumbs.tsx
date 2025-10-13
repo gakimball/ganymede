@@ -4,7 +4,7 @@ import { useMemoAsync } from '../../utils/use-memo-async';
 import { join } from '@tauri-apps/api/path';
 import { Link } from './link';
 import { Database, DatabaseRecord } from '../../types/database';
-import { CREATE_NEW_RECORD } from '../../state/app-store';
+import { CREATE_NEW_RECORD } from '../../state/app-state';
 import { Route } from '../../state/router-state';
 
 interface FileBreadcrumbsProps {

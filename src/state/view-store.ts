@@ -2,7 +2,7 @@ import { Signal, computed, effect, signal } from '@preact/signals';
 import { createEmptyDatabase } from '../utils/create-empty-database';
 import { ViewConfig, toDatabaseRecord, toViewConfig } from '../utils/view-config';
 import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
-import { CREATE_NEW_RECORD } from './app-store';
+import { CREATE_NEW_RECORD } from './app-state';
 import { CurrentFile } from './file-store';
 import { confirm } from '@tauri-apps/api/dialog';
 import { FileEntry } from '@tauri-apps/api/fs';

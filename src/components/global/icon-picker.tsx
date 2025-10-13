@@ -1,17 +1,17 @@
 import { FunctionComponent } from 'preact';
 import { FeatherIconNames, icons } from 'feather-icons'
 import { Modal } from '../common/modal';
-import { useCallback, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { TextInput } from '../forms/text-input';
 import { Icon } from '../common/icon';
 import { Button } from '../common/button';
 import { useStore } from '../../state/use-store';
-import { useEventHandler } from '../../hooks/use-event-handler';
 import { NO_AUTOCOMPLETE } from '../../utils/constants';
+import { closeModal } from '../../state/modal-state';
 
 export const IconPicker: FunctionComponent = () => {
-  const store = useStore()
-  const currentModal = store.currentModal.value
+  const { modal, files } = useStore()
+  const currentModal = modal.current.value
   const isOpen = currentModal?.type === 'icon-picker'
   const [search, setSearch] = useState('')
 
@@ -24,8 +24,8 @@ export const IconPicker: FunctionComponent = () => {
   }) as FeatherIconNames[]
 
   const changeIcon = async (icon: string | null) => {
-    await store.files.changeFileIcon(currentModal.file, icon)
-    store.closeModal()
+    await files.changeFileIcon(currentModal.file, icon)
+    closeModal(modal)
   }
 
   return (

@@ -45,6 +45,7 @@ export function createRouterState(initialRoute: Route) {
 
   return {
     tabs,
+    tabPointer,
     currentTab,
     currentRoute,
   }
@@ -78,4 +79,38 @@ export function goForward(state: RouterState) {
   if (tab.pointer.value < tab.history.value.length - 1) {
     tab.pointer.value++
   }
+}
+
+export function newTab(state: RouterState, initialRoute: Route) {
+  state.tabs.value = state.tabs.value.concat([{
+    history: signal([initialRoute]),
+    pointer: signal(0)
+  }])
+  state.tabPointer.value = state.tabs.value.length - 1
+}
+
+export function changeTab(state: RouterState, index: number) {
+  if (index < state.tabs.value.length) {
+    state.tabPointer.value = index
+  }
+}
+
+export function nextTab(state: RouterState) {
+  let nextIndex = state.tabPointer.value + 1
+
+  if (nextIndex >= state.tabs.value.length) {
+    nextIndex = 0
+  }
+
+  state.tabPointer.value = nextIndex
+}
+
+export function prevTab(state: RouterState) {
+  let nextIndex = state.tabPointer.value - 1
+
+  if (nextIndex < 0) {
+    nextIndex = state.tabs.value.length - 1
+  }
+
+  state.tabPointer.value = nextIndex
 }

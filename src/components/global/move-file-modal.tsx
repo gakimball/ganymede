@@ -5,10 +5,11 @@ import { FileEntry } from '@tauri-apps/api/fs';
 import { FileTree } from '../common/file-tree';
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { FileBrowserAction } from '../common/file-browser-item';
+import { closeModal } from '../../state/modal-state';
 
 export const MoveFileModal = memo(() => {
   const store = useStore()
-  const modal = store.currentModal.value
+  const modal = store.modal.current.value
 
   if (modal?.type !== 'move') {
     return null
@@ -25,7 +26,7 @@ export const MoveFileModal = memo(() => {
   const handleFileAction = useEventHandler((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open' && file.children) {
       store.files.moveFile(modal.file, file)
-      store.closeModal()
+      closeModal(store.modal)
     }
   })
 

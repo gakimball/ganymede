@@ -7,11 +7,12 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { FileTree } from '../common/file-tree';
 import { FileBrowserMenu } from './file-browser-menu';
 import { useFileActions } from '../../hooks/use-file-actions';
+import { openModal } from '../../state/modal-state';
 
 const sortFiles = (a: FileEntry, b: FileEntry) => a.name!.localeCompare(b.name!)
 
 export const FileBrowser = memo(() => {
-  const { files, openModal } = useStore()
+  const { files, modal } = useStore()
   const directoryBase = files.directoryBase.value
   const fileList = files.files.value
   const currentFile = files.current.value
@@ -45,7 +46,7 @@ export const FileBrowser = memo(() => {
         <button
           className="h-4"
           type="button"
-          onClick={() => openModal({ type: 'quick-find' })}
+          onClick={() => openModal(modal, { type: 'quick-find' })}
         >
           <Icon name="search" />
         </button>

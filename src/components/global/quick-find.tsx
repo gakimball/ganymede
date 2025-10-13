@@ -8,13 +8,14 @@ import { TextInput } from '../forms/text-input';
 import { Modal } from '../common/modal';
 import { NO_AUTOCOMPLETE } from '../../utils/constants';
 import { navigate } from '../../state/router-state';
+import { closeModal, openModal } from '../../state/modal-state';
 
 export const QuickFind = memo(() => {
-  const { files, currentModal, openModal, closeModal, router } = useStore()
+  const { files, modal, router } = useStore()
   const fileList = files.flatFiles.value
   const fileIcons = files.fileIcons.value
   const fileCount = fileList.length
-  const isOpen = currentModal.value?.type === 'quick-find'
+  const isOpen = modal.current.value?.type === 'quick-find'
 
   const [search, setSearch] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
@@ -32,7 +33,7 @@ export const QuickFind = memo(() => {
         path: file.path,
         view: null,
       })
-      closeModal()
+      closeModal(modal)
     }
   }, [])
 
@@ -53,7 +54,7 @@ export const QuickFind = memo(() => {
         break
       }
       case 'Escape': {
-        closeModal()
+        closeModal(modal)
         break
       }
     }
@@ -61,7 +62,7 @@ export const QuickFind = memo(() => {
 
   const handleWindowKey = useEventHandler((event: KeyboardEvent) => {
     if ((event.key === 'k' || event.key === 'p') && (event.metaKey || event.ctrlKey)) {
-      if (isOpen) closeModal(); else openModal({ type: 'quick-find' })
+      if (isOpen) closeModal(modal); else openModal(modal, { type: 'quick-find' })
     }
   })
 

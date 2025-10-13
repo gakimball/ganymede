@@ -7,9 +7,10 @@ import { useStore } from '../state/use-store'
 import { FileEntry } from '@tauri-apps/api/fs'
 import { FileBrowserAction } from '../components/common/file-browser-item'
 import { navigate } from '../state/router-state'
+import { openModal } from '../state/modal-state'
 
 export const useFileActions = () => {
-  const { files, prompt, openModal, router } = useStore()
+  const { files, prompt, modal, router } = useStore()
 
   return useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
@@ -70,14 +71,14 @@ export const useFileActions = () => {
         break
       }
       case 'new-database': {
-        openModal({
+        openModal(modal, {
           type: 'new-database',
           file,
         })
         break
       }
       case 'icon': {
-        openModal({
+        openModal(modal, {
           type: 'icon-picker',
           file,
         })
@@ -88,7 +89,7 @@ export const useFileActions = () => {
         break
       }
       case 'move': {
-        openModal({
+        openModal(modal, {
           type: 'move',
           file,
         })

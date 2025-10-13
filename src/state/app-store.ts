@@ -5,6 +5,7 @@ import { FileStore } from './file-store';
 import { ViewStore } from './view-store';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { createRouterState } from './router-state';
+import { createModalState } from './modal-state';
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 
@@ -27,7 +28,7 @@ export class AppStore {
   )
   readonly prompt = new PromptStore()
 
-  readonly currentModal = signal<AppStoreModal | null>(null);
+  readonly modal = createModalState()
 
   constructor() {
     autoBind(this)
@@ -38,13 +39,5 @@ export class AppStore {
 
   initialize(): void {
     this.files.reloadDirectory()
-  }
-
-  openModal(modal: AppStoreModal): void {
-    this.currentModal.value = modal
-  }
-
-  closeModal(): void {
-    this.currentModal.value = null
   }
 }

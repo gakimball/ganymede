@@ -17,9 +17,9 @@ const defaultFormData: NewDatabaseFormData = {
 }
 
 export const NewDatabaseForm = () => {
-  const { currentModal, closeModal } = useStore()
-  const modal = currentModal.value
-  const dbPath = modal?.type === 'new-database' ? modal.file.path : null
+  const { modal } = useStore()
+  const currentModal = modal.current.value
+  const dbPath = currentModal?.type === 'new-database' ? currentModal.file.path : null
 
   const [formData, setFormData] = useState(defaultFormData)
   const patchFormData = useEventHandler((patch: Partial<NewDatabaseFormData>) => {
@@ -34,7 +34,7 @@ export const NewDatabaseForm = () => {
     return join(dbPath, '..')
   }, [dbPath])
 
-  if (modal?.type !== 'new-database') {
+  if (currentModal?.type !== 'new-database') {
     return null
   }
 

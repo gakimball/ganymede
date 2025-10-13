@@ -8,6 +8,7 @@ import { FileEntry } from '@tauri-apps/api/fs'
 import { FileBrowserAction } from '../components/common/file-browser-item'
 import { navigate } from '../state/router-state'
 import { openModal } from '../state/modal-state'
+import { getDefaultNewFileName } from '../utils/get-default-new-file-name'
 
 export const useFileActions = () => {
   const { files, prompt, modal, router } = useStore()
@@ -42,6 +43,7 @@ export const useFileActions = () => {
         const name = await prompt.create({
           text: 'Enter a file name',
           submitText: 'Create',
+          defaultValue: await getDefaultNewFileName(file),
         })
         if (name) {
           const path = await normalize(await join(file.path, name))

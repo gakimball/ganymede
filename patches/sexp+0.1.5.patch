@@ -1,0 +1,30 @@
+diff --git a/node_modules/sexp/index.js b/node_modules/sexp/index.js
+index 66762d2..dddf164 100644
+--- a/node_modules/sexp/index.js
++++ b/node_modules/sexp/index.js
+@@ -26,13 +26,21 @@ function sexp(source, opts) {
+     }
+ 
+     function parseString(quote) {
+-        var start = ix++;
+-        while (ix < len && source[ix] !== quote)
+-            ix++;
++        ix++
++        let string = ''
++        while (ix < len && source[ix] !== quote) {
++            if (source[ix] === '\\' && source[ix + 1] === quote) {
++                string += quote
++                ix++
++            } else {
++                string += source[ix]
++            }
++            ix++
++        }
+         if (ix === len)
+             throw new Error("parse error - unterminated string");
+         ix++;
+-        return tString(source.substring(start + 1, ix - 1));
++        return tString(string);
+     }
+ 
+     function parseSexp() {

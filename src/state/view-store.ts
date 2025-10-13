@@ -3,16 +3,14 @@ import { createEmptyDatabase } from '../utils/create-empty-database';
 import { ViewConfig, toDatabaseRecord, toViewConfig } from '../utils/view-config';
 import { Database, DatabaseFieldMap, DatabaseRecord } from '../types/database';
 import { CREATE_NEW_RECORD } from './app-store';
-import { Command } from '@tauri-apps/api/shell';
 import { CurrentFile } from './file-store';
 import { confirm } from '@tauri-apps/api/dialog';
 import { FileEntry } from '@tauri-apps/api/fs';
 import { queryRecfile } from '../utils/query-recfile';
 import { recins } from '../utils/recins';
 import { recdel } from '../utils/recdel';
-import { ROUTES } from '../utils/routes';
 import { createPlaceholderViewConfig } from '../utils/create-placeholder-view-config';
-import { RouterStore } from './router-store';
+import { RouterState, navigate } from './router-state';
 
 interface CurrentView {
   config: ViewConfig;
@@ -36,7 +34,7 @@ export class ViewStore {
   constructor(
     private readonly currentFile: Signal<CurrentFile | null>,
     private readonly configFile: Signal<FileEntry | null>,
-    private readonly router: RouterStore
+    private readonly router: RouterState,
   ) {
     effect(() => {
       const file = configFile.value
@@ -109,7 +107,7 @@ export class ViewStore {
       type: this.views.value.type,
     }, toDatabaseRecord(view))
     await this.reloadViews(dbPath)
-    this.router.navigate({
+    navigate(this.router, {
       name: 'file',
       path: file.path,
       view: view.name,
@@ -133,7 +131,7 @@ export class ViewStore {
         index,
       }, toDatabaseRecord(changes))
       await this.reloadViews(dbPath)
-      this.router.navigate({
+      navigate(this.router, {
         name: 'file',
         path: file.path,
         view: changes.name,
@@ -166,7 +164,7 @@ export class ViewStore {
         index,
       })
       await this.reloadViews(dbPath)
-      this.router.navigate({
+      navigate(this.router, {
         name: 'file',
         path: file.path,
         view: null,

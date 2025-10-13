@@ -7,6 +7,7 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { TextInput } from '../forms/text-input';
 import { Modal } from '../common/modal';
 import { NO_AUTOCOMPLETE } from '../../utils/constants';
+import { navigate } from '../../state/router-state';
 
 export const QuickFind = memo(() => {
   const { files, currentModal, openModal, closeModal, router } = useStore()
@@ -26,7 +27,7 @@ export const QuickFind = memo(() => {
 
   const handleFileAction = useCallback((file: FileEntry, action: FileBrowserAction) => {
     if (action === 'open') {
-      router.navigate({
+      navigate(router, {
         name: 'file',
         path: file.path,
         view: null,

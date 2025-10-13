@@ -4,7 +4,7 @@ import { PromptStore } from './prompt-store';
 import { FileStore } from './file-store';
 import { ViewStore } from './view-store';
 import { FileEntry } from '@tauri-apps/api/fs';
-import { RouterStore } from './router-store';
+import { createRouterState } from './router-state';
 
 export const CREATE_NEW_RECORD = Symbol('CREATE_NEW_RECORD')
 
@@ -15,7 +15,7 @@ export type AppStoreModal =
   | { type: 'move'; file: FileEntry }
 
 export class AppStore {
-  readonly router = new RouterStore({
+  readonly router = createRouterState({
     name: 'default',
   })
 

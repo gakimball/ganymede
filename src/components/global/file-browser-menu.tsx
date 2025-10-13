@@ -5,6 +5,7 @@ import { useEventHandler } from '../../hooks/use-event-handler';
 import { showMenu } from 'tauri-plugin-context-menu';
 import { useStore } from '../../state/use-store';
 import { FileBrowserAction } from '../common/file-browser-item';
+import { navigate } from '../../state/router-state';
 
 interface FileBrowserProps {
   onAction: (action: FileBrowserAction) => void;
@@ -46,7 +47,7 @@ export const FileBrowserMenu: FunctionComponent<FileBrowserProps> = ({
         {
           label: 'Edit config database',
           event: () => {
-            router.navigate({
+            navigate(router, {
               name: 'file',
               path: files.configFile.value!.path,
               view: null,

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { Route } from '../../state/router-store'
+import { Route } from '../../state/router-state'
 import { Link } from './link';
 import classNames from 'classnames';
 

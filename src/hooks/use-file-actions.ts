@@ -6,6 +6,7 @@ import { useEventHandler } from './use-event-handler'
 import { useStore } from '../state/use-store'
 import { FileEntry } from '@tauri-apps/api/fs'
 import { FileBrowserAction } from '../components/common/file-browser-item'
+import { navigate } from '../state/router-state'
 
 export const useFileActions = () => {
   const { files, prompt, openModal, router } = useStore()
@@ -13,7 +14,7 @@ export const useFileActions = () => {
   return useEventHandler(async (file: FileEntry, action: FileBrowserAction) => {
     switch (action) {
       case 'open': {
-        router.navigate({
+        navigate(router, {
           name: 'file',
           path: file.path,
           view: null,
@@ -31,7 +32,7 @@ export const useFileActions = () => {
       }
       case 'delete': {
         files.deleteFile(file)
-        router.navigate({
+        navigate(router, {
           name: 'default',
         })
         break
@@ -44,7 +45,7 @@ export const useFileActions = () => {
         if (name) {
           const path = await normalize(await join(file.path, name))
           await files.createFile(path)
-          router.navigate({
+          navigate(router, {
             name: 'file',
             path,
             view: null,
@@ -60,7 +61,7 @@ export const useFileActions = () => {
         if (name) {
           const path = await normalize(await join(file.path, name))
           await files.createFolder(path)
-          router.navigate({
+          navigate(router, {
             name: 'file',
             path,
             view: null,

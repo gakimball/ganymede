@@ -1,5 +1,6 @@
 import { memo, useEffect } from 'preact/compat';
 import { useStore } from '../../state/use-store';
+import { goBack, goForward } from '../../state/router-state';
 
 export const ShortcutManager = memo(() => {
   const { router } = useStore()
@@ -7,9 +8,9 @@ export const ShortcutManager = memo(() => {
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
       if (event.key === '[' && (event.metaKey || event.ctrlKey)) {
-        router.goBack()
+        goBack(router)
       } else if (event.key === ']' && (event.metaKey || event.ctrlKey)) {
-        router.goForward()
+        goForward(router)
       }
     }
     window.addEventListener('keypress', handle)

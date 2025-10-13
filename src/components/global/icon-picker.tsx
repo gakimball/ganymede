@@ -7,6 +7,7 @@ import { Icon } from '../common/icon';
 import { Button } from '../common/button';
 import { useStore } from '../../state/use-store';
 import { useEventHandler } from '../../hooks/use-event-handler';
+import { NO_AUTOCOMPLETE } from '../../utils/constants';
 
 export const IconPicker: FunctionComponent = () => {
   const store = useStore()
@@ -35,8 +36,7 @@ export const IconPicker: FunctionComponent = () => {
           value={search}
           onChange={e => setSearch(e.currentTarget.value)}
           autoFocus
-          autocapitalize="off"
-          autocomplete="off"
+          {...NO_AUTOCOMPLETE}
         />
         <Button
           type="button"

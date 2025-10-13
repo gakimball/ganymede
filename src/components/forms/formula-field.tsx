@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 import { DatabaseField } from '../../types/database';
 import { Button } from '../common/button';
 import { TextInput } from './text-input';
+import { NO_AUTOCOMPLETE } from '../../utils/constants';
 
 interface FormulaFieldProps {
   value?: string;
@@ -27,6 +28,7 @@ export const FormulaField: FunctionComponent<FormulaFieldProps> = ({
               ? (field.formula?.formulaStr ?? '(unknown formula)')
               : value
           )}
+          {...NO_AUTOCOMPLETE}
         />
       </div>
       <Button type="button" theme="secondary" onClick={() => setShowFormula(v => !v)}>

@@ -5,6 +5,13 @@ Use recsel features
       Operators: + - * / % && || = > < >= <= != >> << ==
 [ ] Search
 
+File browser
+[ ] Tabbed browsing
+[ ] Sorting: last edited
+[ ] Menu item size?
+[ ] macOS tags?
+    https://github.com/jdberry/tag/
+
 Databases
 [ ] Inline recfile creator
 
@@ -15,7 +22,7 @@ Routing
 [x] DIY router
 
 Issues
-[ ] Cannot turn off autocomplete
+[x] Cannot turn off autocomplete
 [x] Esc should close quick find
 [?] Views should reference paths, not filenames
 [x] Include field name in DatabaseField interface

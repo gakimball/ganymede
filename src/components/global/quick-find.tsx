@@ -6,6 +6,7 @@ import { FileBrowserAction, FileBrowserItem } from '../common/file-browser-item'
 import { useEventHandler } from '../../hooks/use-event-handler';
 import { TextInput } from '../forms/text-input';
 import { Modal } from '../common/modal';
+import { NO_AUTOCOMPLETE } from '../../utils/constants';
 
 export const QuickFind = memo(() => {
   const { files, currentModal, openModal, closeModal, router } = useStore()
@@ -80,13 +81,12 @@ export const QuickFind = memo(() => {
     <Modal width="600px" height="400px">
       <div className="sticky top-0 z-10 mb-2">
         <TextInput
-          type="search"
+          type="url"
           value={search}
           onChange={e => setSearch(e.currentTarget.value)}
           onKeyDown={handleKeyAction}
           autoFocus
-          autocapitalize="off"
-          autocomplete="off"
+          {...NO_AUTOCOMPLETE}
         />
       </div>
       {results.map((result, index) => (

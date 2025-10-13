@@ -4,16 +4,16 @@ import { Modal } from '../common/modal';
 import { TextInput } from '../forms/text-input';
 import { FormLabel } from '../forms/form-label';
 import { Button } from '../common/button';
+import { NO_AUTOCOMPLETE } from '../../utils/constants';
 
 export const Prompt = memo(() => {
   const { prompt } = useStore()
   const current = prompt.current.value
-  const defaultValue = current?.defaultValue
   const [value, setValue] = useState('')
 
   useEffect(() => {
-    setValue(defaultValue ?? '')
-  }, [defaultValue])
+    setValue(current?.defaultValue ?? '')
+  }, [current])
 
   if (!current) {
     return null
@@ -29,6 +29,7 @@ export const Prompt = memo(() => {
         onChange={e => setValue(e.currentTarget.value)}
         placeholder={current.placeholder}
         autoFocus
+        {...NO_AUTOCOMPLETE}
       />
       <div className="flex gap-2 mt-7">
         <Button

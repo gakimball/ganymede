@@ -1,6 +1,6 @@
 {
   "name": "ganymede",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "source": "src/index.html",
   "scripts": {
